@@ -2,6 +2,7 @@ import { useState, FC, FormEvent } from "react";
 import { AppDispatch, login } from "../store";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
+import Navbar from "@/components/Navbar";
 
 const LoginPage: FC = () => {
   const [name, setName] = useState<string>("");
@@ -17,6 +18,7 @@ const LoginPage: FC = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <Navbar></Navbar>
       <div className="mx-auto max-w-md rounded-lg bg-white p-8 shadow-md">
         <h2 className="mb-6 text-2xl font-bold text-gray-800">Login</h2>
         <form onSubmit={handleSubmit}>

@@ -1,0 +1,58 @@
+.navbar {
+  position: absolute;
+  left: 0;
+  background-color: #393939;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 60px;
+}
+
+.navbar-logo {
+  width: 72px;
+  height: 72px;
+  scale: 0.7;
+  background-image: url(../../public/Deloitte-removebg-preview\ 1.png);
+  /* position:relative;
+right: 10px; */
+}
+
+.navbar-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 20%;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.navbar-icons div link svg {
+  display: flex;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.navbar-icons svg {
+  width: 30px;
+  height: 30px;
+}
+
+.navbar-icon-task svg path {
+  fill: white;
+}
+
+/* .navbar-icon-profile svg{
+    background-color: #86BC25;
+    width:45px;
+} */
+
+.active svg path {
+  fill: #86bc25 !important;
+}
+
+.activeCircle svg circle {
+  fill: #86bc25;
+}

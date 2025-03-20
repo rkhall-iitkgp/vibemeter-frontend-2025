@@ -18,6 +18,9 @@ function App() {
           path="/"
           element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
         />
+        <Route path="/calender" element={<LoginPage />} />
+        <Route path="/task" element={<LoginPage />} />
+        <Route path="/profile" element={<LoginPage />} />
       </Routes>
     </>
   );
