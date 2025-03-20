@@ -34,6 +34,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
     dispatch(login({ id: 1, name: "John Doe", email }));
     navigate("/vibemeter");
   };
+  
 
   return (
     <div className="flex h-screen w-full">
