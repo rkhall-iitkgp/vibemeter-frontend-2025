@@ -44,7 +44,7 @@ const LoginPage: FC = () => {
           </div>
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 px-4 py-3 font-medium text-white hover:bg-green-700"
+            className="w-full rounded-md bg-primary-green px-4 py-3 font-inter font-medium text-secondary hover:bg-secondary-green"
           >
             Login
           </button>
