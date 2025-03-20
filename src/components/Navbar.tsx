@@ -34,7 +34,7 @@ function Navbar() {
         <div
           className={`navbar-icon-task ${location.pathname === "/task" ? "active" : ""}`}
         >
-          <Link to="/">
+          <Link to="/task">
             <svg
               width="38"
               height="43"
@@ -56,7 +56,7 @@ function Navbar() {
         <div
           className={`navbar-icon-profile ${location.pathname === "/profile" ? "activeCircle" : ""}`}
         >
-          <Link to="/">
+          <Link to="/profile">
             <svg
               width="56"
               height="57"
