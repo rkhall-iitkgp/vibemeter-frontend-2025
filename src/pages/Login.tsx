@@ -1,7 +1,7 @@
 import { useState, FC, FormEvent } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
 import { AppDispatch, login } from "../store";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 
 const LoginPage: FC = () => {
   const [name, setName] = useState<string>("");

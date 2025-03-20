@@ -5,7 +5,7 @@ import { RootState } from "./store";
 
 function App() {
   const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
+    (state: RootState) => state.auth.isAuthenticated
   );
   return (
     <>
