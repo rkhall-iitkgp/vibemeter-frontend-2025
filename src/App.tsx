@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import { LandingPage, LoginPage, SkeletonPage} from "./pages";
+import { LandingPage, LoginPage, SkeletonPage, TestPage} from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
@@ -21,6 +21,10 @@ function App() {
         <Route
           path="/skeleton"
           element={<SkeletonPage />} 
+        />
+        <Route
+          path="/test"
+          element={<TestPage />} 
         />
       </Routes>
     </>
