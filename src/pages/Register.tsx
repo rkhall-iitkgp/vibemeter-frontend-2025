@@ -4,7 +4,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,6 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Form validation schema
 const formSchema = z
@@ -45,6 +47,8 @@ export default function Register() {
       confirmPassword: "",
     },
   });
+
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
