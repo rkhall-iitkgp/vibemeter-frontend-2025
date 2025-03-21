@@ -1,7 +1,8 @@
 import { useState, FC, FormEvent } from "react";
-import { AppDispatch, login } from "../store";
+import { AppDispatch } from "../store";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
+import { login } from "@/store/actions/authActions";
 
 const LoginPage: FC = () => {
   const [name, setName] = useState<string>("");
@@ -11,7 +12,7 @@ const LoginPage: FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(login({ id: 1, name: name || "John Doe", email }));
+    dispatch(login({ password: "323",  email }));
     navigate("/vibemeter");
   };
 
