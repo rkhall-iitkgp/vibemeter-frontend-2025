@@ -36,13 +36,14 @@ const LoginPage: React.FC<LoginPageProps> = ({
     e.preventDefault();
     dispatch(login({ id: 1, name: "John Doe", email }));
     navigate("/vibemeter");
+    userLogin("",email,password);
   };
 
   
-  const userRegister=async(employee_id:string, email:string, password:string)=>{
+  const userLogin=async(employee_id:string, email:string, password:string)=>{
     const user={employee_id,email,password}
     try {
-      const response = await axios.post('http://ec2-65-2-151-235.ap-south-1.compute.amazonaws.com/api/auth/register', user);
+      const response = await axios.post('http://ec2-65-2-151-235.ap-south-1.compute.amazonaws.com/api/auth/login', user);
       if (response.data.code === 200) {
         toast.success(response.data.message);
        }
@@ -86,7 +87,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
               <CardDescription>Enter your credentials to login</CardDescription>
             </CardHeader>
             <CardContent className="p-0 pt-6">
-              <form onSubmit={()=>{handleSubmit;userRegister("",email,password)}} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input

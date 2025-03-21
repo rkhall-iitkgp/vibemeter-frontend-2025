@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { watch } from "fs";
 
 // Form validation schema
 const formSchema = z
@@ -60,6 +61,23 @@ export default function Register() {
       // Handle successful signup here
     }, 1000);
   }
+  
+  const userRegister=async(employee_id:string, email:string, password:string)=>{
+    const user={employee_id,email,password}
+    try {
+      const response = await axios.post('http://ec2-65-2-151-235.ap-south-1.compute.amazonaws.com/api/auth/register', user);
+      if (response.data.code === 200) {
+        toast.success(response.data.message);
+       }
+    else {
+      toast.error(response.data.message)
+  }
+  }
+  catch(err){
+    toast.error("error")
+    console.log(err)
+  }
+  }
 
   return (
     <div className="flex h-screen w-full">
@@ -93,7 +111,13 @@ export default function Register() {
 
           {/* Form */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+    onSubmit={form.handleSubmit((data) => {
+      onSubmit(data); 
+      userRegister(data.employeeId, data.email, data.password); 
+    })}
+    className="space-y-6"
+  >
               <FormField
                 control={form.control}
                 name="employeeId"
