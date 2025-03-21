@@ -30,9 +30,9 @@ export const useChat = () => {
 	}, [dispatch]);
 
 
-	const sendUserMessage = () => {
-		if (inputMessage.trim() && connectionStatus === 'connected') {
-			dispatch(sendMessage(inputMessage));
+	const sendUserMessage = (message?: string) => {
+		if ((inputMessage.trim() || message?.trim()) && connectionStatus === 'connected') {
+			dispatch(sendMessage(message || inputMessage));
 			setInputMessage('');
 		}
 	};

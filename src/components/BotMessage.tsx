@@ -56,7 +56,7 @@ const BotMessage: React.FC<BotMessageProps> = ({
             transition-opacity duration-500 delay-200
             ${isVisible ? 'opacity-100' : 'opacity-0'}
           `}>
-            {timestamp}
+            {new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
         )}
       </div>
