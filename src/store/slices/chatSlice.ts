@@ -28,7 +28,6 @@ const initialState: ChatState = {
 	connectionStatus: 'disconnected',
 };
 
-
 const generateId = () => Math.random().toString(36).substring(2) + Date.now().toString(36);
 
 const chatSlice = createSlice({
@@ -53,6 +52,12 @@ const chatSlice = createSlice({
 				sender: 'bot',
 				timestamp: Date.now(),
 			});
+		},
+
+		stopBotResponse: (state) => {
+			state.isBotTyping = false;
+			state.isBotThinking = false;
+			state.lastbotMessageId = undefined;
 		},
 
 		updateBotMessage: (state, action: PayloadAction<string>) => {
@@ -88,6 +93,6 @@ const chatSlice = createSlice({
 	},
 });
 
-export const { addUserMessage, addBotMessage, updateBotMessage, setBotTyping, setBotThinking, setConnectionStatus, setError, clearChat } = chatSlice.actions;
+export const { addUserMessage, addBotMessage, updateBotMessage, setBotTyping, setBotThinking, setConnectionStatus, setError, clearChat, stopBotResponse } = chatSlice.actions;
 
 export default chatSlice.reducer;

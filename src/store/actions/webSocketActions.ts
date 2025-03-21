@@ -12,8 +12,13 @@ export const sendMessage = (message: string) => ({
 	payload: message
 });
 
+export const stopBotResponse = () => ({
+	type: 'ws/stopBotResponse' as const
+});
+
 // Define action types
 export type WebSocketAction =
 	| ReturnType<typeof connectWebSocket>
 	| ReturnType<typeof disconnectWebSocket>
-	| ReturnType<typeof sendMessage>;
+	| ReturnType<typeof sendMessage>
+	| ReturnType<typeof stopBotResponse>;

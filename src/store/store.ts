@@ -1,5 +1,5 @@
 import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
+import authReducer from './slices/authSlice';
 import chatReducer from './slices/chatSlice';
 import { websocketMiddleware } from './middlewares/webSocketMiddleware';
 

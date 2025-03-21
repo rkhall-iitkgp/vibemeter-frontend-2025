@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { RootState } from '../index';
-import { addBotMessage, addUserMessage, setBotThinking, updateBotMessage, setBotTyping, setConnectionStatus, setError } from '../slices/chatSlice';
+import { addBotMessage, addUserMessage, setBotThinking, updateBotMessage, setBotTyping, setConnectionStatus, setError, stopBotResponse } from '../slices/chatSlice';
 
 // Define WebSocket message types
 interface Action {
@@ -109,10 +109,8 @@ export const websocketMiddleware: Middleware<unknown, RootState> = store => next
 			if (socket && socket.readyState === WebSocket.OPEN) {
 				const messageId = Date.now().toString();
 
-				// Add message to UI state
 				dispatch(addUserMessage(actionObj.payload));
 
-				// Send to server
 				socket.send(JSON.stringify({
 					type: 'user_message',
 					content: actionObj.payload,
@@ -120,6 +118,16 @@ export const websocketMiddleware: Middleware<unknown, RootState> = store => next
 				}));
 			} else {
 				dispatch(setError('WebSocket is not connected'));
+			}
+			break;
+		}
+		case 'ws/stopBotResponse': {
+			if (socket && socket.readyState === WebSocket.OPEN) {
+				socket.send(JSON.stringify({
+					type: 'stop',
+				}));
+				
+				dispatch(stopBotResponse());
 			}
 			break;
 		}

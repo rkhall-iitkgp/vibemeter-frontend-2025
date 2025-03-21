@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
 	connectWebSocket,
 	disconnectWebSocket,
-	sendMessage
+	sendMessage,
+	stopBotResponse,
 } from '../store/actions/webSocketActions';
 
 import { RootState } from '../store';
@@ -13,7 +14,6 @@ export const useChat = () => {
 	const dispatch = useDispatch();
 	const [inputMessage, setInputMessage] = useState<string>('');
 
-	// Get values from Redux store
 	const messages = useSelector((state: RootState) => state.chat.messages);
 	const connectionStatus = useSelector((state: RootState) => state.chat.connectionStatus);
 	const isTyping = useSelector((state: RootState) => state.chat.isBotTyping);
@@ -22,22 +22,24 @@ export const useChat = () => {
 
 	// Connect to WebSocket when hook is first used
 	useEffect(() => {
-		// Connect to WebSocket
 		dispatch(connectWebSocket());
-
-		// Disconnect when component unmounts
+		
 		return () => {
 			dispatch(disconnectWebSocket());
 		};
 	}, [dispatch]);
 
-	// Handle sending a message
+
 	const sendUserMessage = () => {
 		if (inputMessage.trim() && connectionStatus === 'connected') {
 			dispatch(sendMessage(inputMessage));
 			setInputMessage('');
 		}
 	};
+
+	const stopResponse = () => {
+		dispatch(stopBotResponse());
+	}
 
 	const reconnect = () => {
 		dispatch(connectWebSocket());
@@ -50,6 +52,7 @@ export const useChat = () => {
 		sendUserMessage,
 		connectionStatus,
 		reconnect,
+		stopResponse,
 		isTyping,
 		isThinking,
 		error,

@@ -47,6 +47,7 @@ const Chat: React.FC = () => {
 		isTyping,
 		reconnect,
 		connectionStatus,
+		stopResponse,
 	} = useChat();
 
 	return (
@@ -63,7 +64,11 @@ const Chat: React.FC = () => {
 					onKeyPress={(e) => e.key === 'Enter' && sendUserMessage()}
 					placeholder="Type a message..."
 				/>
-				<button onClick={sendUserMessage}>Send</button>
+				{isTyping ?
+					<button onClick={stopResponse}>Stop</button>
+					:
+					<button onClick={sendUserMessage}>Send</button>
+				}
 			</div>
 			<style>{`
 				.chat-container {
@@ -72,7 +77,7 @@ const Chat: React.FC = () => {
 					padding: 20px;
 					border: 1px solid #ccc;
 					border-radius: 8px;
-					height: 600px;
+					min-height: 100vh;
 					display: flex;
 					flex-direction: column;
 				}
