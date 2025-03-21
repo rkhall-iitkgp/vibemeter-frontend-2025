@@ -1,12 +1,12 @@
-name: Lint Check
+name: CI
 
 on:
   pull_request:
     branches:
-      - main # Change this if you want linting on other branches too
+      - main
 
 jobs:
-  lint:
+  checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,11 +18,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile  # Ensures dependencies match lock file
+        run: pnpm install --frozen-lockfile
 
       - name: Run Linter
-        run: pnpm run lint  # Adjust if your script name is different
+        run: pnpm run lint
+
+      - name: Run Build
+        run: pnpm run build
