@@ -11,13 +11,13 @@ import React from 'react';
 export interface Message {
 	id: string;
 	content: string;
-	sender: 'user' | 'bot';
+	role: 'user' | 'assistant';
 	timestamp: number;
 }
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
 	return (
-		<div className={`message ${message.sender === 'user' ? 'user-message' : 'system-message'}`}>
+		<div className={`message ${message.role === 'user' ? 'user-message' : 'system-message'}`}>
 			<div className="message-content">{message.content}</div>
 			<div className="message-timestamp">
 				{new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

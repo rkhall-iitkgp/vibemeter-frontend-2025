@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface Message {
 	id: string;
 	content: string;
-	sender: 'user' | 'bot';
+	role: 'user' | 'assistant';
 	timestamp: number;
 }
 
@@ -38,7 +38,7 @@ const chatSlice = createSlice({
 			state.messages.push({
 				id: generateId(),
 				content: action.payload,
-				sender: 'user',
+				role: 'user',
 				timestamp: Date.now(),
 			});
 		},
@@ -49,7 +49,7 @@ const chatSlice = createSlice({
 			state.messages.push({
 				id: id,
 				content: '',
-				sender: 'bot',
+				role: 'assistant',
 				timestamp: Date.now(),
 			});
 		},

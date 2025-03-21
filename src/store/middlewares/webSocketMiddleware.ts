@@ -107,14 +107,15 @@ export const websocketMiddleware: Middleware<unknown, RootState> = store => next
 		// Send message through WebSocket
 		case 'ws/sendMessage': {
 			if (socket && socket.readyState === WebSocket.OPEN) {
-				const messageId = Date.now().toString();
 
 				dispatch(addUserMessage(actionObj.payload));
+
+				console.log('Sending message:', actionObj.payload);
 
 				socket.send(JSON.stringify({
 					type: 'user_message',
 					content: actionObj.payload,
-					messageId,
+					context: store.getState().chat.messages || []
 				}));
 			} else {
 				dispatch(setError('WebSocket is not connected'));
