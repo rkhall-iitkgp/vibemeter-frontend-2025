@@ -1,5 +1,5 @@
+import { LandingPage, LoginPage, Register } from "./pages";
 import { Navigate, Route, Routes } from "react-router";
-import { LandingPage, LoginPage } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
@@ -18,6 +18,7 @@ function App() {
           path="/"
           element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
         />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );
