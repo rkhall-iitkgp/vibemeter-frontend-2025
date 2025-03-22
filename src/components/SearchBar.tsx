@@ -20,7 +20,7 @@ export default function SearchBar({ onSearch, placeholder = "Search Task" }: Sea
   }
 
   return (
-    <div className="w-full max-w-xl ">
+    <div className="w-full max-w-[45%] ">
       <h1 className="text-3xl font-bold mb-4">Today's Tasks</h1>
       <form onSubmit={handleSearch} className="relative">
         <Input

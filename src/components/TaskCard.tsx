@@ -2,7 +2,9 @@
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge, BadgeProps } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge"
+import { BadgeProps } from "./ui/BadgeProps"
+
 
 // Define the types for our component
 interface Tag {
@@ -23,7 +25,7 @@ interface TaskCardProps {
 // Map of tag types to their respective variant classes
 const tagVariantMap: Record<string, BadgeProps["variant"]> = {
   overdue: "warning",
-  urgent: "default",
+  urgent: "destructive",
   important: "destructive",
   low: "secondary",
   medium: "outline",
@@ -43,12 +45,12 @@ export default function TaskCard({ id, title, description, isCompleted, tags, on
     <Card >
       <CardContent >
         <div className="flex items-start gap-3">
-          <div className="pt-1">
+          <div className="">
             <Checkbox id={`task-${id}`} checked={isCompleted} onCheckedChange={() => onToggleComplete?.(id)} />
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-semibold">{title}</h3>
-            <p className="text-muted-foreground mt-1">{description}</p>
+            <p className="text-muted-foreground ">{description}</p>
           </div>
           <div className="flex flex-wrap gap-2 justify-end">
             {tags.map((tag) => {

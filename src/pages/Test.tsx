@@ -19,9 +19,9 @@ const tasksData = [
   {
     id: "task-2",
     title: "Design User Interface",
-    description: "Create wireframes and mockups for the main dashboard",
+    description: "Create wireframes and mockups for the main dashboard Create wireframes and mockups for the main dashboard Create wireframes and mockups for the main dashboard Create wireframes and mockups for the main dashboard",
     isCompleted: false,
-    tags: [{ id: "tag-3", name: "Important", type: "important" }],
+    tags: [{ id: "tag-3", name: "In Progress", type: "inProgress" }],
   },
 ]
 
