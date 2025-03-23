@@ -2,6 +2,9 @@ import { Navigate, Route, Routes } from "react-router";
 import { LandingPage, LoginPage, Register } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const isAuthenticated = useSelector(
@@ -20,6 +23,7 @@ function App() {
         />
         <Route path="/register" element={<Register />} />
       </Routes>
+      <ToastContainer />
     </>
   );
 }
