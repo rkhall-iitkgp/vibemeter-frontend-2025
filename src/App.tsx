@@ -5,7 +5,6 @@ import { RootState } from "./store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -13,6 +12,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/register" element={<Register />} />
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
@@ -21,7 +21,6 @@ function App() {
           path="/"
           element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
         />
-        <Route path="/register" element={<Register />} />
       </Routes>
       <ToastContainer />
     </>

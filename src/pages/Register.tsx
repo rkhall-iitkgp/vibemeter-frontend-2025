@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/form";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { watch } from "fs";
+import { useNavigate } from "react-router-dom";
+//import { watch } from "fs";
 
 // Form validation schema
 const formSchema = z
@@ -38,7 +39,7 @@ const formSchema = z
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
-
+  //const navigate=useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,19 +64,24 @@ export default function Register() {
   }
   
   const userRegister=async(employee_id:string, email:string, password:string)=>{
+    
     const user={employee_id,email,password}
     try {
-      const response = await axios.post('http://ec2-65-2-151-235.ap-south-1.compute.amazonaws.com/api/auth/register', user);
-      if (response.data.code === 200) {
+      const response = await axios.post('http://10.145.147.75:8000/api/auth/register', user);
+
+      if (response.status === 201) {
+        console.log("success")
         toast.success(response.data.message);
+        // navigate("/login");
        }
-    else {
-      toast.error(response.data.message)
+      else {
+      console.log("enter")
+      toast.error(response.data.detail)
+      }
   }
-  }
-  catch(err){
-    toast.error("error");
-    console.log(err)
+  catch(error: any){
+    toast.error(error.response.data.detail)
+    console.log(error)
   }
   }
 
@@ -114,7 +120,8 @@ export default function Register() {
           <form
     onSubmit={form.handleSubmit((data) => {
       onSubmit(data); 
-      userRegister(data.employeeId, data.email, data.password); 
+      userRegister(data.employeeId, data.email, data.password);
+  
     })}
     className="space-y-6"
   >

@@ -44,12 +44,12 @@ const LoginPage: React.FC<LoginPageProps> = ({
   const userLogin=async(employee_id:string, email:string, password:string)=>{
     const user={employee_id,email,password}
     try {
-      const response = await axios.post('http://ec2-65-2-151-235.ap-south-1.compute.amazonaws.com/api/auth/login', user);
+      const response = await axios.post('http://10.145.147.75:8000/api/auth/login', user);
       if (response.data.code === 200) {
-        toast.success(response.data.message);
+        toast.success(response.data.detail);
        }
     else {
-      toast.error(response.data.message)
+      toast.error(response.data.detail)
   }
   }
   catch(err){
