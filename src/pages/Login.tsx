@@ -45,16 +45,19 @@ const LoginPage: React.FC<LoginPageProps> = ({
     const user={employee_id,email,password}
     try {
       const response = await axios.post('http://10.145.147.75:8000/api/auth/login', user);
-      if (response.data.code === 200) {
-        toast.success(response.data.detail);
+
+      if (response.status === 201) {
+        console.log("success")
+        toast.success(response.data.message);
        }
-    else {
+      else {
+      console.log("enter")
       toast.error(response.data.detail)
+      }
   }
-  }
-  catch(err){
-    toast.error("error")
-    console.log(err)
+  catch(error: any){
+    toast.error(error.response.data.detail)
+    console.log(error)
   }
   }
 
