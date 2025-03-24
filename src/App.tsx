@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import { LandingPage, LoginPage } from "./pages";
+import { DashboardPage, LoginPage } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
@@ -16,9 +16,11 @@ function App() {
         />
         <Route
           path="/"
-          element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />}
         />
+        <Route path="/dashboard" element={<DashboardPage/>} />
       </Routes>
+      
     </>
   );
 }
