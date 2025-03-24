@@ -37,6 +37,12 @@ export default tseslint.config(
           args: "after-used",
           argsIgnorePattern: "^_",
         },
+        {
+          "rules": {
+            "prettier/prettier": ["error", { "endOfLine": "auto" }]
+          }
+        }
+        
       ],
     },
   }
