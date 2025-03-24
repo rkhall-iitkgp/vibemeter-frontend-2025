@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { Search, Command, Bell, Clock } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -8,8 +9,26 @@ import { DocumentsCard } from "@/components/documents-card"
 import { ChecklistCard } from "@/components/checklist-card"
 import { ParkingSection } from "@/components/parking-section"
 import { MeetingRoomsCard } from "@/components/meeting-rooms-card"
+import { Clock } from 'lucide-react';
 
 export function DashboardContent() {
+  const [time, setTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours() % 12 || 12;
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+      setTime(`${hours}:${minutes} ${ampm}`);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
@@ -81,12 +100,20 @@ export function DashboardContent() {
             <h1 className="text-2xl font-bold text-gray-800">Good afternoon, Anakin!</h1>
             <p className="text-gray-600">You have 12 tasks pending.</p>
           </div>
+          {/* clock */}
           <div className="bg-white rounded-lg p-3 flex items-center gap-3 shadow-sm">
-            <div>
+            {/* <div>
               <p className="text-xs text-gray-500">Current time</p>
               <p className="text-2xl font-bold">12:10 PM</p>
             </div>
-            <Clock className="h-6 w-6 text-gray-400" />
+            <Clock className="h-6 w-6 text-gray-400" /> */}
+
+            <div>
+                        <div className="text-sm text-gray-500">Current time</div>
+                        <div className="text-xl font-semibold">{time}</div>
+                      </div>
+                      <Clock className="w-6 h-6 text-gray-400" />
+                      </div>
           </div>
         </div>
 
