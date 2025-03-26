@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function AttendanceCard() {
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm  ">
       <CardHeader className="flex flex-row items-center justify-between pb-2 pt-6 px-6">
         <CardTitle className="text-lg font-semibold">Attendance</CardTitle>
         <Button variant="link" className="text-teal-500 p-0 h-auto font-medium">
@@ -45,14 +45,14 @@ export function AttendanceCard() {
               </div>
             </div>
             <svg className="w-full h-full" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="16" fill="none" stroke="#f0f0f0" strokeWidth="2"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" stroke="#f0f0f0" strokeWidth="3"></circle>
               <circle
                 cx="18"
                 cy="18"
                 r="16"
                 fill="none"
                 stroke="#3b82f6"
-                strokeWidth="2"
+                strokeWidth="3"
                 strokeDasharray="100"
                 strokeDashoffset="25"
                 strokeLinecap="round"
