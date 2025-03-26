@@ -38,6 +38,31 @@ const TablePage: React.FC = () => {
       employeeId: "EMP0007",
       team: "People's Experience Team"
     },
+    {
+      id: 2,
+      name: "Annette Black",
+      moraleScore: 72,
+      engagementScore: 85,
+      retentionRisk: 15,
+      cultureScore: 78,
+      hrIntervention: "High",
+      date: "12 Jan 2023",
+      employeeId: "EMP0007",
+      team: "People's Experience Team"
+    },
+    {
+      id: 3,
+      name: "Annette Black",
+      moraleScore: 72,
+      engagementScore: 85,
+      retentionRisk: 15,
+      cultureScore: 78,
+      hrIntervention: "Medium",
+      date: "12 Jan 2023",
+      employeeId: "EMP0007",
+      team: "People's Experience Team"
+    },
+
   ];
 
   // Sorting logic
