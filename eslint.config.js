@@ -84,6 +84,7 @@ export default tseslint.config(
         {
           endOfLine: "auto",
         },
+        
       ],
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
