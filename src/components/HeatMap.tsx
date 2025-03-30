@@ -85,18 +85,24 @@ const HeatmapPreview = () => {
   const getDateForPosition = (month: number, day: number, week: number) => {
     // Create a date for the first day of the selected month
     const date = new Date(2025, month, 1);
-
-    // Find the first occurrence of the selected day of week
-    const firstDayOfWeek = day;
-    const firstDayDate = new Date(date);
-    while (firstDayDate.getDay() !== firstDayOfWeek) {
-      firstDayDate.setDate(firstDayDate.getDate() + 1);
+    
+    // Get days in month
+    const daysInMonth = new Date(2025, month + 1, 0).getDate();
+    
+    // Get the day of week of the first day of the month (0-6)
+    const firstDayOfMonth = date.getDay();
+    
+    // Calculate the date from week and day position
+    const dayOffset = day - firstDayOfMonth + (week * 7);
+    
+    if (dayOffset < 0 || dayOffset >= daysInMonth) {
+      // This position doesn't exist in this month
+      return new Date(2025, month, 1); // Return first day as fallback
     }
-
-    // Add weeks
-    const targetDate = new Date(firstDayDate);
-    targetDate.setDate(targetDate.getDate() + week * 7);
-
+    
+    // Set the actual date
+    const targetDate = new Date(2025, month, 1 + dayOffset);
+    
     return targetDate;
   };
 
@@ -134,7 +140,12 @@ const HeatmapPreview = () => {
     processedData.forEach((day) => {
       const month = day.date.getMonth();
       const dayOfWeek = day.date.getDay();
-      const weekOfMonth = Math.floor((day.date.getDate() - 1) / 7);
+      
+      // Calculate the position of the day within the month's grid
+      const firstDayOfMonth = new Date(2025, month, 1).getDay();
+      const dayOfMonth = day.date.getDate();
+      const dayPosition = dayOfMonth - 1 + (firstDayOfMonth - 0); 
+      const weekOfMonth = Math.floor(dayPosition / 7);
 
       if (!data[month]) data[month] = {};
       if (!data[month][dayOfWeek]) data[month][dayOfWeek] = {};
@@ -190,19 +201,31 @@ const HeatmapPreview = () => {
 
   return (
     <TooltipProvider>
-      <Card className="w-250 mx-auto my-5 shadow-md">
+      <Card className="w-254 mx-auto my-5 shadow-md">
         <CardContent className="p-6">
           <div>
             {/* Month Headers */}
-            <div className="flex justify-center w-1 mx-auto">
-              {monthNames.map((month, index) => (
-                <Label
-                  key={index}
-                  className="flex-1 text-center text-sm font-medium text-gray-600 mx-6 mb-3"
-                >
-                  {month}
+            {/* Month Headers - Two-section approach */}
+            <div className="flex items-end mb-2">
+              {/* January header - positioned directly above first square */}
+              <div className="flex">
+                <Label className="w-8 text-sm font-medium text-gray-600"></Label>
+                <Label className="text-center text-sm font-medium text-gray-600 w-20 ml-1">
+                  {monthNames[0]}
                 </Label>
-              ))}
+              </div>
+              
+              {/* Other months with uniform spacing */}
+              <div className="flex ml-1">
+                {monthNames.slice(1).map((month, index) => (
+                  <Label
+                    key={index}
+                    className="text-center text-sm font-medium text-gray-600 w-20 mx-0.3"
+                  >
+                    {month}
+                  </Label>
+                ))}
+              </div>
             </div>
 
             {/* Heatmap Grid */}
@@ -213,36 +236,59 @@ const HeatmapPreview = () => {
                     {dayLabels[day]}
                   </Label>
                   <div className="flex gap-0.5">
-                    {" "}
                     {/* Reduced gap between grid items */}
                     {monthNames.map((_, monthIndex) => (
-                      <div key={monthIndex} className="flex gap-0.5">
-                        {" "}
+                      <div key={monthIndex} className="flex gap-0.5 items-start">
                         {/* Reduced gap between months */}
-                        {Array.from({ length: 4 }).map((_, weekIndex) => {
-                          const dayData =
-                            organizedData[monthIndex]?.[day]?.[weekIndex];
-
-                          return (
-                            <Tooltip key={weekIndex}>
-                              <TooltipTrigger asChild>
-                                <div
-                                  className={`w-4 h-4 cursor-pointer transition-all duration-200 hover:scale-110 hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 ${dayData ? getIntensityColor(dayData.intensityLevel) : "bg-gray-100"}`}
-                                  onClick={() => {
-                                    setSelectedPosition({
-                                      month: monthIndex,
-                                      day,
-                                      week: weekIndex,
-                                    });
-                                  }}
-                                />
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-white shadow-md border border-gray-200 rounded-lg z-50 animate-in fade-in-50 duration-200">
-                                {formatTooltipContent(dayData)}
-                              </TooltipContent>
-                            </Tooltip>
-                          );
-                        })}
+                        {(() => {
+                          const daysInMonth = new Date(2025, monthIndex + 1, 0).getDate();
+                          const firstDayOfMonth = new Date(2025, monthIndex, 1).getDay();
+                          const weeksInMonth = Math.ceil((daysInMonth + firstDayOfMonth) / 7);
+                          
+                          // Create an array of valid day positions for this day of week
+                          const validDayPositions = [];
+                          for (let week = 0; week < weeksInMonth; week++) {
+                            const dayPosition = (week * 7) + day - firstDayOfMonth;
+                            if (dayPosition >= 0 && dayPosition < daysInMonth) {
+                              // Calculate the actual date for this position
+                              const date = new Date(2025, monthIndex, 1 + dayPosition);
+                              
+                              // Skip December 31st
+                              if (date.getMonth() === 11 && date.getDate() === 31) {
+                                continue;
+                              }
+                              
+                              validDayPositions.push({ week, dayPosition });
+                            }
+                          }
+                          
+                          // Return only the valid day positions
+                          return validDayPositions.map(({ week }) => {
+                            const dayData = organizedData[monthIndex]?.[day]?.[week];
+                            
+                            return (
+                              <Tooltip key={week}>
+                                <TooltipTrigger asChild>
+                                  <div
+                                    className={`w-4 h-4 cursor-pointer transition-all duration-200 hover:scale-110 hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 ${
+                                      dayData ? getIntensityColor(dayData.intensityLevel) : "bg-gray-100"
+                                    }`}
+                                    onClick={() => {
+                                      setSelectedPosition({
+                                        month: monthIndex,
+                                        day,
+                                        week,
+                                      });
+                                    }}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent className="bg-white shadow-md border border-gray-200 rounded-lg z-50 animate-in fade-in-50 duration-200">
+                                  {formatTooltipContent(dayData)}
+                                </TooltipContent>
+                              </Tooltip>
+                            );
+                          });
+                        })()}
                       </div>
                     ))}
                   </div>
@@ -263,7 +309,7 @@ const HeatmapPreview = () => {
                     )
                   : getCurrentDateInfo()}
               </Label>
-              <div className="px-14 flex items-center gap-2">
+              <div className="px-3 flex items-center gap-1">
                 <Label className="text-sm text-gray-600">Less</Label>
                 <div className="w-4 h-4 bg-white border border-gray-200" />
                 <div className="w-4 h-4 bg-green-100" />
