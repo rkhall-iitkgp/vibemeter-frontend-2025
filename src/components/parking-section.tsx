@@ -42,7 +42,6 @@ export function ParkingSection() {
   return (
     <Card className="shadow-sm h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2 pt-6 px-6">
-        <CardTitle className="text-lg font-semibold">Live Parking</CardTitle>
         <Button variant="link" className="text-teal-500 p-0 h-auto font-medium">
           View Stats
         </Button>
@@ -50,12 +49,11 @@ export function ParkingSection() {
       <CardContent className="px-6 pb-6">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-medium">Main Parking Area</h3>
             <div className="flex items-center gap-1 text-gray-500 text-sm">
-              <Car className="h-4 w-4" />
+              {/* <Car className="h-4 w-4" />
               <span>
                 {occupiedSpots}/{totalSpots}
-              </span>
+              </span> */}
             </div>
           </div>
           <div className="border-t-2 border-teal-500 mb-3"></div>

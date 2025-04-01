@@ -39,20 +39,14 @@ export function Sidebar() {
   return (
     <div className="w-20 bg-white border-r flex flex-col">
       <div className="p-4 border-b">
-        <div className="h-10 w-10 bg-teal-500 text-white flex items-center justify-center rounded">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-        </div>
+      <div className="h-12 w-12 text-white flex items-center justify-center rounded">
+          <img src="/deloitte.svg" alt="Deloitte Logo" className="h-12 w-12" />
+      </div>
       </div>
       <div className="flex-1 flex flex-col">
         <SidebarItem icon={LayoutDashboard} label="Dashboard" href="/" active />
-        <SidebarItem icon={Users} label="Users" href="/users" />
         <SidebarItem icon={CheckSquare} label="Checklist" href="/checklist" />
         <SidebarItem icon={Calendar} label="Calendar" href="/calendar" />
-        <SidebarItem icon={Car} label="Parkings" href="/parkings" />
-        <SidebarItem icon={UserPlus} label="Recruit" href="/recruit" />
-        <SidebarItem icon={MessageSquare} label="Messages" href="/messages" />
         <SidebarItem icon={HelpCircle} label="Help" href="/help" />
         <SidebarItem icon={Settings} label="Settings" href="/settings" />
       </div>

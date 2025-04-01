@@ -2,10 +2,9 @@
 import Navbar from "./Navbar"
 import { Clock } from "lucide-react"
 import { AttendanceCard } from "@/components/attendence-card"
-import { DocumentsCard } from "@/components/documents-card"
+import  CalendarBox  from "@/components/CalendarBox"
 import { ChecklistCard } from "@/components/checklist-card"
-import { ParkingSection } from "@/components/parking-section"
-import { MeetingRoomsCard } from "@/components/meeting-rooms-card"
+import  HeatMap  from "@/components/HeatMap"
 import { useEffect,useState } from "react"
 export function DashboardContent() {
 const [time, setTime] = useState('');
@@ -50,9 +49,9 @@ return (
                 <div className="col-span-2 flex flex-col gap-6">
                     <div className="grid grid-cols-2 gap-6">
                         <AttendanceCard />
-                        <DocumentsCard />
+                        <CalendarBox />
                     </div>
-                    <ParkingSection />
+                    <HeatMap />
                 </div>
 
                 {/* Right Column */}
