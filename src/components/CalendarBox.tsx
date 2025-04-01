@@ -61,7 +61,7 @@ const Calendar : React.FC = () => {
               key={day.toString()} 
               className={`relative flex flex-col items-center justify-center p-2 h-10 w-10 rounded-md text-sm transition 
                 ${isSameMonth(day, currentMonth) ? "text-gray-900" : "text-gray-400"} 
-                ${isToday(day) ? "bg-blue-500 text-white font-semibold" : "hover:bg-gray-200"}
+                ${isToday(day) ? "bg-[#80C342] text-white font-semibold" : "hover:bg-gray-200"}
               `}
             >
               {format(day, "d")}

@@ -1,7 +1,7 @@
 "use client"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent,CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useState, useMemo } from "react"
 
@@ -146,6 +146,7 @@ const HeatmapPreview = () => {
   return (
     <TooltipProvider>
       <Card className="w-full shadow-md">
+        <CardTitle className="mx-7 my-0 text-lg font-semibold">Your Activity</CardTitle>
         <CardContent className="p-3 overflow-x-auto max-w-full">
           <div className="overflow-x-auto">
             {/* Adjusted Month Headers to align with heatmap */}
