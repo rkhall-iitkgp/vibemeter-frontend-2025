@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import { DashboardPage, LoginPage,Graph  } from "./pages";
+import { DashboardPage, LoginPage,Graph, AdminDashboard  } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
@@ -20,6 +20,7 @@ function App() {
         />
         <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="/graph" element= {<Graph/>} />
+        <Route path="/admin" element={<AdminDashboard/>} />
       </Routes>
       
     </>
