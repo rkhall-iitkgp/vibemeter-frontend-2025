@@ -94,25 +94,7 @@ const generateDummyData = (): DataPoint[] => {
 // Generate once at component initialization
 const allDummyData = generateDummyData();
 
-const FilterCheckbox: React.FC<FilterCheckboxProps> = ({ id, label, defaultChecked, onChange }) => {
-  // Remove the internal state that's causing the sync issue
-  return (
-    <div className="flex items-center space-x-2">
-      <Checkbox 
-        id={id} 
-        defaultChecked={defaultChecked}
-        onCheckedChange={(checked) => onChange(id, checked as boolean)}
-        className="border-[#80C342] data-[state=checked]:bg-[#80C342] data-[state=checked]:border-[#80C342]"
-      />
-      <label
-        htmlFor={id}
-        className="text-sm font-medium leading-none text-gray-700"
-      >
-        {label}
-      </label>
-    </div>
-  );
-};
+
 
 const MoraleChart: React.FC<MoraleChartProps> = ({
   data = allDummyData,
