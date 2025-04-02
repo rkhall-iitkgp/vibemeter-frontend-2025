@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { LandingPage, LoginPage , AdminDashboard} from "./pages";
+import { LandingPage, LoginPage , AdminDashboard, QuestionsPage} from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
@@ -22,6 +22,10 @@ function App() {
         <Route
           path="/adminDashboard"
           element={isAuthenticated ? <Navigate to="/AdminDashboard" /> : <AdminDashboard/>}
+        />
+        <Route
+          path="/Questions"
+          element={isAuthenticated ? <Navigate to="/QuestionsPage" /> : <QuestionsPage/>}
         />
       </Routes>
     </>
