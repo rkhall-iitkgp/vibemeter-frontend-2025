@@ -76,7 +76,7 @@ const Questions = () => {
             <h1 className="text-3xl sm:text-4xl font-medium">Questions</h1>
             <p className="text-gray-500">Some description</p>
           </div>
-          <button className="bg-[#80C342] text-white px-3 py-2 rounded-md flex items-center text-sm sm:text-base w-full sm:w-48 justify-center sm:justify-start">
+          <button className="bg-[#80C342] text-white px-5 py-2 rounded-md flex items-center text-sm sm:text-base w-full sm:w-48 justify-center sm:justify-start hover:cursor-pointer">
             <Plus size={18} className="mr-2" />
             Create Question
           </button>
