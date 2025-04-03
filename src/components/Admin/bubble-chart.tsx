@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 
 const BubbleChartPreview = ({ className = "" }) => {
   const chartRef = useRef(null);
+  const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   
   // Function to update dimensions
@@ -17,12 +18,18 @@ const BubbleChartPreview = ({ className = "" }) => {
     // Initialize dimensions
     updateDimensions();
     
-    // Add resize listener
-    window.addEventListener('resize', updateDimensions);
+    // Use ResizeObserver instead of window event for better performance
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    if (chartRef.current) {
+      resizeObserver.observe(chartRef.current);
+    }
     
     // Cleanup
     return () => {
-      window.removeEventListener('resize', updateDimensions);
+      if (chartRef.current) {
+        resizeObserver.unobserve(chartRef.current);
+      }
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -31,7 +38,9 @@ const BubbleChartPreview = ({ className = "" }) => {
     
     // Clear any existing content
     d3.select(chartRef.current).selectAll('svg').remove();
-    d3.select(chartRef.current).selectAll('.tooltip').remove();
+    
+    // Also remove any existing tooltips
+    d3.select(containerRef.current).selectAll('.bubble-tooltip').remove();
     
     // Chart dimensions - responsive
     const width = dimensions.width;
@@ -91,10 +100,10 @@ const BubbleChartPreview = ({ className = "" }) => {
     const bubbleGroup = svg.append('g')
       .attr('transform', `translate(${centerX}, ${centerY})`);
       
-    // Create tooltip div with modern styling
-    const tooltip = d3.select(chartRef.current)
+    // Create tooltip div that's contained within the component
+    const tooltip = d3.select(containerRef.current)
       .append('div')
-      .attr('class', 'tooltip')
+      .attr('class', 'bubble-tooltip')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
       .style('background-color', 'white')
@@ -105,7 +114,7 @@ const BubbleChartPreview = ({ className = "" }) => {
       .style('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)')
       .style('max-width', '220px')
       .style('pointer-events', 'none')
-      .style('z-index', '10');
+      .style('z-index', '100');
       
     // Create bubble layout - sized to fit within the center area
     const packSize = Math.min(width, height) * 0.75;
@@ -146,12 +155,24 @@ const BubbleChartPreview = ({ className = "" }) => {
       .style('stroke-width', 1)
       .style('cursor', 'pointer')
       .on('mouseover', function(event, d) {
+        // Stop event propagation to prevent other elements from reacting
+        event.stopPropagation();
+        
         d3.select(this)
           .style('stroke', '#333')
           .style('stroke-width', 2)
           .style('opacity', 1);
           
-        const [x, y] = d3.pointer(event, chartRef.current);
+        // Get container's position for proper tooltip positioning
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const [mouseX, mouseY] = d3.pointer(event);
+        
+        // Get chart's position
+        const chartRect = chartRef.current.getBoundingClientRect();
+        
+        // Calculate position relative to the container
+        const x = chartRect.left - containerRect.left + mouseX;
+        const y = chartRect.top - containerRect.top + mouseY;
         
         tooltip
           .html(`
@@ -165,14 +186,56 @@ const BubbleChartPreview = ({ className = "" }) => {
           .style('visibility', 'visible')
           .style('left', `${x + 10}px`)
           .style('top', `${y + 10}px`);
+          
+        // Ensure tooltip stays within container bounds
+        const tooltipRect = tooltip.node().getBoundingClientRect();
+        
+        // Check right boundary
+        if (x + tooltipRect.width > containerRect.width - 20) {
+          tooltip.style('left', `${x - tooltipRect.width - 10}px`);
+        }
+        
+        // Check bottom boundary
+        if (y + tooltipRect.height > containerRect.height - 20) {
+          tooltip.style('top', `${y - tooltipRect.height - 10}px`);
+        }
       })
       .on('mousemove', function(event) {
-        const [x, y] = d3.pointer(event, chartRef.current);
+        // Stop event propagation
+        event.stopPropagation();
+        
+        // Get container's position
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const chartRect = chartRef.current.getBoundingClientRect();
+        
+        // Calculate mouse position relative to the chart
+        const [mouseX, mouseY] = d3.pointer(event);
+        
+        // Calculate position relative to the container
+        const x = chartRect.left - containerRect.left + mouseX;
+        const y = chartRect.top - containerRect.top + mouseY;
+        
+        let tooltipX = x + 10;
+        let tooltipY = y + 10;
+        
+        // Check boundaries and adjust if necessary
+        const tooltipRect = tooltip.node().getBoundingClientRect();
+        if (tooltipX + tooltipRect.width > containerRect.width - 20) {
+          tooltipX = x - tooltipRect.width - 10;
+        }
+        
+        if (tooltipY + tooltipRect.height > containerRect.height - 20) {
+          tooltipY = y - tooltipRect.height - 10;
+        }
+        
         tooltip
-          .style('left', `${x + 10}px`)
-          .style('top', `${y + 10}px`);
+          .style('left', `${tooltipX}px`)
+          .style('top', `${tooltipY}px`);
       })
-      .on('mouseout', function() {
+      .on('mouseout', function(event) {
+        // Stop event propagation
+        event.stopPropagation();
+        
         d3.select(this)
           .style('stroke', 'white')
           .style('stroke-width', 1)
@@ -248,10 +311,22 @@ const BubbleChartPreview = ({ className = "" }) => {
       .style('fill', '#555')
       .text(d => d.r > 15 ? d.data.value : ''); // Only show value for bubbles larger than 15px radius
       
+    // Add click event listener to the container to hide tooltip when clicking outside
+    d3.select('body').on('click.bubble-tooltip-hide', () => {
+      tooltip.style('visibility', 'hidden');
+    });
+      
   }, [dimensions]);
   
+  // Clean up global event listener when component unmounts
+  useEffect(() => {
+    return () => {
+      d3.select('body').on('click.bubble-tooltip-hide', null);
+    };
+  }, []);
+  
   return (
-    <div className={`w-full ${className}`}>
+    <div ref={containerRef} className={`w-full relative ${className}`}>
       {/* Header directly inside component for layout consistency */}
       <div className="p-4 sm:p-6">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Major Issues</h2>
