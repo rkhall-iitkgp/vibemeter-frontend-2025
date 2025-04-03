@@ -11,7 +11,7 @@ const BubbleChartPreview = () => {
     d3.select(chartRef.current).selectAll('*').remove();
     
     // Chart dimensions
-    const fullWidth = 1000; // Define the width of the chart
+    const fullWidth = 1470; // Define the width of the chart
     const width = fullWidth;
     const fullHeight = 600; // Define the height of the chart
     const height = fullHeight;
@@ -21,36 +21,41 @@ const BubbleChartPreview = () => {
       { name: 'Content', value: 12, color: '#4472C4', category: 'Content', description: 'Content management and creation tools' },
       { name: 'Front End', value: 6, color: '#8FAADC', category: 'Front End', description: 'User interface technologies and frameworks' },
       { name: 'Languages / Frameworks', value: 16, color: '#A9CCE3', category: 'Languages / Frameworks', description: 'Programming languages and development frameworks' },
-      { name: 'JavaScript', value: 10, color: '#D6EAF8', category: 'Javascript', description: 'JavaScript libraries and tools' },
+      { name: 'JavaScript', value: 9, color: '#D6EAF8', category: 'Javascript', description: 'JavaScript libraries and tools' },
       { name: 'DevOps', value: 2, color: '#D85A27', category: 'DevOps', description: 'Development operations tools and practices' },
-      { name: 'Databases', value: 15, color: 'grey', category: 'Databases', description: 'Database technologies and management systems' },
+      { name: 'Databases', value: 10, color: 'grey', category: 'Databases', description: 'Database technologies and management systems' },
       { name: 'Misc', value: 5, color: '#F4B183', category: 'Misc', description: 'Miscellaneous technologies and tools' },
       { name: 'Mobile', value: 8, color: '#FADBC8', category: 'Mobile', description: 'Mobile development platforms and tools' },
-      { name: 'Conversion', value: 9, color: '#4CAF50', category: 'Conversion', description: 'Conversion optimization technologies' },
+      { name: 'Conversion', value: 7, color: '#4CAF50', category: 'Conversion', description: 'Conversion optimization technologies' },
       { name: 'Testing', value: 6, color: '#81C784', category: 'Testing', description: 'Testing tools and frameworks' },
       { name: 'Management', value: 5, color: '#A5D6A7', category: 'Management', description: 'Project and product management tools' },
       { name: 'AI', value: 3, color: '#C8E6C9', category: 'AI', description: 'Artificial intelligence and machine learning technologies' },
       { name: 'API', value: 1, color: '#673AB7', category: 'API', description: 'API development and management tools' },
       { name: 'Commerce', value: 2, color: '#9575CD', category: 'Commerce', description: 'E-commerce platforms and tools' },
-      { name: 'Data', value: 1, color: '#D1C4E9', category: 'Data', description: 'Data processing and analytics tools' },
+      { name: 'Data', value: 6, color: '#D1C4E9', category: 'Data', description: 'Data processing and analytics tools' },
       { name: 'CRM', value: 1, color: '#E9E3F4', category: 'CRM', description: 'Customer relationship management systems' }
     ];
 
-    // Create SVG element
+    // Create SVG element with explicit dimensions
     const svg = d3.select(chartRef.current)
       .append('svg')
       .attr('width', '100%')
       .attr('height', '100%')
       .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
       .style('background-color', 'white');
+    
+    // Create a container for background elements
+    const background = svg.append('g')
+      .attr('class', 'background');
       
-    // Add horizontal grid lines first (before appending the group for bubbles)
+    // Add horizontal grid lines
     const numLines = 10;
     const lineSpacing = height / numLines;
     
     for (let i = 1; i < numLines; i++) {
-      svg.append('line')
-        .attr('x1', 1)
+      background.append('line')
+        .attr('x1', 0)
         .attr('y1', i * lineSpacing)
         .attr('x2', width)
         .attr('y2', i * lineSpacing)
@@ -58,8 +63,8 @@ const BubbleChartPreview = () => {
         .style('stroke-width', 1);
     }
     
-    // Add a light gray border to the chart
-    svg.append('rect')
+    // Add a light gray border to the chart - ensure it covers full width and height
+    background.append('rect')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
@@ -271,11 +276,11 @@ const BubbleChartPreview = () => {
   }, []);
   
   return (
-    <div className="flex flex-col items-center w-full bg-white rounded-lg shadow-lg " >
+    <div className="flex flex-col items-center w-full bg-white rounded-lg shadow-lg">
       <div 
         ref={chartRef} 
-        className="flex relative w-full bg-white rounded-lg shadow-lg items-center justify-center" 
-        style={{ height: '600px', width: 'w' }}
+        className="relative w-full h-full bg-white rounded-lg shadow-lg flex items-center justify-center" 
+        style={{ height: '600px' }}
       />
     </div>
   );
