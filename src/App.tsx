@@ -5,7 +5,7 @@ import { RootState } from "./store";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
 import EmployeeList from "./pages/employeeList";
-
+import Questions from "./pages/Questions";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -25,6 +25,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage/>} />
         <Route path="/graph" element= {<Graph/>} />
         <Route path="/admin" element={<AdminDashboard/>} />
+        <Route path="/questions" element={<AdminLayout><Questions /></AdminLayout>} />
         <Route path="/focus-groups" element={<AdminLayout><FocusGroupPage /></AdminLayout>} />
         <Route path="/focus-groups/:id" element={<AdminLayout><FocusGroupPage /></AdminLayout>} />
         <Route path="/employees" element={<AdminLayout><EmployeeList /></AdminLayout>} />

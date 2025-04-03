@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { FocusGroup } from '../../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 interface FocusGroupCardProps {
   focusGroup: FocusGroup;
