@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
+// Dummy employee data
 const employees = [
   {
     id: "EM1234564",
@@ -35,14 +36,67 @@ const employees = [
       { label: "Risk Retention", value: "-12%", color: "bg-pink-200 text-pink-800" },
     ],
   },
+  {
+    id: "EM3456789",
+    name: "Suresh",
+    avatar: "/avatars/suresh.png",
+    group: "Leadership Training #GRP12345",
+    metrics: [
+      { label: "Morality", value: "-28%", color: "bg-yellow-200 text-yellow-800" },
+      { label: "Engagement", value: "-40%", color: "bg-blue-200 text-blue-800" },
+    ],
+  },
+  // {
+  //   id: "EM2345678",
+  //   name: "Aditi",
+  //   avatar: "/avatars/aditi.png",
+  //   group: "Leadership Training #GRP12345",
+  //   metrics: [
+  //     { label: "Morality", value: "-28%", color: "bg-yellow-200 text-yellow-800" },
+  //     { label: "Engagement", value: "-40%", color: "bg-blue-200 text-blue-800" },
+  //   ],
+  // }
 ];
+
+// EmployeeCard Component
+const EmployeeCard = ({ employee }: { employee: typeof employees[0] }) => {
+  const getInitials = (name: string) => name.charAt(0).toUpperCase();
+
+  return (
+    <Card className="border border-gray-200 rounded-lg shadow-sm mb-2">
+      <CardContent className="py-1 px-3 sm:px-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Avatar className="w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-100">
+            <AvatarImage src={employee.avatar} alt={employee.name} />
+            <AvatarFallback className="bg-gray-200 text-gray-700 text-xs">
+              {getInitials(employee.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-grow">
+            <div className="flex justify-between items-baseline">
+              <p className="font-semibold text-gray-900 text-sm">{employee.name}</p>
+              <p className="text-xs text-gray-400">{employee.id}</p>
+            </div>
+            <p className="text-xs text-gray-500 truncate max-w-[180px] sm:max-w-none">{employee.group}</p>
+          </div>
+        </div>
+        <div className="mt-1 flex gap-1 flex-wrap">
+          {employee.metrics.map((metric, idx) => (
+            <span
+              key={idx}
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${metric.color}`}
+            >
+              {metric.label} {metric.value}
+            </span>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function HighConcernEmployees({ className = "" }) {
   const [month, setMonth] = useState("March");
-
-  const getInitials = (name: string) => {
-    return name.charAt(0).toUpperCase();
-  };
 
   return (
     <div className={`p-4 sm:p-5 bg-white rounded-lg h-full flex flex-col ${className}`}>
@@ -58,67 +112,10 @@ export default function HighConcernEmployees({ className = "" }) {
         </Button>
       </div>
 
-      {/* Avatar showcase section */}
-      <div className="flex justify-center items-end mb-4 sm:mb-6 px-2">
-        {employees.slice(0, 3).map((employee, index) => (
-          <div 
-            key={employee.id} 
-            className={`flex flex-col items-center ${
-              index === 0 ? 'mr-3 sm:mr-4' : 
-              index === 1 ? 'z-10 mx-3 sm:mx-4' : 
-              'ml-3 sm:ml-4'
-            }`}
-          >
-            <Avatar 
-              className={`
-                ${index === 1 ? 'w-20 h-20 sm:w-28 sm:h-28 border-2 border-white shadow-lg' : 'w-16 h-16 sm:w-20 sm:h-20'}
-                transition-transform hover:scale-105 duration-200
-              `}
-            >
-              <AvatarImage src={employee.avatar} alt={employee.name} />
-              <AvatarFallback className="bg-gray-300 text-gray-700 text-base sm:text-lg font-medium">
-                {getInitials(employee.name)}
-              </AvatarFallback>
-            </Avatar>
-            <p className="text-xs sm:text-sm font-semibold text-gray-900 mt-2 text-center">{employee.name}</p>
-            <p className="text-xs text-gray-500 text-center hidden sm:block mt-0.5">{employee.group}</p>
-            <p className="text-xs text-gray-500 text-center sm:hidden mt-0.5">{employee.id}</p>
-          </div>
-        ))}
-      </div>
-
       {/* Employee cards section */}
-      <div className="overflow-y-auto max-h-[calc(100vh-290px)] sm:max-h-[calc(100%-200px)] pr-1 flex-grow">
-        {employees.map((employee, index) => (
-          <Card key={employee.id} className={`border border-gray-200 rounded-lg shadow-sm ${index < employees.length - 1 ? 'mb-2.5' : ''}`}>
-            <CardContent className="py-2 px-4 sm:px-5">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <Avatar className="w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-100">
-                  <AvatarImage src={employee.avatar} alt={employee.name} />
-                  <AvatarFallback className="bg-gray-200 text-gray-700 text-xs">
-                    {getInitials(employee.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-grow">
-                  <div className="flex justify-between items-baseline">
-                    <p className="font-semibold text-gray-900 text-sm">{employee.name}</p>
-                    <p className="text-xs text-gray-400">{employee.id}</p>
-                  </div>
-                  <p className="text-xs text-gray-500 truncate max-w-[180px] sm:max-w-none">{employee.group}</p>
-                </div>
-              </div>
-              <div className="mt-1.5 flex gap-1.5 flex-wrap">
-                {employee.metrics.map((metric, idx) => (
-                  <span
-                    key={idx}
-                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${metric.color}`}
-                  >
-                    {metric.label} {metric.value}
-                  </span>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+      <div className="overflow-y-auto max-h-[calc(100vh-200px)] pr-1 flex-grow">
+        {employees.map((employee) => (
+          <EmployeeCard key={employee.id} employee={employee} />
         ))}
       </div>
     </div>

@@ -43,7 +43,7 @@ const Sidebar = () => {
   return (
     <div className="w-64 h-screen bg-white shadow-md flex flex-col">
       {/* Logo Section */}
-      <div className="flex items-center text-2xl font-bold mb-6 px-4 pt-4">
+      <div className="flex items-center text-2xl font-bold mb-4 px-4 pt-4">
         <span className="text-black">Deloitte</span>
         <span className="text-[#80C342]">.</span>
       </div>
@@ -51,9 +51,9 @@ const Sidebar = () => {
       {/* Menu Sections */}
       <div className="flex-grow overflow-y-auto px-4">
         {menuSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="mb-6">
+          <div key={sectionIndex} className="mb-4">
             {/* Section Title */}
-            <p className="text-gray-500 mb-3 text-sm font-semibold">{section.title}</p>
+            <p className="text-gray-500 text-sm font-semibold">{section.title}</p>
             {/* Section Items */}
             <ul>
               {section.items.map((item, itemIndex) => (
