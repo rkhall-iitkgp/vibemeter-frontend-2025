@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChevronDown, Filter } from "lucide-react"
+import { HorizontalRecognitionCard } from "@/components/recog-component2"
 
 export default function TestPage() {
   const [sortOpen, setSortOpen] = React.useState(false)
@@ -76,7 +77,7 @@ export default function TestPage() {
             <PopoverContent className="w-[200px] p-3" align="end">
               <RadioGroup
                 defaultValue="Priority"
-                onValueChange={(value) => {
+                onValueChange={(value: React.SetStateAction<string>) => {
                   setSortBy(value)
                   setSortOpen(false)
                 }}
@@ -169,6 +170,26 @@ export default function TestPage() {
             tags={program.tags}
           />
         ))}
+      </div>
+      <div>
+        
+        <HorizontalRecognitionCard
+          title="Recognition Program"
+          createdDate="March 17, 2025"
+          description="Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth"
+          targetGroup="Leadership Group"
+          groupId="#GRP2345"
+          tags={["Morality", "Engagement"]}
+        />
+
+        <HorizontalRecognitionCard
+          title="Recognition Program"
+          createdDate="March 17, 2025"
+          description="Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth"
+          targetGroup="Leadership Group"
+          groupId="#GRP2345"
+          tags={["Morality", "Engagement"]}
+        />
       </div>
     </div>
   )
