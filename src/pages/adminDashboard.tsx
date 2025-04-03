@@ -1,9 +1,9 @@
 import { useState } from "react";
-import VibemeterChart from "@/components/average-vibemeter-score";
-import HighConcernEmployees from "@/components/high-concern-employees";
-import Sidebar from "@/components/sidenav";
-import EmployeeSatisfactionGauge from "@/components/employee-satisfaction";
-import BubbleChartPreview from "@/components/bubble-chart";
+import VibemeterChart from "@/components/Admin/average-vibemeter-score";
+import HighConcernEmployees from "@/components/Admin/high-concern-employees";
+import Sidebar from "@/components/Admin/sidenav";
+import EmployeeSatisfactionGauge from "@/components/Admin/employee-satisfaction";
+import BubbleChartPreview from "@/components/Admin/bubble-chart";
 import { FaChartBar } from "react-icons/fa";
 
 export default function AdminDashboard() {
