@@ -3,6 +3,7 @@ import { LandingPage, LoginPage } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
+
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
