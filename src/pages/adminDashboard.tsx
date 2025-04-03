@@ -14,13 +14,13 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar - fixed on desktop, toggleable on mobile */}
       <div className="fixed inset-y-0 left-0 z-50 md:relative md:flex">
-        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activeTab="Overview" />
       </div>
 
       {/* Main content area */}
       <div className="flex-1 overflow-auto">
         {/* Header - now in gray area */}
-        <header className="sticky top-0 bg-gray-100 z-10 py-4 px-6">
+        <header className=" bg-gray-100 z-10 py-4 px-6">
           <div className="flex items-center gap-3">
             <span className="text-[#80C342]">
               <FaChartBar size={44} />

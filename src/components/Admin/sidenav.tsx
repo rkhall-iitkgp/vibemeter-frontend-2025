@@ -1,11 +1,39 @@
-import React, { useState } from "react";
-import { FaChartBar, FaUsers, FaComments, FaClipboardList, FaSearch, FaQuestionCircle, FaRocket, FaLifeRing, FaFileAlt } from "react-icons/fa";
+import React from "react";
+import {
+  FaChartBar,
+  FaUsers,
+  FaComments,
+  FaClipboardList,
+  FaSearch,
+  FaQuestionCircle,
+  FaRocket,
+  FaLifeRing,
+  FaFileAlt,
+} from "react-icons/fa";
 
-const menuSections = [
+type MenuItem = {
+  name: string;
+  icon: JSX.Element;
+  link: string;
+  notifications?: number; // Optional notifications count
+};
+
+type MenuSection = {
+  title: string;
+  items: MenuItem[];
+};
+
+type SidebarProps = {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  menuSections?: MenuSection[];
+};
+
+const defaultMenuSections: MenuSection[] = [
   {
     title: "Main",
     items: [
-      { name: "Overview", icon: <FaChartBar />, link: "#" },
+      { name: "Overview", icon: <FaChartBar />, link: "#", notifications: 1 },
       { name: "Employees", icon: <FaUsers />, link: "#" },
       { name: "Focus Groups", icon: <FaComments />, link: "#" },
     ],
@@ -33,13 +61,11 @@ const menuSections = [
   },
 ];
 
-const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState("Overview");
-
-  const handleItemClick = (name: string) => {
-    setActiveItem(name);
-  };
-
+const Sidebar: React.FC<SidebarProps> = ({
+  activeTab,
+  onTabChange,
+  menuSections = defaultMenuSections,
+}) => {
   return (
     <div className="w-64 h-screen bg-white shadow-md flex flex-col">
       {/* Logo Section */}
@@ -59,18 +85,31 @@ const Sidebar = () => {
               {section.items.map((item, itemIndex) => (
                 <li
                   key={itemIndex}
-                  onClick={() => handleItemClick(item.name)}
-                  className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer ${
-                    activeItem === item.name
+                  onClick={() => onTabChange(item.name)}
+                  className={`relative flex items-center space-x-3 p-3 rounded-lg cursor-pointer ${
+                    activeTab === item.name
                       ? "bg-green-50 text-[#80C342]"
                       : "text-gray-500 hover:bg-gray-100"
                   }`}
                 >
-                  <span className={`text-lg ${activeItem === item.name ? "text-[#80C342]" : "text-[#80C342]"}`}>
+                  {/* Solid green bar for active tab */}
+                  {activeTab === item.name && (
+                    <div className="absolute left-0 top-0 h-full w-1 bg-[#80C342] rounded-r-md"></div>
+                  )}
+                  <span
+                    className={`text-lg ${
+                      activeTab === item.name ? "text-[#80C342]" : "text-gray-500"
+                    }`}
+                  >
                     {item.icon}
                   </span>
                   <span className="flex-1 text-sm font-medium">{item.name}</span>
-                  <span className={`text-sm ${activeItem === item.name ? "text-green-600" : "text-gray-400"}`}>&gt;</span>
+                  {/* Notifications badge */}
+                  {item.notifications && (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      {item.notifications}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
