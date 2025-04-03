@@ -1,6 +1,6 @@
 import { useState } from "react";
 import VibemeterChart from "@/components/Admin/average-vibemeter-score";
-import HighConcernEmployees from "@/components/Admin/high-concern-employees";
+import HighConcernEmployees from "@/components/Admin/new-high-concern-employee";
 import Sidebar from "@/components/Admin/sidenav";
 import EmployeeSatisfactionGauge from "@/components/Admin/employee-satisfaction";
 import BubbleChartPreview from "@/components/Admin/bubble-chart";
