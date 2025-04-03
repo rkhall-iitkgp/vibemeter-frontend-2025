@@ -40,7 +40,7 @@ const defaultMenuSections: MenuSection[] = [
     items: [
       { name: "Overview", img_src: menuIcons["Overview"], link: "#", notifications: 1 },
       { name: "Employees", img_src: menuIcons["Employees"], link: "#" },
-      { name: "Focus Groups", img_src: menuIcons["Focus Groups"], link: "#" },
+      { name: "Focus Groups", img_src: menuIcons["Focus Groups"], link: "/focus-group" },
     ],
   },
   {
