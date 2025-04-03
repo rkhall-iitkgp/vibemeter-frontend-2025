@@ -335,7 +335,7 @@ const FocusGroupPage: FC = () => {
           {/* Breadcrumb Navigation */}
           <div className="mb-6">
             <div className="flex items-center text-sm">
-              <Link to="/focus-group" className="text-gray-600 hover:text-gray-900">
+              <Link to="/focus-groups" className="text-gray-600 hover:text-gray-900">
                 Focus Groups
               </Link>
               <svg className="mx-2 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">

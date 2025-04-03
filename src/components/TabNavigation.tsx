@@ -30,7 +30,7 @@ const TabNavigation: FC<TabNavigationProps> = ({ activeTab }) => {
           Employee
         </Link>
         <Link
-          to="/focus-group"
+          to="/focus-groups"
           className={`px-4 py-4 text-base font-medium ${
             activeTab === 'focus-group'
               ? 'border-b-2 border-green-500 text-green-600'

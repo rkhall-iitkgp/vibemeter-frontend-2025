@@ -19,7 +19,7 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({ focusGroup, onDelete, onEdit 
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/focus-group/${focusGroup.id}`);
+    navigate(`/focus-groups/${focusGroup.id}`);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
