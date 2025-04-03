@@ -6,3 +6,10 @@ export interface FocusGroup{
     tags: string[];
     participantCount: number;
 }
+
+export interface Employee {
+  name: string;
+  id: string;
+  title: string;
+  dateAdded: string;
+}

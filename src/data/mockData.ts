@@ -3,7 +3,7 @@ import { FocusGroup } from "../types";
 export const mockFocusGroups: FocusGroup[] = [
     {
         id: '1wdf647',
-        title: 'Leadership Development Training',
+        title: 'Employee Engagement Task Force',
         createdDate: 'March 17, 2025',
         description: 'A group dedicated to developing leadership skills and strategic decision-making among employees.',
         tags: ['Morality', 'Engagement'],

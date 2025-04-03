@@ -2,9 +2,10 @@ import { FC, useState, ChangeEvent } from 'react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  placeholder?: string;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: FC<SearchBarProps> = ({ onSearch, placeholder = "Search Focus Group" }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,8 +39,8 @@ const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
         type="text"
         value={searchQuery}
         onChange={handleSearch}
-        className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-        placeholder="Search Focus Group"
+        className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-green-500"
+        placeholder={placeholder}
       />
       {searchQuery && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
