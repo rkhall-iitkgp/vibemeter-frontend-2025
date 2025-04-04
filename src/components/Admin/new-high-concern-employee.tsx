@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
+// import { Calendar } from "lucide-react";
 
 // Types for better export readiness
 type Metric = {
@@ -92,6 +92,25 @@ const defaultEmployees: Employee[] = [
       },
     ],
   },
+  {
+    id: "EM7890123",
+    name: "Ankan",
+    avatar: "/avatars/ankan.png",
+    group: "Leadership Training #GRP12345",
+    needsIntervention: false,
+    metrics: [
+      {
+        label: "Leave Impact",
+        value: "+38%",
+        color: "bg-green-200 text-green-800",
+      },
+      {
+        label: "Morality",
+        value: "-18%",
+        color: "bg-yellow-200 text-yellow-800",
+      },
+    ],
+  },
 ];
 
 // New Intervention Card Component
@@ -99,8 +118,8 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
   return (
-    <Card className="border border-red-500 rounded-lg mb-4 overflow-hidden hover:shadow-md transition-shadow duration-200">
-      <div className="p-3 sm:p-4">
+    <Card className="border-2 border-red-500 rounded-lg mb-2 overflow-hidden">
+      <div className="p-3 sm:p-2">
         <div className="flex items-start gap-3 sm:gap-4">
           {/* Avatar with notification badge */}
           <div className="relative shrink-0">
@@ -136,9 +155,11 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
               </p>
             </div>
 
-            <Button className="bg-[#80C342] hover:bg-green-600 text-white text-xs sm:text-sm px-2 sm:px-4 py-1 mt-2 rounded-md font-medium h-auto">
-              <Calendar size={14} className="mr-1.5 hidden sm:inline" />
+            <Button className="bg-[#80C342] hover:bg-[#5A9027] mr-2 text-white text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
               Schedule a Meet
+            </Button>
+            <Button className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
+              View
             </Button>
           </div>
         </div>
@@ -152,9 +173,9 @@ const EmployeeCard = ({ employee }: { employee: Employee }) => {
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
   return (
-    <Card className="border border-gray-200 rounded-lg shadow-sm mb-2 hover:shadow transition-shadow duration-200">
-      <CardContent className="py-1 px-3 sm:px-4">
-        <div className="flex items-center gap-2 sm:gap-3">
+    <Card className="border border-gray-200 rounded-lg  mb-2">
+      <CardContent className="py-2 px-3 sm:px-4">
+        <div className="flex items-center gap-2 sm:gap-2">
           <Avatar className="w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-100 shrink-0">
             <AvatarImage src={employee.avatar} alt={employee.name} />
             <AvatarFallback className="bg-gray-200 text-gray-700 text-xs">
@@ -177,7 +198,7 @@ const EmployeeCard = ({ employee }: { employee: Employee }) => {
           {employee.metrics.map((metric, idx) => (
             <span
               key={idx}
-              className={`text-xs px-2 py-0.5 rounded-full font-medium ${metric.color}`}
+              className={`text-xs px-2 py-1 mt-1 rounded-sm font-medium ${metric.color}`}
             >
               {metric.label} {metric.value}
             </span>
@@ -203,11 +224,11 @@ export default function HighConcernEmployees({
   const regularEmployees = employees.filter((emp) => !emp.needsIntervention);
 
   return (
-    <div className={`bg-white h-full flex flex-col ${className}`}>
+    <div className={`rounded-md bg-white h-full flex flex-col ${className}`}>
       {/* Header section */}
       <div className="flex justify-between items-center mb-4 px-3 sm:px-4 pt-4">
         <div className="min-w-0 pr-2">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
             High Concern Employees
           </h2>
           <p className="text-xs text-gray-500">
