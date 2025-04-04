@@ -6,7 +6,7 @@ import SearchBar from "../components/ActionPlan/Search-bar";
 import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { PlusIcon } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Sample data for horizontal cards
 const actionPlans = [

@@ -238,12 +238,11 @@ const MoraleChart: React.FC<MoraleChartProps> = ({
 
           {/* Conditional Inputs */}
           {filterBy === "month" ? (
-            <Select
-              value={selectedMonth}
-              onValueChange={setSelectedMonth}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <SelectTrigger className="mt-2 text-[#949494]">
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger
+                className="mt-2 text-[#949494]"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {" "}
                 {/* Updated color */}
                 <SelectValue placeholder="Select Month" />

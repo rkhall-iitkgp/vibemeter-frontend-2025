@@ -1,7 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
-const BubbleChartPreview = ({ className = "" }) => {
+// Define interfaces for proper typing
+interface BubbleChartProps {
+  className?: string;
+}
+
+interface BubbleData {
+  name: string;
+  value: number;
+  color: string;
+  category: string;
+  description: string;
+}
+
+interface HierarchyNode extends d3.HierarchyCircularNode<unknown> {
+  data: {
+    name: string;
+    value: number;
+    color: string;
+    category: string;
+    description: string;
+  };
+}
+
+const BubbleChartPreview: React.FC<BubbleChartProps> = ({ className = "" }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -36,7 +59,8 @@ const BubbleChartPreview = ({ className = "" }) => {
   }, []);
 
   useEffect(() => {
-    if (!chartRef.current || dimensions.width === 0) return;
+    if (!chartRef.current || !containerRef.current || dimensions.width === 0)
+      return;
 
     // Clear any existing content
     d3.select(chartRef.current).selectAll("svg").remove();
@@ -49,7 +73,7 @@ const BubbleChartPreview = ({ className = "" }) => {
     const height = Math.min(600, Math.max(350, width * 0.6)); // Responsive height
 
     // Data for our bubble chart - employee-related concerns
-    const data = [
+    const data: BubbleData[] = [
       // Larger bubbles
       {
         name: "Workload",
@@ -214,16 +238,16 @@ const BubbleChartPreview = ({ className = "" }) => {
 
     // Create bubble layout - sized to fit within the center area
     const packSize = Math.min(width, height) * 0.75;
-    const pack = d3.pack().size([packSize, packSize]).padding(3);
+    const pack = d3.pack<unknown>().size([packSize, packSize]).padding(3);
 
     // Process data into hierarchy
     const root = d3
-      .hierarchy({ children: data })
-      .sum((d) => d.value)
-      .sort((a, b) => b.value - a.value);
+      .hierarchy<unknown>({ children: data })
+      .sum((d) => (d as unknown as BubbleData).value)
+      .sort((a, b) => (b.value || 0) - (a.value || 0));
 
     // Apply pack layout
-    const bubbleData = pack(root).descendants().slice(1);
+    const bubbleData = pack(root).descendants().slice(1) as HierarchyNode[];
 
     // Create nodes - position directly from d.x and d.y (already centered by pack layout)
     const nodes = bubbleGroup
@@ -238,7 +262,7 @@ const BubbleChartPreview = ({ className = "" }) => {
       );
 
     // Calculate font size based on circle radius
-    const calculateFontSize = (radius) => {
+    const calculateFontSize = (radius: number): number => {
       if (radius < 15) return Math.max(6, radius * 0.4);
       if (radius < 25) return 8;
       if (radius < 35) return 10;
@@ -254,7 +278,7 @@ const BubbleChartPreview = ({ className = "" }) => {
       .style("stroke", "white")
       .style("stroke-width", 1)
       .style("cursor", "pointer")
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (event: MouseEvent, d: HierarchyNode) {
         // Stop event propagation to prevent other elements from reacting
         event.stopPropagation();
 
@@ -262,6 +286,8 @@ const BubbleChartPreview = ({ className = "" }) => {
           .style("stroke", "#333")
           .style("stroke-width", 2)
           .style("opacity", 1);
+
+        if (!containerRef.current || !chartRef.current) return;
 
         // Get container's position for proper tooltip positioning
         const containerRect = containerRef.current.getBoundingClientRect();
@@ -290,7 +316,10 @@ const BubbleChartPreview = ({ className = "" }) => {
           .style("top", `${y + 10}px`);
 
         // Ensure tooltip stays within container bounds
-        const tooltipRect = tooltip.node().getBoundingClientRect();
+        const tooltipElement = tooltip.node();
+        if (!tooltipElement) return;
+
+        const tooltipRect = tooltipElement.getBoundingClientRect();
 
         // Check right boundary
         if (x + tooltipRect.width > containerRect.width - 20) {
@@ -302,9 +331,11 @@ const BubbleChartPreview = ({ className = "" }) => {
           tooltip.style("top", `${y - tooltipRect.height - 10}px`);
         }
       })
-      .on("mousemove", function (event) {
+      .on("mousemove", function (event: MouseEvent) {
         // Stop event propagation
         event.stopPropagation();
+
+        if (!containerRef.current || !chartRef.current) return;
 
         // Get container's position
         const containerRect = containerRef.current.getBoundingClientRect();
@@ -321,7 +352,11 @@ const BubbleChartPreview = ({ className = "" }) => {
         let tooltipY = y + 10;
 
         // Check boundaries and adjust if necessary
-        const tooltipRect = tooltip.node().getBoundingClientRect();
+        const tooltipElement = tooltip.node();
+        if (!tooltipElement) return;
+
+        const tooltipRect = tooltipElement.getBoundingClientRect();
+
         if (tooltipX + tooltipRect.width > containerRect.width - 20) {
           tooltipX = x - tooltipRect.width - 10;
         }
@@ -332,7 +367,7 @@ const BubbleChartPreview = ({ className = "" }) => {
 
         tooltip.style("left", `${tooltipX}px`).style("top", `${tooltipY}px`);
       })
-      .on("mouseout", function (event) {
+      .on("mouseout", function (event: MouseEvent) {
         // Stop event propagation
         event.stopPropagation();
 
@@ -345,18 +380,21 @@ const BubbleChartPreview = ({ className = "" }) => {
       });
 
     // Helper function to wrap text
-    function wrapText(text, width) {
+    function wrapText(
+      text: d3.Selection<SVGTextElement, unknown, null, undefined>,
+      width: number
+    ): void {
       text.each(function () {
-        const text = d3.select(this);
-        const words = text.text().split(/\s+/).reverse();
+        const textElement = d3.select(this);
+        const words = textElement.text().split(/\s+/).reverse();
         const lineHeight = 1.1; // ems
-        const y = text.attr("y") || 0;
-        const dy = parseFloat(text.attr("dy") || 0);
+        const y = textElement.attr("y") || "0";
+        const dy = parseFloat(textElement.attr("dy") || "0");
 
-        let word;
-        let line = [];
+        let word: string | undefined;
+        let line: string[] = [];
         let lineNumber = 0;
-        let tspan = text
+        let tspan = textElement
           .text(null)
           .append("tspan")
           .attr("x", 0)
@@ -366,11 +404,12 @@ const BubbleChartPreview = ({ className = "" }) => {
         while ((word = words.pop())) {
           line.push(word);
           tspan.text(line.join(" "));
-          if (tspan.node().getComputedTextLength() > width) {
+          const tspanNode = tspan.node();
+          if (tspanNode && tspanNode.getComputedTextLength() > width) {
             line.pop();
             tspan.text(line.join(" "));
             line = [word];
-            tspan = text
+            tspan = textElement
               .append("tspan")
               .attr("x", 0)
               .attr("y", y)

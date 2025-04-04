@@ -1,5 +1,5 @@
 import { FaUsers, FaChevronRight } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router"; // Fixed import from react-router to react-router-dom
 import React from "react";
 
 // Updated MenuItem type to support image sources
@@ -17,10 +17,12 @@ type MenuSection = {
 
 type SidebarProps = {
   menuSections?: MenuSection[];
+  activeTab?: string; // Make it optional
+  onTabChange?: (tab: string) => void; // Make it optional
 };
 
 // Complete menuIcons object with all paths
-const menuIcons = {
+const menuIcons: Record<string, string> = {
   Overview: "/icons/Overview.svg",
   Employees: "/icons/Employees.svg",
   "Focus Groups": "/icons/Focus-grops.svg",
@@ -84,9 +86,20 @@ const defaultMenuSections: MenuSection[] = [
 
 const Sidebar: React.FC<SidebarProps> = ({
   menuSections = defaultMenuSections,
+  activeTab,
+  onTabChange,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Handle the click on menu items
+  const handleItemClick = (item: MenuItem) => {
+    if (onTabChange) {
+      onTabChange(item.name);
+    }
+    navigate(`/${item.link}`);
+  };
+
   return (
     <div className="w-64 h-screen bg-white shadow-md flex flex-col">
       {/* Logo Section */}
@@ -106,12 +119,15 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* Section Items */}
             <ul>
               {section.items.map((item, itemIndex) => {
-                const isActive = location.pathname.split("/")[1] === item.link;
+                // Determine if item is active based on either activeTab prop or current location
+                const isActive = activeTab
+                  ? activeTab === item.name
+                  : location.pathname.split("/")[1] === item.link;
 
                 return (
                   <li
                     key={itemIndex}
-                    onClick={() => navigate(`/${item.link}`)}
+                    onClick={() => handleItemClick(item)}
                     className={`relative flex items-center p-3 rounded-lg cursor-pointer ${
                       isActive
                         ? "bg-green-50 text-[#80C342]"
@@ -174,12 +190,16 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Add CSS to colorize SVGs */}
-      <style>{`
-        .filter-green {
-          filter: brightness(0) saturate(100%) invert(65%) sepia(49%) saturate(1612%) hue-rotate(54deg) brightness(103%) contrast(90%);
-        }
-      `}</style>
+      {/* Add CSS to colorize SVGs - fixed style tag */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+          .filter-green {
+            filter: brightness(0) saturate(100%) invert(65%) sepia(49%) saturate(1612%) hue-rotate(54deg) brightness(103%) contrast(90%);
+          }
+        `,
+        }}
+      />
     </div>
   );
 };

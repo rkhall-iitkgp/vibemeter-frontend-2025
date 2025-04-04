@@ -6,10 +6,29 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  TooltipProps,
 } from "recharts";
 import React, { useEffect, useState } from "react";
 
-const dummyData = {
+// Define types for our data
+interface ScoreData {
+  month: string;
+  score: number;
+}
+
+interface ChartData {
+  scores: ScoreData[];
+  average: number;
+  percentageChange: number;
+}
+
+// Define props for VibemeterChart
+interface VibemeterChartProps {
+  fetchData?: () => Promise<ChartData>;
+  className?: string;
+}
+
+const dummyData: ChartData = {
   scores: [
     { month: "Jan", score: 65 },
     { month: "Feb", score: 67 },
@@ -22,8 +41,12 @@ const dummyData = {
   percentageChange: 5.3,
 };
 
-// Custom tooltip component for better styling
-const CustomTooltip = ({ active, payload, label }) => {
+// Custom tooltip component for better styling with proper typing
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md text-sm">
@@ -35,19 +58,30 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const VibemeterChart = ({ fetchData, className = "" }) => {
-  const [data, setData] = useState([]);
-  const [averageScore, setAverageScore] = useState(0);
-  const [percentageChange, setPercentageChange] = useState(0);
+const VibemeterChart: React.FC<VibemeterChartProps> = ({
+  fetchData,
+  className = "",
+}) => {
+  const [data, setData] = useState<ScoreData[]>([]);
+  const [averageScore, setAverageScore] = useState<number>(0);
+  const [percentageChange, setPercentageChange] = useState<number>(0);
 
   useEffect(() => {
     const loadData = async () => {
-      if (fetchData) {
-        const response = await fetchData();
-        setData(response.scores);
-        setAverageScore(response.average);
-        setPercentageChange(response.percentageChange);
-      } else {
+      try {
+        if (fetchData) {
+          const response = await fetchData();
+          setData(response.scores);
+          setAverageScore(response.average);
+          setPercentageChange(response.percentageChange);
+        } else {
+          setData(dummyData.scores);
+          setAverageScore(dummyData.average);
+          setPercentageChange(dummyData.percentageChange);
+        }
+      } catch (error) {
+        console.error("Error loading vibemeter data:", error);
+        // Fall back to dummy data on error
         setData(dummyData.scores);
         setAverageScore(dummyData.average);
         setPercentageChange(dummyData.percentageChange);
@@ -101,7 +135,7 @@ const VibemeterChart = ({ fetchData, className = "" }) => {
             />
             <YAxis
               hide={true}
-              domain={[0, "dataMax + 10"]} // Add some padding to top
+              domain={[0, (dataMax: number) => dataMax + 10]} // Add some padding to top with proper typing
             />
             <Tooltip
               content={<CustomTooltip />}

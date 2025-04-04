@@ -4,6 +4,7 @@ import { ParkingSection } from "@/components/parking-section";
 import { DocumentsCard } from "@/components/documents-card";
 import { ChecklistCard } from "@/components/checklist-card";
 import { useEffect, useState } from "react";
+import { Clock } from "lucide-react";
 import Navbar from "./Navbar";
 export function DashboardContent() {
   const [time, setTime] = useState("");

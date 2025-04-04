@@ -1,9 +1,23 @@
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
 
+// Define types for our data structures
+interface Question {
+  id: number;
+  text: string;
+  tags: string[];
+  severity: "Critical" | "Moderate" | "Low";
+}
+
+interface NewQuestion {
+  text: string;
+  tags: string[];
+  severity: "Critical" | "Moderate" | "Low";
+}
+
 const Questions = () => {
   // Sample question data
-  const initialQuestions = [
+  const initialQuestions: Question[] = [
     {
       id: 1,
       text: "Can you think of a recent situation where you struggled? How did you handle it, and what would you do differently now?",
@@ -30,19 +44,19 @@ const Questions = () => {
     },
   ];
 
-  // State variables
-  const [questions, setQuestions] = useState(initialQuestions);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilters, setActiveFilters] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newQuestion, setNewQuestion] = useState({
+  // State variables with proper typing
+  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [newQuestion, setNewQuestion] = useState<NewQuestion>({
     text: "",
     tags: [],
     severity: "Moderate",
   });
 
   // Available filters
-  const allFilters = [
+  const allFilters: string[] = [
     "Engagement",
     "Morality",
     "Leave Impact",
@@ -95,7 +109,7 @@ const Questions = () => {
   };
 
   // Handle severity change
-  const handleSeverityChange = (severity: string) => {
+  const handleSeverityChange = (severity: "Critical" | "Moderate" | "Low") => {
     setNewQuestion({
       ...newQuestion,
       severity,
@@ -117,7 +131,7 @@ const Questions = () => {
     e.preventDefault();
     if (newQuestion.text.trim() === "") return;
 
-    const newQuestionObj = {
+    const newQuestionObj: Question = {
       id: questions.length + 1,
       text: newQuestion.text,
       tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["Engagement"],
@@ -263,7 +277,7 @@ const Questions = () => {
 
       {/* Create Question Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center p-4 z-40">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-semibold">Create Question</h2>
