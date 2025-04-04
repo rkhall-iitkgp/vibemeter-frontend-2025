@@ -539,8 +539,14 @@ const Questions = () => {
 
       {/* Modal: Create or Edit Question */}
       {(modalType === "create" || modalType === "edit") && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto" onClick={handleModalBackdropClick}>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md relative" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-semibold">
                 {modalType === "create" ? "Create Question" : "Edit Question"}
@@ -706,8 +712,14 @@ const Questions = () => {
 
       {/* Modal: Delete Confirmation */}
       {modalType === "delete" && currentQuestion && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50" onClick={handleModalBackdropClick}>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-4">Delete Question</h3>
               <p className="mb-6">
