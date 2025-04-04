@@ -125,9 +125,9 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
             <input 
               type="number" 
               min="1"
-              className="w-24 p-2 border border-gray-300 rounded"
+              className="w-24 p-2 border border-gray-300 rounded text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <span className="ml-2">mins</span>
+            <span className="ml-2 text-gray-500 ">minutes</span>
           </div>
         </div>
         
