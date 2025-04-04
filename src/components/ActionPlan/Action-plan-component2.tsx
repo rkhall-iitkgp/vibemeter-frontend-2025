@@ -1,29 +1,25 @@
 import { ArrowRight, Trash2 } from "lucide-react";
 
+interface FocusGroups {
+  name : string
+  focus_group_id : string
+}
 interface HorizontalRecognitionCardProps {
   title: string;
-  createdDate: string;
-  description: string;
-  targetGroup: string;
-  groupId: string;
-  tags: string[];
-  actionId: string;
+  created_at: string;
+  purpose : string;
+  target_groups : FocusGroups[];
+  metrics: string[];
+  action_id: string;
+  is_completed ?: boolean 
   onDelete: (actionId: string) => void;
 }
 
-export function HorizontalRecognitionCard({
-  title = "Recognition Program",
-  createdDate = "March 17, 2025",
-  description = "Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
-  targetGroup = "Leadership Group",
-  groupId = "#GRP2345",
-  tags = ["Morality", "Engagement"],
-  actionId,
-  onDelete,
-}: HorizontalRecognitionCardProps) {
-  // Function to determine tag color based on tag content
-  const getTagColor = (tag) => {
-    const tagLower = tag.toLowerCase();
+export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps) {
+  // Function to determine metric color based on metric content
+  console.log(props)
+  const getTagColor = (metric : any) => {
+    const tagLower = metric.toLowerCase();
     if (tagLower.includes("moral") || tagLower === "morality") {
       return "bg-amber-100 text-amber-700";
     } else if (tagLower.includes("engage") || tagLower === "engagement") {
@@ -45,17 +41,23 @@ export function HorizontalRecognitionCard({
 
   return (
     <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4">
-      <h3 className="font-semibold text-gray-900 text-lg mb-1">{title}</h3>
+      <h3 className="font-semibold text-gray-900 text-lg mb-1">{props.title}</h3>
 
       <div className="flex items-center flex-wrap gap-2 mb-3">
-        <p className="text-sm text-gray-500">Created on {createdDate}</p>
-        {Array.isArray(tags) && tags.length > 0 ? (
-          tags.map((tag, tagIndex) => (
+        <p className="text-sm text-gray-500">
+              Created on {new Date(props.created_at).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: '2-digit'
+							})}
+        </p>
+        {Array.isArray(props.metrics) && props.metrics.length > 0 ? (
+          props.metrics.map((metric, tagIndex) => (
             <span
               key={tagIndex}
-              className={`px-3 py-1 text-xs rounded-sm ${getTagColor(tag)}`}
+              className={`px-3 py-1 text-xs rounded-sm ${getTagColor(metric)}`}
             >
-              {tag}
+              {metric}
             </span>
           ))
         ) : (
@@ -65,7 +67,7 @@ export function HorizontalRecognitionCard({
         )}
       </div>
 
-      <div className="text-gray-600 text-sm mb-4">{description}</div>
+      <div className="text-gray-600 text-sm mb-4">{props.purpose}</div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center text-sm text-gray-600">
@@ -84,14 +86,19 @@ export function HorizontalRecognitionCard({
             />
           </svg>
           <span className="text-[#005587] font-semibold">Target Group:</span>
-          <span className="ml-1 font-semibold text-[#000]">
-            {targetGroup} {groupId && `(${groupId})`}
-          </span>
+          {props.target_groups?.map(targetGroup => {
+            return(
+              <span className="ml-1 font-semibold text-[#000]">
+                {targetGroup.name} ({targetGroup.focus_group_id})
+              </span>
+            );
+          })}
+          
         </div>
 
         <div className="flex items-center gap-4">
           <button 
-            onClick={() => onDelete && actionId && onDelete(actionId)}
+            onClick={() => props.onDelete(props.action_id)}
             className="text-red-600 text-sm font-medium flex items-center hover:text-red-800 transition-colors"
             aria-label="Delete action plan"
           >

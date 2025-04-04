@@ -8,6 +8,7 @@ import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Action } from "@reduxjs/toolkit";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -73,8 +74,8 @@ const sampleActionPlans = [
 ];
 
 export default function ActionPlan() {
-  const [actionPlans, setActionPlans] = useState([]);
-  const [displayPlans, setDisplayPlans] = useState([]);
+  const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
+  const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,20 +133,20 @@ export default function ActionPlan() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const responseData = await response.json();
-
+      const responseData: { data: ActionPlan[], status: string } = await response.json();
+//      console.log(responseData.data)
       // Handle the API response format
       if (Array.isArray(responseData)) {
-        // Direct array of action plans
-        const formattedActionPlans = responseData.map(mapResponseToActionPlan);
-        setActionPlans(formattedActionPlans);
-        setDisplayPlans(formattedActionPlans);
+        // // Direct array of action plans
+        // const formattedActionPlans = responseData.map(mapResponseToActionPlan);
+        setActionPlans(responseData.data);
+        setDisplayPlans(responseData.data);
         setError(null);
       } else if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
         // Wrapped in a success response object
-        const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
-        setActionPlans(formattedActionPlans);
-        setDisplayPlans(formattedActionPlans);
+        // const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
+        setActionPlans(responseData.data);
+        setDisplayPlans(responseData.data);
         setError(null);
       } else {
         throw new Error("Invalid response format");
@@ -154,9 +155,6 @@ export default function ActionPlan() {
       console.error("Failed to fetch action plans:", err);
       setError("Failed to load action plans. Please try again later.");
       
-      // Fall back to sample data for development
-      setActionPlans(sampleActionPlans);
-      setDisplayPlans(sampleActionPlans);
     } finally {
       setIsLoading(false);
     }
@@ -345,19 +343,20 @@ export default function ActionPlan() {
               </p>
             )}
             
-            {!isLoading && displayPlans.map((plan, index) => (
-              <HorizontalRecognitionCard
-                key={index}
-                actionId={plan.actionId}
-                title={plan.title}
-                createdDate={plan.createdDate}
-                description={plan.description}
-                targetGroup={plan.targetGroup}
-                groupId={plan.groupId}
-                tags={plan.tags}
-                onDelete={openDeleteModal}
-              />
-            ))}
+            {!isLoading && displayPlans?.map((plan, index) => {
+              return (
+                <HorizontalRecognitionCard
+                  key={index}
+                  action_id={plan.action_id}
+                  title={plan.title}
+                  created_at={plan.created_at}
+                  purpose={plan.purpose}
+                  target_groups={plan.target_groups}
+                  metrics={plan.metric}
+                  onDelete={openDeleteModal}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
