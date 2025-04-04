@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect, KeyboardEvent } from "react";
+import { FC, useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 
 interface ActionStep {
   id: number;
@@ -58,11 +58,20 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
     "Retention Rate",
   ];
 
-  const tabRefs = {
-    basicInfo: useRef<HTMLButtonElement>(null),
-    targetGroups: useRef<HTMLButtonElement>(null),
-    actionSteps: useRef<HTMLButtonElement>(null),
-  };
+  // Create individual refs
+  const basicInfoRef = useRef<HTMLButtonElement>(null);
+  const targetGroupsRef = useRef<HTMLButtonElement>(null);
+  const actionStepsRef = useRef<HTMLButtonElement>(null);
+
+  // Memoize the tabRefs object to prevent it from changing on every render
+  const tabRefs = useMemo(
+    () => ({
+      basicInfo: basicInfoRef,
+      targetGroups: targetGroupsRef,
+      actionSteps: actionStepsRef,
+    }),
+    []
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);

@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect, KeyboardEvent } from "react";
+import { FC, useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 
 interface ActionStep {
   id: number;
@@ -58,11 +58,18 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
     "Retention Rate",
   ];
 
-  const tabRefs = {
-    basicInfo: useRef<HTMLButtonElement>(null),
-    targetGroups: useRef<HTMLButtonElement>(null),
-    actionSteps: useRef<HTMLButtonElement>(null),
-  };
+  const basicInfoRef = useRef<HTMLButtonElement>(null);
+  const targetGroupsRef = useRef<HTMLButtonElement>(null);
+  const actionStepsRef = useRef<HTMLButtonElement>(null);
+
+  const tabRefs = useMemo(
+    () => ({
+      basicInfo: basicInfoRef,
+      targetGroups: targetGroupsRef,
+      actionSteps: actionStepsRef,
+    }),
+    []
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +86,7 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
         width: `${(tabWidth / parentWidth) * 100}%`,
       });
     }
-  }, [activeTab]);
+  }, [activeTab, tabRefs]);
 
   const isBasicInfoValid = () => {
     return title.trim() !== "" && purpose.trim() !== "";
@@ -226,11 +233,11 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
   };
 
   // Helper function to determine progress bar status
-  const getProgressStatus = (tabName: string) => {
-    if (completedTabs.includes(tabName)) return "completed";
-    if (activeTab === tabName) return "active";
-    return "pending";
-  };
+  //   const getProgressStatus = (tabName: string) => {
+  //     if (completedTabs.includes(tabName)) return "completed";
+  //     if (activeTab === tabName) return "active";
+  //     return "pending";
+  //   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/50">

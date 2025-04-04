@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useState } from "react";
 import { Card } from "./Card";
 
 // Use the same data structure as your original component
@@ -51,7 +50,7 @@ const actionPlans = [
 ];
 
 export function ActionPlansCarousel() {
-  const [isVisible, setIsVisible] = useState(true);
+  const isVisible = true;
 
   if (!isVisible) return null;
 

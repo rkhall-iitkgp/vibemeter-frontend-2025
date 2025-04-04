@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const BubbleChartPreview = ({ className = "" }) => {
-  const chartRef = useRef(null);
-  const containerRef = useRef(null);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   // Function to update dimensions
@@ -20,14 +20,16 @@ const BubbleChartPreview = ({ className = "" }) => {
 
     // Use ResizeObserver instead of window event for better performance
     const resizeObserver = new ResizeObserver(updateDimensions);
-    if (chartRef.current) {
-      resizeObserver.observe(chartRef.current);
+    const currentRef = chartRef.current; // Capture the current value
+
+    if (currentRef) {
+      resizeObserver.observe(currentRef);
     }
 
     // Cleanup
     return () => {
-      if (chartRef.current) {
-        resizeObserver.unobserve(chartRef.current);
+      if (currentRef) {
+        resizeObserver.unobserve(currentRef);
       }
       resizeObserver.disconnect();
     };

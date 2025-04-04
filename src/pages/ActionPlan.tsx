@@ -139,17 +139,27 @@ export default function ActionPlan() {
 
           {/* Action Plans Cards */}
           <div className="space-y-4">
-            {actionPlans.map((plan, index) => (
-              <HorizontalRecognitionCard
-                key={index}
-                title={plan.title}
-                createdDate={plan.createdDate}
-                description={plan.description}
-                targetGroup={plan.targetGroup}
-                groupId={plan.groupId}
-                tags={plan.tags}
-              />
-            ))}
+            {actionPlans
+              .filter(
+                (plan) =>
+                  plan.title
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                  plan.description
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase())
+              )
+              .map((plan, index) => (
+                <HorizontalRecognitionCard
+                  key={index}
+                  title={plan.title}
+                  createdDate={plan.createdDate}
+                  description={plan.description}
+                  targetGroup={plan.targetGroup}
+                  groupId={plan.groupId}
+                  tags={plan.tags}
+                />
+              ))}
           </div>
         </div>
       </div>
