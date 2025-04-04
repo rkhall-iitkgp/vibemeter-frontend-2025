@@ -479,9 +479,9 @@ const BubbleChartPreview: React.FC<BubbleChartProps> = ({ className = "" }) => {
     <div ref={containerRef} className={`w-full relative ${className}`}>
       {/* Header directly inside component for layout consistency */}
       <div className="p-4 sm:p-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+        <div className="text-lg sm:text-xl font-bold text-gray-900 ">
           Major Issues
-        </h2>
+        </div>
         <p className="text-sm text-gray-500 mt-1">
           Primary concerns reported by employees
         </p>

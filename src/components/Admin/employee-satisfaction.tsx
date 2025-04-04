@@ -66,8 +66,8 @@ export default function EmployeeSatisfactionGauge({
   return (
     <div className={`w-full text-center bg-white rounded-lg ${className}`}>
       <div className="px-4 pt-4">
-        <div className="text-lg font-semibold mb-1">{title}</div>
-        <div className="text-sm text-gray-500 mb-3">{subtitle}</div>
+        <div className="text-lg sm:text-xl font-bold text-gray-900 text-left">{title}</div>
+        <div className="text-sm  text-left text-gray-500 mb-3">{subtitle}</div>
       </div>
 
       <div className="px-2 pb-4">

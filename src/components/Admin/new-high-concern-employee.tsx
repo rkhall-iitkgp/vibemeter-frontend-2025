@@ -203,7 +203,7 @@ export default function HighConcernEmployees({
   const regularEmployees = employees.filter((emp) => !emp.needsIntervention);
 
   return (
-    <div className={`bg-white h-full flex flex-col ${className}`}>
+    <div className={`bg-white h-full flex flex-col ${className} rounded-lg`}>
       {/* Header section */}
       <div className="flex justify-between items-center mb-4 px-3 sm:px-4 pt-4">
         <div className="min-w-0 pr-2">

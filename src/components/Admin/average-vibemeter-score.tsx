@@ -94,7 +94,7 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
     <div className={`px-4 pt-4 pb-3 w-full h-full ${className}`}>
       {/* Header section */}
       <div className="mb-2">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900">
           Average Vibemeter Scores
         </h2>
         <p className="text-sm text-gray-500">Average Vibe Scores per month</p>
