@@ -17,7 +17,7 @@ const FocusGroupList: FC<FocusGroupListProps> = ({
     <div className="mt-6">
       {focusGroups.map((group) => (
         <FocusGroupCard
-          key={group.id}
+          key={group.focus_group_id}
           focusGroup={group}
           onDelete={onDelete}
           onEdit={onEdit}

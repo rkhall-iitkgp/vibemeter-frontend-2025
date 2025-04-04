@@ -1,15 +1,15 @@
 export interface FocusGroup {
-  id: string;
-  title: string;
-  createdDate: string;
+  focus_group_id: string;
+  name: string;
+  created_at: string;
   description: string;
-  tags: string[];
-  participantCount: number;
+  metrics: string[];
+  members: number;
 }
 
 export interface Employee {
   name: string;
-  id: string;
-  title: string;
-  dateAdded: string;
+  employee_id: string;
+  job_title: string;
+  joining_date: string;
 }
