@@ -3,17 +3,17 @@ import React, { useState, useEffect, useRef } from "react";
 export default function EmployeeSatisfactionGauge({
   title = "Employee Satisfaction",
   subtitle = "Employees who need most attention",
-  satisfactionValue = 68, 
-  monthlyChange = 5.3,   
+  satisfactionValue = 68,
+  monthlyChange = 5.3,
   monthLabel = "in past 1 month",
   className = "", // Add className prop for custom styling
 }) {
-  const [animatedAngle, setAnimatedAngle] = useState(-90); 
-  const [animatedRatio, setAnimatedRatio] = useState(0); 
+  const [animatedAngle, setAnimatedAngle] = useState(-90);
+  const [animatedRatio, setAnimatedRatio] = useState(0);
 
-  const ratio = Math.min(Math.max(satisfactionValue / 100, 0), 1); 
+  const ratio = Math.min(Math.max(satisfactionValue / 100, 0), 1);
   const targetNeedleAngle = -90 + 180 * ratio;
-  
+
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -22,8 +22,8 @@ export default function EmployeeSatisfactionGauge({
     }
 
     const startTime = Date.now();
-    const duration = 1500; 
-    const startAngle = -90; 
+    const duration = 1500;
+    const startAngle = -90;
     const startRatio = 0;
     const angleChange = targetNeedleAngle - startAngle;
     const ratioChange = ratio - startRatio;
@@ -32,22 +32,22 @@ export default function EmployeeSatisfactionGauge({
     const animate = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
-      const easeOut = 1 - Math.pow(1 - progress, 3); 
-      
+
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+
       const currentAngle = startAngle + angleChange * easeOut;
       const currentRatio = startRatio + ratioChange * easeOut;
-      
+
       setAnimatedAngle(currentAngle);
       setAnimatedRatio(currentRatio);
-      
+
       if (progress < 1) {
         animationRef.current = requestAnimationFrame(animate);
       }
     };
-    
+
     animationRef.current = requestAnimationFrame(animate);
-    
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -60,8 +60,6 @@ export default function EmployeeSatisfactionGauge({
   const changeColor = monthlyChange >= 0 ? "text-green-600" : "text-red-600";
 
   // Arc properties
-  const centerX = 100;
-  const centerY = 100;
   const radius = 90;
   const arcLength = Math.PI * radius; // Length of a semicircle arc
 
@@ -81,8 +79,7 @@ export default function EmployeeSatisfactionGauge({
             preserveAspectRatio="xMidYMid meet"
           >
             {/* Tick marks and labels */}
-            
-            
+
             {/* Background arc */}
             <path
               d="M 10,100 A 90,90 0 0 1 190,100"
@@ -90,7 +87,7 @@ export default function EmployeeSatisfactionGauge({
               stroke="#e5e7eb"
               strokeWidth="20"
             />
-            
+
             {/* Filled arc - animated */}
             <path
               d="M 10,100 A 90,90 0 0 1 190,100"
@@ -106,12 +103,18 @@ export default function EmployeeSatisfactionGauge({
             <g transform={`rotate(${animatedAngle}, 100, 100)`}>
               {/* Enhanced indicator */}
               <defs>
-                <linearGradient id="needleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <linearGradient
+                  id="needleGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
                   <stop offset="0%" stopColor="#8BC34A" stopOpacity="1" />
                   <stop offset="100%" stopColor="#7CB342" stopOpacity="1" />
                 </linearGradient>
               </defs>
-              
+
               {/* Main needle shape with thicker base */}
               <path
                 d="M 92,100 L 100,30 L 108,100 Z"
@@ -119,9 +122,16 @@ export default function EmployeeSatisfactionGauge({
                 stroke="#7CB342"
                 strokeWidth="0.5"
               />
-              
+
               {/* Center pivot */}
-              <circle cx="100" cy="100" r="8" fill="#ffffff" stroke="#8BC34A" strokeWidth="2" />
+              <circle
+                cx="100"
+                cy="100"
+                r="8"
+                fill="#ffffff"
+                stroke="#8BC34A"
+                strokeWidth="2"
+              />
             </g>
           </svg>
         </div>

@@ -1,4 +1,3 @@
-import type React from "react"
 // import Link from "next/link"
 import {
   LayoutDashboard,
@@ -10,14 +9,15 @@ import {
   MessageSquare,
   HelpCircle,
   Settings,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import type React from "react";
 
 interface SidebarItemProps {
-  icon: React.ElementType
-  label: string
-  href: string
-  active?: boolean
+  icon: React.ElementType;
+  label: string;
+  href: string;
+  active?: boolean;
 }
 
 function SidebarItem({ icon: Icon, label, href, active }: SidebarItemProps) {
@@ -26,13 +26,13 @@ function SidebarItem({ icon: Icon, label, href, active }: SidebarItemProps) {
       href={href}
       className={cn(
         "flex flex-col items-center justify-center p-3 text-gray-500 hover:text-teal-500 transition-colors",
-        active && "text-teal-500 bg-blue-50",
+        active && "text-teal-500 bg-blue-50"
       )}
     >
       <Icon className="h-5 w-5 mb-1" />
       <span className="text-xs">{label}</span>
     </a>
-  )
+  );
 }
 
 export function Sidebar() {
@@ -57,6 +57,5 @@ export function Sidebar() {
         <SidebarItem icon={Settings} label="Settings" href="/settings" />
       </div>
     </div>
-  )
+  );
 }
-

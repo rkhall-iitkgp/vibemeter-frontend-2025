@@ -79,7 +79,7 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
         width: `${(tabWidth / parentWidth) * 100}%`,
       });
     }
-  }, [activeTab, tabRefs]);
+  }, [activeTab]);
 
   const isBasicInfoValid = () => {
     return title.trim() !== "" && purpose.trim() !== "";
@@ -223,6 +223,13 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
         id: index + 1,
       }))
     );
+  };
+
+  // Helper function to determine progress bar status
+  const getProgressStatus = (tabName: string) => {
+    if (completedTabs.includes(tabName)) return "completed";
+    if (activeTab === tabName) return "active";
+    return "pending";
   };
 
   return (

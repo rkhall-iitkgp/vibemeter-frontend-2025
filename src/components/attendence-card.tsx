@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export function AttendanceCard() {
   return (
@@ -33,7 +33,9 @@ export function AttendanceCard() {
 
             <div className="mt-6 flex items-center gap-2">
               <div className="w-1 h-4 bg-teal-500 rounded"></div>
-              <span className="text-sm text-gray-600">12% more than Wednesday</span>
+              <span className="text-sm text-gray-600">
+                12% more than Wednesday
+              </span>
             </div>
           </div>
 
@@ -45,7 +47,14 @@ export function AttendanceCard() {
               </div>
             </div>
             <svg className="w-full h-full" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="16" fill="none" stroke="#f0f0f0" strokeWidth="3"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="16"
+                fill="none"
+                stroke="#f0f0f0"
+                strokeWidth="3"
+              ></circle>
               <circle
                 cx="18"
                 cy="18"
@@ -63,6 +72,5 @@ export function AttendanceCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

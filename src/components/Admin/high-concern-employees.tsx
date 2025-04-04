@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 // Dummy employee data
 const employees = [
@@ -12,8 +11,16 @@ const employees = [
     avatar: "/avatars/ankan.png",
     group: "Leadership Training #GRP12345",
     metrics: [
-      { label: "Morality", value: "-28%", color: "bg-yellow-200 text-yellow-800" },
-      { label: "Engagement", value: "-40%", color: "bg-blue-200 text-blue-800" },
+      {
+        label: "Morality",
+        value: "-28%",
+        color: "bg-yellow-200 text-yellow-800",
+      },
+      {
+        label: "Engagement",
+        value: "-40%",
+        color: "bg-blue-200 text-blue-800",
+      },
     ],
   },
   {
@@ -22,8 +29,16 @@ const employees = [
     avatar: "/avatars/rohit.png",
     group: "Leadership Training #GRP12345",
     metrics: [
-      { label: "Leave Impact", value: "+38%", color: "bg-green-200 text-green-800" },
-      { label: "Morality", value: "-18%", color: "bg-yellow-200 text-yellow-800" },
+      {
+        label: "Leave Impact",
+        value: "+38%",
+        color: "bg-green-200 text-green-800",
+      },
+      {
+        label: "Morality",
+        value: "-18%",
+        color: "bg-yellow-200 text-yellow-800",
+      },
     ],
   },
   {
@@ -32,8 +47,16 @@ const employees = [
     avatar: "/avatars/priya.png",
     group: "Leadership Training #GRP12345",
     metrics: [
-      { label: "Cultural Score", value: "+22%", color: "bg-red-200 text-red-800" },
-      { label: "Risk Retention", value: "-12%", color: "bg-pink-200 text-pink-800" },
+      {
+        label: "Cultural Score",
+        value: "+22%",
+        color: "bg-red-200 text-red-800",
+      },
+      {
+        label: "Risk Retention",
+        value: "-12%",
+        color: "bg-pink-200 text-pink-800",
+      },
     ],
   },
   {
@@ -42,8 +65,16 @@ const employees = [
     avatar: "/avatars/suresh.png",
     group: "Leadership Training #GRP12345",
     metrics: [
-      { label: "Morality", value: "-28%", color: "bg-yellow-200 text-yellow-800" },
-      { label: "Engagement", value: "-40%", color: "bg-blue-200 text-blue-800" },
+      {
+        label: "Morality",
+        value: "-28%",
+        color: "bg-yellow-200 text-yellow-800",
+      },
+      {
+        label: "Engagement",
+        value: "-40%",
+        color: "bg-blue-200 text-blue-800",
+      },
     ],
   },
   // {
@@ -59,7 +90,7 @@ const employees = [
 ];
 
 // EmployeeCard Component
-const EmployeeCard = ({ employee }: { employee: typeof employees[0] }) => {
+const EmployeeCard = ({ employee }: { employee: (typeof employees)[0] }) => {
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
   return (
@@ -74,10 +105,14 @@ const EmployeeCard = ({ employee }: { employee: typeof employees[0] }) => {
           </Avatar>
           <div className="flex-grow">
             <div className="flex justify-between items-baseline">
-              <p className="font-semibold text-gray-900 text-sm">{employee.name}</p>
+              <p className="font-semibold text-gray-900 text-sm">
+                {employee.name}
+              </p>
               <p className="text-xs text-gray-400">{employee.id}</p>
             </div>
-            <p className="text-xs text-gray-500 truncate max-w-[180px] sm:max-w-none">{employee.group}</p>
+            <p className="text-xs text-gray-500 truncate max-w-[180px] sm:max-w-none">
+              {employee.group}
+            </p>
           </div>
         </div>
         <div className="mt-1 flex gap-1 flex-wrap">
@@ -96,19 +131,29 @@ const EmployeeCard = ({ employee }: { employee: typeof employees[0] }) => {
 };
 
 export default function HighConcernEmployees({ className = "" }) {
-  const [month, setMonth] = useState("March");
+  // const [month, setMonth] = useState("March");
 
   return (
-    <div className={`p-4 sm:p-5 bg-white rounded-lg h-full flex flex-col ${className}`}>
+    <div
+      className={`p-4 sm:p-5 bg-white rounded-lg h-full flex flex-col ${className}`}
+    >
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">High Concern Employees</h2>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Employees who need most attention</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+            High Concern Employees
+          </h2>
+          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+            Employees who need most attention
+          </p>
         </div>
-        <Button variant="outline" size="sm" className="flex items-center gap-2 self-start sm:self-auto py-1.5 px-2.5 h-auto">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 self-start sm:self-auto py-1.5 px-2.5 h-auto"
+        >
           <Calendar size={14} className="text-gray-700" />
-          <span className="text-gray-700 font-medium">{month}</span>
+          <span className="text-gray-700 font-medium">{"March"}</span>
         </Button>
       </div>
 

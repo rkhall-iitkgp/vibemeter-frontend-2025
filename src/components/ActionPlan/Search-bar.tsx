@@ -2,13 +2,9 @@ import { FC, useState, ChangeEvent } from "react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
-  placeholder?: string;
 }
 
-const SearchBar: FC<SearchBarProps> = ({
-  onSearch,
-  placeholder = "Search Focus Group",
-}) => {
+const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,10 +18,10 @@ const SearchBar: FC<SearchBarProps> = ({
     onSearch("");
   };
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
         <svg
-          className="h-5 w-5 text-gray-400"
+          className="h-5 w-5 text-gray-900"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -42,8 +38,8 @@ const SearchBar: FC<SearchBarProps> = ({
         type="text"
         value={searchQuery}
         onChange={handleSearch}
-        className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-green-500"
-        placeholder={placeholder}
+        className="block w-full rounded-[0.3rem] border border-gray-300 bg-white py-2 pl-10 pr-10 text-sm placeholder-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+        placeholder="Search"
       />
       {searchQuery && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-3">

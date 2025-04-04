@@ -1,5 +1,5 @@
-import { FC, useState } from 'react';
-import { FocusGroup } from '../../types';
+import { FocusGroup } from "../../types";
+import { FC, useState } from "react";
 
 interface FilterState {
   tags: string[];
@@ -20,72 +20,82 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
   currentFilters,
 }) => {
   // Initialize with current filters
-  const [tempTagFilters, setTempTagFilters] = useState<string[]>(currentFilters.tags);
-  const [tempDateFilters, setTempDateFilters] = useState<string[]>(currentFilters.createdDate);
+  const [tempTagFilters, setTempTagFilters] = useState<string[]>(
+    currentFilters.tags
+  );
+  const [tempDateFilters, setTempDateFilters] = useState<string[]>(
+    currentFilters.createdDate
+  );
 
   // Get unique tags from all focus groups
-  const uniqueTags = ['All', ...new Set(focusGroups.flatMap(group => group.tags))];
+  const uniqueTags = [
+    "All",
+    ...new Set(focusGroups.flatMap((group) => group.tags)),
+  ];
 
   // Get unique dates
-  const uniqueDates = ['All', ...new Set(focusGroups.map(group => group.createdDate))].sort();
+  const uniqueDates = [
+    "All",
+    ...new Set(focusGroups.map((group) => group.createdDate)),
+  ].sort();
 
   const toggleTagFilter = (tag: string) => {
-    if (tag === 'All') {
-      setTempTagFilters(['All']);
+    if (tag === "All") {
+      setTempTagFilters(["All"]);
       return;
     }
-    
+
     // If 'All' is currently selected, remove it
-    let newFilters = tempTagFilters.filter(t => t !== 'All');
-    
+    let newFilters = tempTagFilters.filter((t) => t !== "All");
+
     if (newFilters.includes(tag)) {
       // Remove the tag if it's already selected
-      newFilters = newFilters.filter(t => t !== tag);
+      newFilters = newFilters.filter((t) => t !== tag);
       // If no filters left, select 'All'
       if (newFilters.length === 0) {
-        newFilters = ['All'];
+        newFilters = ["All"];
       }
     } else {
       // Add the tag if it's not already selected
       newFilters.push(tag);
     }
-    
+
     setTempTagFilters(newFilters);
   };
-  
+
   const toggleDateFilter = (date: string) => {
-    if (date === 'All') {
-      setTempDateFilters(['All']);
+    if (date === "All") {
+      setTempDateFilters(["All"]);
       return;
     }
-    
+
     // If 'All' is currently selected, remove it
-    let newFilters = tempDateFilters.filter(d => d !== 'All');
-    
+    let newFilters = tempDateFilters.filter((d) => d !== "All");
+
     if (newFilters.includes(date)) {
       // Remove the date if it's already selected
-      newFilters = newFilters.filter(d => d !== date);
+      newFilters = newFilters.filter((d) => d !== date);
       // If no filters left, select 'All'
       if (newFilters.length === 0) {
-        newFilters = ['All'];
+        newFilters = ["All"];
       }
     } else {
       // Add the date if it's not already selected
       newFilters.push(date);
     }
-    
+
     setTempDateFilters(newFilters);
   };
-  
+
   const clearAllFilters = () => {
-    setTempTagFilters(['All']);
-    setTempDateFilters(['All']);
+    setTempTagFilters(["All"]);
+    setTempDateFilters(["All"]);
   };
-  
+
   const applyFilters = () => {
     onApply({
       tags: tempTagFilters,
-      createdDate: tempDateFilters
+      createdDate: tempDateFilters,
     });
     onClose();
   };
@@ -97,7 +107,7 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-bold text-gray-900">Filter Options</h3>
         </div>
-        
+
         <div className="overflow-y-auto max-h-[450px]">
           {/* Tags Filter Section */}
           <div className="p-4 border-b border-gray-200">
@@ -112,17 +122,22 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
                     checked={tempTagFilters.includes(tag)}
                     onChange={() => toggleTagFilter(tag)}
                   />
-                  <label htmlFor={`tag-filter-${index}`} className="ml-2 text-sm text-gray-900">
+                  <label
+                    htmlFor={`tag-filter-${index}`}
+                    className="ml-2 text-sm text-gray-900"
+                  >
                     {tag}
                   </label>
                 </div>
               ))}
             </div>
           </div>
-          
+
           {/* Created Date Filter Section */}
           <div className="p-4 border-b border-gray-200">
-            <h4 className="text-base font-semibold text-gray-900 mb-3">Created Date</h4>
+            <h4 className="text-base font-semibold text-gray-900 mb-3">
+              Created Date
+            </h4>
             <div className="space-y-2 max-h-[150px] overflow-y-auto pr-2">
               {uniqueDates.map((date, index) => (
                 <div key={index} className="flex items-center">
@@ -133,7 +148,10 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
                     checked={tempDateFilters.includes(date)}
                     onChange={() => toggleDateFilter(date)}
                   />
-                  <label htmlFor={`date-filter-${index}`} className="ml-2 text-sm text-gray-900">
+                  <label
+                    htmlFor={`date-filter-${index}`}
+                    className="ml-2 text-sm text-gray-900"
+                  >
                     {date}
                   </label>
                 </div>
@@ -141,7 +159,7 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
             </div>
           </div>
         </div>
-        
+
         {/* Filter Action Buttons */}
         <div className="p-4 flex justify-between border-t border-gray-200">
           <button

@@ -1,10 +1,14 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Car } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Car } from "lucide-react";
 
-function ParkingSpot({ status }: { status: "available" | "occupied" | "empty" }) {
+function ParkingSpot({
+  status,
+}: {
+  status: "available" | "occupied" | "empty";
+}) {
   if (status === "empty") {
-    return <div className="h-4 w-4 rounded-sm bg-gray-200"></div>
+    return <div className="h-4 w-4 rounded-sm bg-gray-200"></div>;
   }
 
   if (status === "available") {
@@ -12,32 +16,41 @@ function ParkingSpot({ status }: { status: "available" | "occupied" | "empty" })
       <div className="h-4 w-4 rounded-sm border border-teal-500">
         <div className="h-full w-full bg-teal-500 opacity-30 rounded-sm"></div>
       </div>
-    )
+    );
   }
 
-  return <div className="h-4 w-4 rounded-sm border border-teal-500 bg-teal-500"></div>
+  return (
+    <div className="h-4 w-4 rounded-sm border border-teal-500 bg-teal-500"></div>
+  );
 }
 
-function ParkingGrid({ grid }: { grid: ("available" | "occupied" | "empty")[] }) {
+function ParkingGrid({
+  grid,
+}: {
+  grid: ("available" | "occupied" | "empty")[];
+}) {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(1rem,1fr))] gap-1.5">
       {grid.map((status, index) => (
         <ParkingSpot key={index} status={status} />
       ))}
     </div>
-  )
+  );
 }
 
-function createParkingGrid(totalSpots: number, occupancyRate: number): ("available" | "occupied" | "empty")[] {
+function createParkingGrid(
+  totalSpots: number,
+  occupancyRate: number
+): ("available" | "occupied" | "empty")[] {
   return Array.from({ length: totalSpots }, () =>
     Math.random() > occupancyRate ? "available" : "occupied"
-  )
+  );
 }
 
 export function ParkingSection() {
-  const totalSpots = 365
-  const occupiedSpots = 275
-  const parkingGrid = createParkingGrid(totalSpots, occupiedSpots / totalSpots)
+  const totalSpots = 365;
+  const occupiedSpots = 275;
+  const parkingGrid = createParkingGrid(totalSpots, occupiedSpots / totalSpots);
 
   return (
     <Card className="shadow-sm h-full">
@@ -63,6 +76,5 @@ export function ParkingSection() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

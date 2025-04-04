@@ -1,12 +1,12 @@
+import { DashboardPage, LoginPage, Graph, AdminDashboard } from "./pages";
 import { Navigate, Route, Routes } from "react-router";
-import { DashboardPage, LoginPage,Graph, AdminDashboard  } from "./pages";
-import { useSelector } from "react-redux";
-import { RootState } from "./store";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
 import EmployeeList from "./pages/employeeList";
+import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
-
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -20,17 +20,54 @@ function App() {
         />
         <Route
           path="/"
-          element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />}
+          element={
+            isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />
+          }
         />
-        <Route path="/dashboard" element={<DashboardPage/>} />
-        <Route path="/graph" element= {<Graph/>} />
-        <Route path="/admin" element={<AdminDashboard/>} />
-        <Route path="/questions" element={<AdminLayout><Questions /></AdminLayout>} />
-        <Route path="/focus-groups" element={<AdminLayout><FocusGroupPage /></AdminLayout>} />
-        <Route path="/focus-groups/:id" element={<AdminLayout><FocusGroupPage /></AdminLayout>} />
-        <Route path="/employees" element={<AdminLayout><EmployeeList /></AdminLayout>} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/graph" element={<Graph />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/questions"
+          element={
+            <AdminLayout>
+              <Questions />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/focus-groups"
+          element={
+            <AdminLayout>
+              <FocusGroupPage />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/focus-groups/:id"
+          element={
+            <AdminLayout>
+              <FocusGroupPage />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/employees"
+          element={
+            <AdminLayout>
+              <EmployeeList />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/action-plan"
+          element={
+            <AdminLayout>
+              <ActionPlan />
+            </AdminLayout>
+          }
+        />
       </Routes>
-      
     </>
   );
 }

@@ -1,6 +1,6 @@
-import { FC } from 'react';
-import { FocusGroup } from '../../types';
-import FocusGroupCard from './FocusGroupCard';
+import FocusGroupCard from "./FocusGroupCard";
+import { FocusGroup } from "../../types";
+import { FC } from "react";
 
 interface FocusGroupListProps {
   focusGroups: FocusGroup[];
@@ -8,13 +8,17 @@ interface FocusGroupListProps {
   onEdit: (focusGroup: FocusGroup) => void;
 }
 
-const FocusGroupList: FC<FocusGroupListProps> = ({ focusGroups, onDelete, onEdit }) => {
+const FocusGroupList: FC<FocusGroupListProps> = ({
+  focusGroups,
+  onDelete,
+  onEdit,
+}) => {
   return (
     <div className="mt-6">
       {focusGroups.map((group) => (
-        <FocusGroupCard 
-          key={group.id} 
-          focusGroup={group} 
+        <FocusGroupCard
+          key={group.id}
+          focusGroup={group}
           onDelete={onDelete}
           onEdit={onEdit}
         />

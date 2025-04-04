@@ -6,8 +6,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "./ui/carousel";
-import { X } from "lucide-react";
+} from "@/components/ui/carousel";
 import { useState } from "react";
 import { Card } from "./Card";
 
@@ -58,20 +57,8 @@ export function ActionPlansCarousel() {
 
   return (
     <div className="bg-slate-100 rounded-sm p-6 px-10 relative mx-auto max-w-7xl">
-      {/* Close button */}
-      <button
-        onClick={() => setIsVisible(false)}
-        className="absolute top-2 right-2 p-1 hover:bg-slate-200 rounded-full transition-colors"
-        aria-label="Close action plans"
-      >
-        <X size={20} />
-      </button>
-
       <div className="flex justify-between items-center mb-5 pt-1">
         <h2 className="text-lg font-semibold">Suggested Action Plans</h2>
-        <button className="bg-[#80c342] text-white text-sm px-4 py-1.5 rounded-md hover:bg-[#99c342] transition-colors">
-          View All Plans
-        </button>
       </div>
 
       <Carousel
@@ -104,10 +91,10 @@ export function ActionPlansCarousel() {
           ))}
         </CarouselContent>
         <div className="absolute inset-y-0 left-0 flex items-center">
-          <CarouselPrevious className="!h-10 !w-10 -ml-5 bg-white text-black shadow-none border-0" />
+          <CarouselPrevious className="!h-9 !w-9 -ml-7 bg-white text-black shadow-none border-0 " />
         </div>
         <div className="absolute inset-y-0 right-0 flex items-center">
-          <CarouselNext className="!h-10 !w-10 -mr-5 bg-white text-black shadow-none border-0" />
+          <CarouselNext className="!h-9 !w-9 -mr-7 bg-white text-black shadow-none border-0" />
         </div>
       </Carousel>
     </div>

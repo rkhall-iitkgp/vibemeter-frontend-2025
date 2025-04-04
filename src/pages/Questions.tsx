@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { X, Plus } from "lucide-react"
+import { X, Plus } from "lucide-react";
+import { useState } from "react";
 
 const Questions = () => {
   // Sample question data
@@ -28,46 +28,56 @@ const Questions = () => {
       tags: ["Morality", "Engagement"],
       severity: "Critical",
     },
-  ]
+  ];
 
   // State variables
-  const [questions, setQuestions] = useState(initialQuestions)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeFilters, setActiveFilters] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [questions, setQuestions] = useState(initialQuestions);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilters, setActiveFilters] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newQuestion, setNewQuestion] = useState({
     text: "",
     tags: [],
     severity: "Moderate",
-  })
+  });
 
   // Available filters
-  const allFilters = ["Engagement", "Morality", "Leave Impact", "Cultural Score", "Risk Retention"]
+  const allFilters = [
+    "Engagement",
+    "Morality",
+    "Leave Impact",
+    "Cultural Score",
+    "Risk Retention",
+  ];
 
   // Filter questions based on active filters and search query
   const filteredQuestions = questions.filter((question) => {
     // Search filter
-    const matchesSearch = searchQuery === "" || question.text.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSearch =
+      searchQuery === "" ||
+      question.text.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Tag filters
-    const matchesTags = activeFilters.length === 0 || activeFilters.some((filter) => question.tags.includes(filter))
+    const matchesTags =
+      activeFilters.length === 0 ||
+      activeFilters.some((filter) => question.tags.includes(filter));
 
-    return matchesSearch && matchesTags
-  })
+    return matchesSearch && matchesTags;
+  });
 
   // Toggle filter
   const toggleFilter = (filter: string) => {
     if (activeFilters.includes(filter)) {
-      setActiveFilters(activeFilters.filter((f) => f !== filter))
+      setActiveFilters(activeFilters.filter((f) => f !== filter));
     } else {
-      setActiveFilters([...activeFilters, filter])
+      setActiveFilters([...activeFilters, filter]);
     }
-  }
+  };
 
   // Clear search
   const clearSearch = () => {
-    setSearchQuery("")
-  }
+    setSearchQuery("");
+  };
 
   // Toggle tag selection for new question
   const toggleTagSelection = (tag: string) => {
@@ -75,51 +85,53 @@ const Questions = () => {
       setNewQuestion({
         ...newQuestion,
         tags: newQuestion.tags.filter((t) => t !== tag),
-      })
+      });
     } else {
       setNewQuestion({
         ...newQuestion,
         tags: [...newQuestion.tags, tag],
-      })
+      });
     }
-  }
+  };
 
   // Handle severity change
   const handleSeverityChange = (severity: string) => {
     setNewQuestion({
       ...newQuestion,
       severity,
-    })
-  }
+    });
+  };
 
   // Handle question text change
-  const handleQuestionTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleQuestionTextChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setNewQuestion({
       ...newQuestion,
       text: e.target.value,
-    })
-  }
+    });
+  };
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (newQuestion.text.trim() === "") return
+    e.preventDefault();
+    if (newQuestion.text.trim() === "") return;
 
     const newQuestionObj = {
       id: questions.length + 1,
       text: newQuestion.text,
       tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["Engagement"],
       severity: newQuestion.severity,
-    }
+    };
 
-    setQuestions([...questions, newQuestionObj])
+    setQuestions([...questions, newQuestionObj]);
     setNewQuestion({
       text: "",
       tags: [],
       severity: "Moderate",
-    })
-    setIsModalOpen(false)
-  }
+    });
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen p-3 sm:p-6">
@@ -130,7 +142,8 @@ const Questions = () => {
             <h1 className="text-3xl sm:text-4xl font-medium">Questions</h1>
             <p className="text-gray-500">Some description</p>
           </div>
-          <button type="button"
+          <button
+            type="button"
             className="bg-[#80C342] text-white px-5 py-2 rounded-md flex items-center text-sm sm:text-base w-full sm:w-48 justify-center sm:justify-start hover:cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
@@ -180,8 +193,11 @@ const Questions = () => {
             {allFilters.map((filter) => (
               <button
                 key={filter}
-                className={`px-3 sm:px-4 py-1 rounded-md text-xs drop-shadow-sm sm:text-sm whitespace-nowrap mr-2 ${activeFilters.includes(filter) ? "bg-[#80C342] text-white" : "bg-white text-gray-700"
-                  }`}
+                className={`px-3 sm:px-4 py-1 rounded-md text-xs drop-shadow-sm sm:text-sm whitespace-nowrap mr-2 ${
+                  activeFilters.includes(filter)
+                    ? "bg-[#80C342] text-white"
+                    : "bg-white text-gray-700"
+                }`}
                 onClick={() => toggleFilter(filter)}
               >
                 {filter}
@@ -193,41 +209,47 @@ const Questions = () => {
         {/* Questions list */}
         <div className="space-y-3 sm:space-y-4">
           {filteredQuestions.map((question) => (
-            <div key={question.id} className="bg-white p-3 sm:p-4 rounded-md shadow-sm border">
-              <p className="text-gray-800 mb-3 text-sm sm:text-base break-words">{question.text}</p>
+            <div
+              key={question.id}
+              className="bg-white p-3 sm:p-4 rounded-md shadow-sm border"
+            >
+              <p className="text-gray-800 mb-3 text-sm sm:text-base break-words">
+                {question.text}
+              </p>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-1 sm:gap-2">
-            {question.tags.map((tag) => (
+                <div className="flex flex-wrap gap-1 sm:gap-2">
+                  {question.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
+                        tag === "Morality"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : tag === "Engagement"
+                            ? "bg-teal-100 text-teal-800"
+                            : tag === "Leave Impact"
+                              ? "bg-[#e088c3] text-pink-800"
+                              : tag === "Cultural Score"
+                                ? "bg-[#80C342] text-green-800"
+                                : tag === "Risk Retention"
+                                  ? "bg-[#d97a73] text-white"
+                                  : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
                 <span
-                key={tag}
-                className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
-                  tag === "Morality"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : tag === "Engagement"
-                  ? "bg-teal-100 text-teal-800"
-                  : tag === "Leave Impact"
-                  ? "bg-[#e088c3] text-pink-800"
-                  : tag === "Cultural Score"
-                  ? "bg-[#80C342] text-green-800"
-                  : tag === "Risk Retention"
-                  ? "bg-[#d97a73] text-white"
-                  : "bg-gray-100 text-gray-800"
-                }`}
+                  className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
+                    question.severity === "Critical"
+                      ? "bg-red-100 text-red-800"
+                      : question.severity === "Moderate"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-[#F3FFE1] text-green-800"
+                  }`}
                 >
-                {tag}
+                  Severity: {question.severity}
                 </span>
-            ))}
-          </div>
-          <span
-            className={`px-2 sm:px-3 py-1 text-xs rounded-full ${question.severity === "Critical"
-                ? "bg-red-100 text-red-800"
-                : question.severity === "Moderate"
-            ? "bg-yellow-100 text-yellow-800"
-            : "bg-[#F3FFE1] text-green-800"
-              }`}
-          >
-            Severity: {question.severity}
-          </span>
               </div>
             </div>
           ))}
@@ -245,14 +267,21 @@ const Questions = () => {
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-semibold">Create Question</h2>
-              <button type="button" onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700" title="Close Modal">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+                title="Close Modal"
+              >
                 <X size={24} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-4">
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Question Text:</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Question Text:
+                </label>
                 <textarea
                   className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#80C342] focus:border-transparent"
                   rows={4}
@@ -263,25 +292,29 @@ const Questions = () => {
                 />
               </div>
 
-                <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Categories:</label>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Categories:
+                </label>
                 <div className="grid grid-cols-2 gap-2">
                   {allFilters.map((tag) => (
-                  <label key={tag} className="flex items-center gap-2">
-                    <input
-                    type="checkbox"
-                    className="form-checkbox text-[#80C342] rounded"
-                    checked={newQuestion.tags.includes(tag)}
-                    onChange={() => toggleTagSelection(tag)}
-                    />
-                    <span className="text-sm text-gray-700">{tag}</span>
-                  </label>
+                    <label key={tag} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox text-[#80C342] rounded"
+                        checked={newQuestion.tags.includes(tag)}
+                        onChange={() => toggleTagSelection(tag)}
+                      />
+                      <span className="text-sm text-gray-700">{tag}</span>
+                    </label>
                   ))}
                 </div>
-                </div>
+              </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Severity</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Severity
+                </label>
                 <div className="flex flex-col gap-2">
                   <label className="flex items-center">
                     <input
@@ -324,7 +357,10 @@ const Questions = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-[#80C342] text-white rounded-md hover:bg-[#6ca438]">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#80C342] text-white rounded-md hover:bg-[#6ca438]"
+                >
                   Create
                 </button>
               </div>
@@ -333,7 +369,7 @@ const Questions = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Questions
+export default Questions;

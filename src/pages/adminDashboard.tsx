@@ -1,10 +1,10 @@
-import { useState } from "react";
-import VibemeterChart from "@/components/Admin/average-vibemeter-score";
-import HighConcernEmployees from "@/components/Admin/new-high-concern-employee";
-import Sidebar from "@/components/Admin/sidenav";
 import EmployeeSatisfactionGauge from "@/components/Admin/employee-satisfaction";
+import HighConcernEmployees from "@/components/Admin/new-high-concern-employee";
+import VibemeterChart from "@/components/Admin/average-vibemeter-score";
 import BubbleChartPreview from "@/components/Admin/bubble-chart";
+import Sidebar from "@/components/Admin/sidenav";
 import { FaChartBar } from "react-icons/fa";
+import { useState } from "react";
 
 export default function AdminDashboard() {
   // For responsive sidebar toggling on mobile
@@ -14,7 +14,11 @@ export default function AdminDashboard() {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar - fixed on desktop, toggleable on mobile */}
       <div className="fixed inset-y-0 left-0 z-50 md:relative md:flex">
-        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} activeTab="Overview" />
+        <Sidebar
+          open={sidebarOpen}
+          setOpen={setSidebarOpen}
+          activeTab="Overview"
+        />
       </div>
 
       {/* Main content area */}
