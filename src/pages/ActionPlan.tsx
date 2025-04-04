@@ -232,7 +232,6 @@ export default function ActionPlan() {
       setIsDeleting(false);
     }
   };
->>>>>>> Stashed changes
 
 	return (
 		<div className="flex-1 overflow-auto ">
