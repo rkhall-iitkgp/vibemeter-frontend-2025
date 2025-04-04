@@ -16,13 +16,13 @@ interface NewQuestion {
   severity: "critical" | "moderate" | "mild" | "low";
 }
 
-// Map API response format to our component's format
-const mapResponseToQuestion = (item: any): Question => {
+const mapResponseToQuestion = (item: Question): Question => {
   return {
-    id: item.question_id,
+    id: item.id,
     text: item.text,
     tags: item.tags || [],
-    severity: item.severity || "moderate"
+    // Map "high" to "critical" if that's coming from your API
+    severity: item.severity || "moderate",
   };
 };
 
@@ -45,7 +45,7 @@ const Questions = () => {
     tags: [],
     severity: "moderate",
   });
-  
+
   // Add a state for tracking API operations
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -53,15 +53,15 @@ const Questions = () => {
   useEffect(() => {
     if (modalType !== null) {
       // Prevent scrolling on the body when modal is open
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
       // Re-enable scrolling when modal is closed
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     // Cleanup function to ensure scrolling is re-enabled when component unmounts
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [modalType]);
 
@@ -74,15 +74,19 @@ const Questions = () => {
     try {
       setIsLoading(true);
       const response = await fetch(`${BACKEND_URL}:8000/api/question`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      
+
       const responseData = await response.json();
-      
+
       // Handle the specific response format
-      if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
+      if (
+        responseData &&
+        responseData.status === "success" &&
+        Array.isArray(responseData.data)
+      ) {
         // Map the data to our expected Question format
         const formattedQuestions = responseData.data.map(mapResponseToQuestion);
         setQuestions(formattedQuestions);
@@ -100,7 +104,7 @@ const Questions = () => {
 
   // Get all unique tags from questions
   const allTags = Array.from(
-    new Set(questions.flatMap(question => question.tags))
+    new Set(questions.flatMap((question) => question.tags))
   ).sort();
 
   // Use all unique tags as available filters
@@ -151,7 +155,9 @@ const Questions = () => {
   };
 
   // Handle severity change
-  const handleSeverityChange = (severity: "critical" | "moderate" | "mild" | "low") => {
+  const handleSeverityChange = (
+    severity: "critical" | "moderate" | "mild" | "low"
+  ) => {
     setNewQuestion({
       ...newQuestion,
       severity,
@@ -214,7 +220,7 @@ const Questions = () => {
     if (newQuestion.text.trim() === "" || isSubmitting) return;
 
     setIsSubmitting(true);
-    
+
     try {
       // Prepare the question object based on API expectations
       const questionObj = {
@@ -228,26 +234,32 @@ const Questions = () => {
       if (modalType === "create") {
         // Create a new question
         response = await fetch(`${BACKEND_URL}:8000/api/question`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(questionObj),
         });
       } else if (modalType === "edit" && currentQuestion) {
         // For edit, we'll ensure we're using the format expected by your API
-        response = await fetch(`${BACKEND_URL}:8000/api/question/${currentQuestion.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question_id: currentQuestion.id,
-            text: newQuestion.text,
-            tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
-            severity: newQuestion.severity,
-          }),
-        });
+        response = await fetch(
+          `${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              question_id: currentQuestion.id,
+              text: newQuestion.text,
+              tags:
+                newQuestion.tags.length > 0
+                  ? newQuestion.tags
+                  : ["burnoutRisk"],
+              severity: newQuestion.severity,
+            }),
+          }
+        );
       } else {
         throw new Error("Invalid modal type");
       }
@@ -257,7 +269,7 @@ const Questions = () => {
       }
 
       const responseData = await response.json();
-      
+
       if (modalType === "create") {
         // Handle the response data based on the API format
         let createdQuestion;
@@ -269,7 +281,8 @@ const Questions = () => {
           createdQuestion = {
             id: responseData.question_id,
             text: newQuestion.text,
-            tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
+            tags:
+              newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
             severity: newQuestion.severity,
           };
         } else {
@@ -277,11 +290,12 @@ const Questions = () => {
           createdQuestion = {
             id: `temp-${Date.now()}`,
             text: newQuestion.text,
-            tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
+            tags:
+              newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
             severity: newQuestion.severity,
           };
         }
-        
+
         // Update the questions state with the new question
         setQuestions([...questions, createdQuestion]);
       } else if (modalType === "edit" && currentQuestion) {
@@ -289,16 +303,19 @@ const Questions = () => {
         const updatedQuestion = {
           id: currentQuestion.id,
           text: newQuestion.text,
-          tags: newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
+          tags:
+            newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
           severity: newQuestion.severity,
         };
-        
+
         // Preserve the original order by mapping through existing questions
-        setQuestions(questions.map(q => 
-          q.id === currentQuestion.id ? updatedQuestion : q
-        ));
+        setQuestions(
+          questions.map((q) =>
+            q.id === currentQuestion.id ? updatedQuestion : q
+          )
+        );
       }
-      
+
       // Reset form and close modal
       setNewQuestion({
         text: "",
@@ -319,18 +336,21 @@ const Questions = () => {
     if (!currentQuestion || isSubmitting) return;
 
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch(`${BACKEND_URL}:8000/api/question/${currentQuestion.id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       // Remove the question from the state
-      setQuestions(questions.filter(q => q.id !== currentQuestion.id));
+      setQuestions(questions.filter((q) => q.id !== currentQuestion.id));
       closeModal();
     } catch (err) {
       console.error("Failed to delete question:", err);
@@ -343,8 +363,8 @@ const Questions = () => {
   // Format a tag for display
   const formatTagName = (tag: string) => {
     return tag
-      .replace(/([A-Z])/g, ' $1') // Insert a space before uppercase letters
-      .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+      .replace(/([A-Z])/g, " $1") // Insert a space before uppercase letters
+      .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
   };
 
   // Add a new tag
@@ -352,7 +372,7 @@ const Questions = () => {
     if (tag && !newQuestion.tags.includes(tag)) {
       setNewQuestion({
         ...newQuestion,
-        tags: [...newQuestion.tags, tag]
+        tags: [...newQuestion.tags, tag],
       });
     }
   };
@@ -364,7 +384,9 @@ const Questions = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-medium">Questions</h1>
-            <p className="text-gray-500">Manage check-in questions for your team</p>
+            <p className="text-gray-500">
+              Manage check-in questions for your team
+            </p>
           </div>
           <button
             type="button"
@@ -452,61 +474,63 @@ const Questions = () => {
 
         {/* Questions list */}
         <div className="space-y-3 sm:space-y-4">
-          {!isLoading && filteredQuestions.map((question) => (
-            <div
-              key={question.id}
-              className="bg-white p-3 sm:p-4 rounded-md shadow-sm border"
-            >
-              <div className="flex justify-between">
-                <p className="text-gray-800 mb-3 text-sm sm:text-base break-words flex-grow">
-                  {question.text}
-                </p>
-                <div className="flex gap-2 ml-2">
-                  <button
-                    onClick={() => openEditModal(question)}
-                    className="text-blue-600 hover:text-blue-800 p-1"
-                    title="Edit Question"
-                  >
-                    <Edit size={18} />
-                  </button>
-                  <button 
-                    onClick={() => openDeleteModal(question)}
-                    className="text-red-600 hover:text-red-800 p-1"
-                    title="Delete Question"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-1 sm:gap-2">
-                  {question.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 sm:px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
+          {!isLoading &&
+            filteredQuestions.map((question) => (
+              <div
+                key={question.id}
+                className="bg-white p-3 sm:p-4 rounded-md shadow-sm border"
+              >
+                <div className="flex justify-between">
+                  <p className="text-gray-800 mb-3 text-sm sm:text-base break-words flex-grow">
+                    {question.text}
+                  </p>
+                  <div className="flex gap-2 ml-2">
+                    <button
+                      onClick={() => openEditModal(question)}
+                      className="text-blue-600 hover:text-blue-800 p-1"
+                      title="Edit Question"
                     >
-                      {formatTagName(tag)}
-                    </span>
-                  ))}
+                      <Edit size={18} />
+                    </button>
+                    <button
+                      onClick={() => openDeleteModal(question)}
+                      className="text-red-600 hover:text-red-800 p-1"
+                      title="Delete Question"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
-                <span
-                  className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
-                    question.severity === "critical"
-                      ? "bg-red-100 text-red-800"
-                      : question.severity === "moderate"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-green-100 text-green-800"
-                  }`}
-                >
-                  {question.severity.charAt(0).toUpperCase() + question.severity.slice(1)}
-                </span>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                  <div className="flex flex-wrap gap-1 sm:gap-2">
+                    {question.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 sm:px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
+                      >
+                        {formatTagName(tag)}
+                      </span>
+                    ))}
+                  </div>
+                  <span
+                    className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
+                      question.severity === "critical"
+                        ? "bg-red-100 text-red-800"
+                        : question.severity === "moderate"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {question.severity.charAt(0).toUpperCase() +
+                      question.severity.slice(1)}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           {!isLoading && filteredQuestions.length === 0 && (
             <div className="bg-white p-4 rounded-md shadow-sm border text-center text-gray-500">
-              {activeFilters.length > 0 || searchQuery 
-                ? "No questions match your filters" 
+              {activeFilters.length > 0 || searchQuery
+                ? "No questions match your filters"
                 : "No questions available. Create your first question!"}
             </div>
           )}
@@ -515,8 +539,14 @@ const Questions = () => {
 
       {/* Modal: Create or Edit Question */}
       {(modalType === "create" || modalType === "edit") && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto" onClick={handleModalBackdropClick}>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md relative" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-semibold">
                 {modalType === "create" ? "Create Question" : "Edit Question"}
@@ -557,18 +587,21 @@ const Questions = () => {
                     className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#80C342]"
                     placeholder="Add a new tag (press Enter)"
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === "Enter") {
                         e.preventDefault();
                         const newTag = e.currentTarget.value.trim();
                         addNewTag(newTag);
-                        e.currentTarget.value = '';
+                        e.currentTarget.value = "";
                       }
                     }}
                   />
                 </div>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {newQuestion.tags.map((tag) => (
-                    <div key={tag} className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                    <div
+                      key={tag}
+                      className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+                    >
                       {formatTagName(tag)}
                       <button
                         type="button"
@@ -576,7 +609,7 @@ const Questions = () => {
                         onClick={() => {
                           setNewQuestion({
                             ...newQuestion,
-                            tags: newQuestion.tags.filter(t => t !== tag)
+                            tags: newQuestion.tags.filter((t) => t !== tag),
                           });
                         }}
                       >
@@ -595,11 +628,15 @@ const Questions = () => {
                           checked={newQuestion.tags.includes(tag)}
                           onChange={() => toggleTagSelection(tag)}
                         />
-                        <span className="text-sm text-gray-700">{formatTagName(tag)}</span>
+                        <span className="text-sm text-gray-700">
+                          {formatTagName(tag)}
+                        </span>
                       </label>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500 col-span-2">No categories available yet. Create your own tags above.</p>
+                    <p className="text-sm text-gray-500 col-span-2">
+                      No categories available yet. Create your own tags above.
+                    </p>
                   )}
                 </div>
               </div>
@@ -653,7 +690,7 @@ const Questions = () => {
                 </button>
                 <button
                   type="submit"
-                  className={`px-4 py-2 bg-[#80C342] text-white rounded-md hover:bg-[#6ca438] ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`px-4 py-2 bg-[#80C342] text-white rounded-md hover:bg-[#6ca438] ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -661,8 +698,10 @@ const Questions = () => {
                       <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                       {modalType === "create" ? "Creating..." : "Saving..."}
                     </span>
+                  ) : modalType === "create" ? (
+                    "Create"
                   ) : (
-                    modalType === "create" ? "Create" : "Save Changes"
+                    "Save Changes"
                   )}
                 </button>
               </div>
@@ -673,12 +712,19 @@ const Questions = () => {
 
       {/* Modal: Delete Confirmation */}
       {modalType === "delete" && currentQuestion && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={handleModalBackdropClick}>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
               <h3 className="text-xl font-semibold mb-4">Delete Question</h3>
               <p className="mb-6">
-                Are you sure you want to delete this question? This action cannot be undone.
+                Are you sure you want to delete this question? This action
+                cannot be undone.
               </p>
               <div className="border-t pt-4 flex justify-end gap-3">
                 <button
@@ -691,7 +737,7 @@ const Questions = () => {
                 </button>
                 <button
                   type="button"
-                  className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
                   onClick={handleDeleteQuestion}
                   disabled={isSubmitting}
                 >
