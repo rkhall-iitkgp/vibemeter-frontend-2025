@@ -25,7 +25,7 @@ interface Message {
  * ChatPage Component
  * A responsive chat interface that simulates conversation with an AI assistant.
  * Features include:
- * - Message history
+ * - Message history (with unlimited messages)
  * - Typing indicators
  * - Auto-expanding text input
  * - Emoji picker
@@ -108,14 +108,7 @@ export default function ChatPage() {
       timestamp: new Date(),
     }
 
-    setMessages((prev) => {
-      // Only keep last 50 messages for performance
-      const messageHistory = [...prev, newUserMessage];
-      if (messageHistory.length > 50) {
-        return messageHistory.slice(messageHistory.length - 50);
-      }
-      return messageHistory;
-    });
+    setMessages((prev) => [...prev, newUserMessage]);
     
     // Simulate AI response with sequential timeouts
     const waitingTimer = setTimeout(() => {
@@ -132,14 +125,7 @@ export default function ChatPage() {
             text: "I've received your message. How can I help further?",
             timestamp: new Date(),
           }
-          setMessages((prev) => {
-            // Only keep last 50 messages for performance
-            const messageHistory = [...prev, aiResponse];
-            if (messageHistory.length > 50) {
-              return messageHistory.slice(messageHistory.length - 50);
-            }
-            return messageHistory;
-          });
+          setMessages((prev) => [...prev, aiResponse]);
           setIsWaitingForResponse(false)
         }, 800) // Slightly faster response time
         
@@ -222,19 +208,17 @@ export default function ChatPage() {
       {/* Messages Area - Displays conversation history */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 will-change-scroll" 
            style={{ scrollBehavior: 'smooth', overscrollBehavior: 'contain' }}>
-        {messages.map((message, index) => {
-          // Only animate recent messages (last 5) for better performance
-          const isRecent = index >= Math.max(0, messages.length - 5);
-          
+        {messages.map((message) => {
+          // Apply animation to all messages
           return (
             <div 
               key={message.id} 
               className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-              style={isRecent ? {
+              style={{
                 animation: `fadeIn 0.3s ease-out forwards`,
                 opacity: 0,
                 transform: 'translateY(10px)'
-              } : {}}
+              }}
             >
               {/* Show avatar only for AI messages */}
               {message.sender === "ai" && (
@@ -433,6 +417,25 @@ export default function ChatPage() {
           scroll-behavior: smooth;
           overscroll-behavior: contain;
           -webkit-overflow-scrolling: touch; /* For iOS devices */
+        }
+        
+        /* Hide scrollbar buttons */
+        .will-change-scroll::-webkit-scrollbar-button {
+          display: none;
+        }
+        
+        /* Custom scrollbar for chat */
+        .will-change-scroll::-webkit-scrollbar {
+          width: 5px;
+        }
+        
+        .will-change-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        
+        .will-change-scroll::-webkit-scrollbar-thumb {
+          background-color: rgba(209, 213, 219, 0.5);
+          border-radius: 20px;
         }
         
         /* Textarea styling */
