@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Calendar, Clock, Coffee, LogOut, Timer } from "lucide-react";
 import { format, differenceInMinutes } from "date-fns";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // Define TypeScript interfaces for better type safety and export readiness
@@ -18,11 +24,10 @@ interface ClockInOutProps {
  * ClockInOut component - Allows users to track their work time
  */
 const ClockInOut: React.FC<ClockInOutProps> = ({
-  className,
   onClockIn,
   onClockOut,
   onBreakStart,
-  onBreakEnd
+  onBreakEnd,
 }) => {
   // Time tracking states
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
@@ -31,7 +36,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   const [breakStartTime, setBreakStartTime] = useState<Date | null>(null);
   const [totalBreakMinutes, setTotalBreakMinutes] = useState<number>(0);
   const [isOnBreak, setIsOnBreak] = useState<boolean>(false);
-  
+
   // Working time calculations
   const [workingTime, setWorkingTime] = useState<string>("0h 0m");
 
@@ -39,19 +44,17 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-      
+
       // Calculate working time if clocked in
       if (clockInTime && !clockOutTime) {
-        let workMinutes = differenceInMinutes(
-          new Date(), 
-          clockInTime
-        ) - totalBreakMinutes;
-        
+        let workMinutes =
+          differenceInMinutes(new Date(), clockInTime) - totalBreakMinutes;
+
         if (isOnBreak && breakStartTime) {
           // Subtract ongoing break time
           workMinutes -= differenceInMinutes(new Date(), breakStartTime);
         }
-        
+
         const hours = Math.floor(workMinutes / 60);
         const minutes = workMinutes % 60;
         setWorkingTime(`${hours}h ${minutes}m`);
@@ -72,10 +75,11 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   const handleClockOut = () => {
     const now = new Date();
     setClockOutTime(now);
-    
+
     // Calculate total hours worked
     if (clockInTime) {
-      let totalMinutes = differenceInMinutes(now, clockInTime) - totalBreakMinutes;
+      const totalMinutes =
+        differenceInMinutes(now, clockInTime) - totalBreakMinutes;
       const totalHours = totalMinutes / 60;
       onClockOut?.(now, totalHours);
     }
@@ -93,7 +97,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
       // End break
       const now = new Date();
       const breakDuration = differenceInMinutes(now, breakStartTime);
-      setTotalBreakMinutes(prev => prev + breakDuration);
+      setTotalBreakMinutes((prev) => prev + breakDuration);
       setIsOnBreak(false);
       setBreakStartTime(null);
       onBreakEnd?.(now, breakDuration);
@@ -107,14 +111,18 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   };
 
   return (
-    <Card className={cn("w-full mx-auto border shadow-md", className)}>
-      <CardHeader className="pb-2 px-4 sm:px-6">
+    <Card className=" w-full mx-auto border shadow-md">
+      <CardHeader className=" px-2 pb-0 sm:px-6">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg font-semibold text-gray-800">
             Clock In / Out
           </CardTitle>
           <span className="text-xs sm:text-sm text-[#80C342] font-medium">
-            {clockOutTime ? "Completed" : clockInTime ? "Active" : "Not started"}
+            {clockOutTime
+              ? "Completed"
+              : clockInTime
+                ? "Active"
+                : "Not started"}
           </span>
         </div>
         <div className="flex items-center text-xs sm:text-sm text-gray-500 mt-1">
@@ -123,7 +131,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 px-4 sm:px-6">
+      <CardContent className="space-y-1 px-4 sm:px-6">
         {/* Clock In / Out Times */}
         <div className="grid grid-cols-2 gap-2 sm:gap-4">
           <div className="bg-gray-50 p-2 sm:p-3 rounded-md text-center">
@@ -158,20 +166,21 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
 
         {/* Break Status */}
         {clockInTime && !clockOutTime && (
-          <div className={`text-center p-2 rounded-md ${isOnBreak ? "bg-amber-50 border border-amber-200" : "bg-gray-50"}`}>
+          <div
+            className={`text-center p-2 rounded-md ${isOnBreak ? "bg-amber-50 border border-amber-200" : "bg-gray-50"}`}
+          >
             <p className="text-xs sm:text-sm text-gray-500">
-              {isOnBreak 
-                ? `On break: ${formatTime(breakStartTime)}` 
-                : totalBreakMinutes > 0 
+              {isOnBreak
+                ? `On break: ${formatTime(breakStartTime)}`
+                : totalBreakMinutes > 0
                   ? `Total break: ${Math.floor(totalBreakMinutes / 60)}h ${totalBreakMinutes % 60}m`
-                  : "No breaks taken"
-              }
+                  : "No breaks taken"}
             </p>
           </div>
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-wrap sm:flex-nowrap gap-2 justify-between px-4 sm:px-6 pb-4">
+      <CardFooter className="flex flex-wrap sm:flex-nowrap gap-2 justify-between px-2 sm:px-6 ">
         {!clockInTime && (
           <Button
             onClick={handleClockIn}
@@ -180,7 +189,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
             <Clock className="h-4 w-4 mr-2" /> Clock In
           </Button>
         )}
-        
+
         {clockInTime && !clockOutTime && (
           <>
             <Button
@@ -194,7 +203,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
               <Coffee className="h-4 w-4" />
               {isOnBreak ? "End Break" : "Start Break"}
             </Button>
-            
+
             <Button
               onClick={handleClockOut}
               className="bg-[#80C342] hover:bg-[#6ca438] text-white w-full sm:flex-1"
@@ -204,7 +213,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
             </Button>
           </>
         )}
-        
+
         {clockOutTime && (
           <div className="w-full text-center text-sm text-gray-500">
             <Timer className="inline h-4 w-4 mr-2 text-[#80C342]" />

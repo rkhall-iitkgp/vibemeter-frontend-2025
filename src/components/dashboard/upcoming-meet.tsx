@@ -1,7 +1,6 @@
-
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CalendarDays, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const meetings = [
   {
@@ -22,8 +21,8 @@ const meetings = [
 
 export default function UpcomingMeetings() {
   return (
-    <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md p-4 space-y-4">
-      <h2 className="text-lg font-semibold">Upcoming Meetings</h2>
+    <div className="mx-auto bg-white rounded-xl shadow-md p-4 space-y-4">
+      <h2 className="text-lg font-semibold ">Upcoming Meetings</h2>
       <div className="text-sm text-muted-foreground">Friday, April 4, 2025</div>
 
       {meetings.map((meeting, idx) => (

@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const userData = {
   name: "Ankan",
@@ -9,7 +9,7 @@ const userData = {
 
 export default function ProfileCard() {
   return (
-    <Card className="w-48 h-52 rounded-2xl bg-muted flex flex-col items-center justify-center shadow-sm">
+    <Card className="rounded-2xl  flex flex-col items-center justify-center shadow-sm">
       <CardContent className="flex flex-col items-center justify-center text-center space-y-2">
         <Avatar className="w-16 h-16">
           <AvatarImage src={userData.avatarUrl} alt={userData.name} />

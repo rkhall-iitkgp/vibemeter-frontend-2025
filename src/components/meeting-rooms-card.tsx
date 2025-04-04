@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Building2 } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Building2 } from "lucide-react";
 
 export function MeetingRoomsCard({ className }: { className?: string }) {
   return (
@@ -8,7 +8,9 @@ export function MeetingRoomsCard({ className }: { className?: string }) {
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Meeting rooms</h3>
-          <div className="bg-teal-500 text-white text-xs px-2 py-1 rounded-full">Available</div>
+          <div className="bg-teal-500 text-white text-xs px-2 py-1 rounded-full">
+            Available
+          </div>
         </div>
 
         <div className="flex justify-center mb-6">
@@ -28,9 +30,10 @@ export function MeetingRoomsCard({ className }: { className?: string }) {
           </div>
         </div>
 
-        <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white">Book a Meeting Room</Button>
+        <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white">
+          Book a Meeting Room
+        </Button>
       </CardContent>
     </Card>
-  )
+  );
 }
-

@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, CheckCircle, LucideIcon } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Clock, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-type TaskType = 'lunch' | 'event' | 'meeting' | 'email'
+// type TaskType = "lunch" | "event" | "meeting" | "email";
 
 interface Task {
   id: number;
@@ -22,18 +22,21 @@ export function ChecklistCard({ tasks }: ChecklistCardProps) {
       <CardHeader className="flex flex-row items-center justify-between pb-2 pt-6 px-6">
         <CardTitle className="text-lg font-semibold">Checklist</CardTitle>
         <div className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-          {tasks.filter(task => !task.is_completed).length} Pending
+          {tasks.filter((task) => !task.is_completed).length} Pending
         </div>
       </CardHeader>
       <CardContent className="px-6 pb-6">
         <div className="space-y-4">
-          {tasks.map(task => (
-            <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg">
+          {tasks.map((task) => (
+            <div
+              key={task.id}
+              className="flex items-start gap-3 p-3 rounded-lg"
+            >
               <div className={`p-2 rounded-lg`}>
                 {task.is_completed ? (
-                  <CheckCircle className="h-5 w-5 text-green-500" /> 
+                  <CheckCircle className="h-5 w-5 text-green-500" />
                 ) : (
-                  <Clock className="h-5 w-5 text-blue-500" />  
+                  <Clock className="h-5 w-5 text-blue-500" />
                 )}
               </div>
               <div className="flex-1">
@@ -54,4 +57,3 @@ export function ChecklistCard({ tasks }: ChecklistCardProps) {
     </Card>
   );
 }
-

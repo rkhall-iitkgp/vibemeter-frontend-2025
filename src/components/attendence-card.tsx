@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 // Define the type for the stats prop
 interface AttendanceStats {
@@ -41,25 +41,38 @@ export function AttendanceCard({ stats }: AttendanceCardProps) {
               <div className="flex items-center gap-2">
                 <div className="h-2.5 w-2.5 rounded-full bg-gray-400"></div>
                 <span className="font-medium">{stats.avg_work_hours}</span>
-                <span className="text-gray-500 text-sm">Average Work Hours</span>
+                <span className="text-gray-500 text-sm">
+                  Average Work Hours
+                </span>
               </div>
             </div>
 
             <div className="mt-6 flex items-center gap-2">
               <div className="w-1 h-4 bg-teal-500 rounded"></div>
-              <span className="text-sm text-gray-600">{stats.punctuality_score}% more than last period</span>
+              <span className="text-sm text-gray-600">
+                {stats.punctuality_score}% more than last period
+              </span>
             </div>
           </div>
 
           <div className="relative w-32 h-32">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <div className="text-2xl font-bold">{stats.total_days_present + stats.total_days_absent}</div>
+                <div className="text-2xl font-bold">
+                  {stats.total_days_present + stats.total_days_absent}
+                </div>
                 <div className="text-xs text-gray-500">Total</div>
               </div>
             </div>
             <svg className="w-full h-full" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="16" fill="none" stroke="#f0f0f0" strokeWidth="3"></circle>
+              <circle
+                cx="18"
+                cy="18"
+                r="16"
+                fill="none"
+                stroke="#f0f0f0"
+                strokeWidth="3"
+              ></circle>
               <circle
                 cx="18"
                 cy="18"
@@ -68,7 +81,12 @@ export function AttendanceCard({ stats }: AttendanceCardProps) {
                 stroke="#3b82f6"
                 strokeWidth="3"
                 strokeDasharray="100"
-                strokeDashoffset={100 - (stats.total_days_present / (stats.total_days_present + stats.total_days_absent)) * 100}
+                strokeDashoffset={
+                  100 -
+                  (stats.total_days_present /
+                    (stats.total_days_present + stats.total_days_absent)) *
+                    100
+                }
                 strokeLinecap="round"
                 transform="rotate(-90 18 18)"
               ></circle>

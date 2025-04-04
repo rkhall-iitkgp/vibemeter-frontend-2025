@@ -1,6 +1,11 @@
 "use client";
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useState, useMemo } from "react";
@@ -40,11 +45,27 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
     intensityLevel: getIntensityLevel(day.hours),
   }));
 
-  const [selectedPosition, setSelectedPosition] = useState<null | { month: number; day: number; week: number }>(null);
+  const [selectedPosition, setSelectedPosition] = useState<null | {
+    month: number;
+    day: number;
+    week: number;
+  }>(null);
 
   // Organize the data by month, day, and week for heatmap rendering
-  const organizedData: Record<number, Record<number, Record<number, { date: Date; hours: number; intensityLevel: string }>>> = useMemo(() => {
-    const data: Record<number, Record<number, Record<number, { date: Date; hours: number; intensityLevel: string }>>> = {};
+  const organizedData: Record<
+    number,
+    Record<
+      number,
+      Record<number, { date: Date; hours: number; intensityLevel: string }>
+    >
+  > = useMemo(() => {
+    const data: Record<
+      number,
+      Record<
+        number,
+        Record<number, { date: Date; hours: number; intensityLevel: string }>
+      >
+    > = {};
     processedData.forEach((day) => {
       const month = day.date.getMonth();
       const dayOfWeek = day.date.getDay();
@@ -72,11 +93,15 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
     }).format(today);
   };
 
-  const formatTooltipContent = (dayData: { date: Date; hours: number } | null) => {
+  const formatTooltipContent = (
+    dayData: { date: Date; hours: number } | null
+  ) => {
     if (dayData) {
       return (
         <div className="px-3 py-2 flex items-center gap-2">
-          <div className={`w-3 h-3 ${getIntensityColor(getIntensityLevel(dayData.hours))}`}></div>
+          <div
+            className={`w-3 h-3 ${getIntensityColor(getIntensityLevel(dayData.hours))}`}
+          ></div>
           <Label className="font-medium text-sm text-gray-800">
             {dayData.hours} {dayData.hours === 1 ? "hour" : "hours"}
           </Label>
@@ -86,7 +111,9 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
       return (
         <div className="px-3 py-2 flex items-center gap-2">
           <div className="w-3 h-3 bg-gray-100"></div>
-          <Label className="font-medium text-sm text-gray-500">No activity</Label>
+          <Label className="font-medium text-sm text-gray-500">
+            No activity
+          </Label>
         </div>
       );
     }
@@ -95,13 +122,31 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
   return (
     <TooltipProvider>
       <Card className="w-full shadow-md">
-        <CardTitle className="mx-7 my-0 text-lg font-semibold">Your Activity</CardTitle>
+        <CardTitle className="mx-7 my-0 text-lg font-semibold">
+          Your Activity
+        </CardTitle>
         <CardContent className="p-3 overflow-x-auto max-w-full">
           <div className="overflow-x-auto">
             {/* Adjusted Month Headers to align with heatmap */}
             <div className="flex gap-6 px-19">
-              {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, index) => (
-                <Label key={index} className="flex-1 text-center text-xs font-medium text-gray-600 mb-2">
+              {[
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ].map((month, index) => (
+                <Label
+                  key={index}
+                  className="flex-1 text-center text-xs font-medium text-gray-600 mb-2"
+                >
                   {month}
                 </Label>
               ))}
@@ -111,12 +156,28 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
             <div className="flex flex-col gap-1">
               {[0, 1, 2, 3, 4, 5, 6].map((day) => (
                 <div key={day} className="flex items-center mx-auto">
-                  <Label className="w-6 text-xs font-medium text-gray-600">{["", "M", "", "W", "", "F", ""][day]}</Label>
+                  <Label className="w-6 text-xs font-medium text-gray-600">
+                    {["", "M", "", "W", "", "F", ""][day]}
+                  </Label>
                   <div className="flex gap-0.5">
-                    {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((_, monthIndex) => (
+                    {[
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ].map((_, monthIndex) => (
                       <div key={monthIndex} className="flex gap-0.5">
                         {Array.from({ length: 4 }).map((_, weekIndex) => {
-                          const dayData = organizedData[monthIndex]?.[day]?.[weekIndex];
+                          const dayData =
+                            organizedData[monthIndex]?.[day]?.[weekIndex];
 
                           return (
                             <Tooltip key={weekIndex}>
@@ -149,7 +210,13 @@ const HeatMap: React.FC<HeatMapProps> = ({ workHours }) => {
             <div className="w-full flex justify-between mt-3 items-center text-xs ">
               <Label className="text-sm font-medium text-gray-700 px-19">
                 {selectedPosition
-                  ? formatSelectedDate(new Date(2025, selectedPosition.month, selectedPosition.day))
+                  ? formatSelectedDate(
+                      new Date(
+                        2025,
+                        selectedPosition.month,
+                        selectedPosition.day
+                      )
+                    )
                   : getCurrentDateInfo()}
               </Label>
               <div className="flex items-center gap-1 px-13">

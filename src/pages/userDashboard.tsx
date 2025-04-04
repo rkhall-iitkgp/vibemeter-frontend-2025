@@ -1,5 +1,5 @@
-import { DashboardContent } from "@/components/dashboard-content"
-import { Sidebar } from "@/components/sidebar"
+import { DashboardContent } from "@/components/dashboard-content";
+import { Sidebar } from "@/components/sidebar";
 
 export default function DashboardPage() {
   return (
@@ -9,5 +9,5 @@ export default function DashboardPage() {
         <DashboardContent />
       </div>
     </div>
-  )
+  );
 }

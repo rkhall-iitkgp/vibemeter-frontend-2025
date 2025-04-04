@@ -39,7 +39,7 @@ export default function NoticeBoard() {
         </div>
         <div className="space-y-4">
           {notices.map((notice, index) => (
-            <div key={index} className="border-l-4 border-lime-600 pl-3">
+            <div key={index} className="border-l-4 border-lime-600 pl-2">
               <div className="font-semibold text-gray-900">{notice.title}</div>
               <div className="text-sm text-gray-600">{notice.description}</div>
               <div className="text-xs text-lime-600 mt-1">{notice.posted}</div>
