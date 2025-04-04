@@ -1,8 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import MeetingScheduler from "@/pages/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import MeetingScheduler from "@/pages/MeetingScheduler";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
@@ -131,7 +131,7 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
   const handleScheduleMeeting = (meetingDetails: MeetingDetails) => {
-    console.log('Meeting scheduled:', meetingDetails);
+    console.log("Meeting scheduled:", meetingDetails);
     setShowMeetingScheduler(false);
   };
 
@@ -174,7 +174,7 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
                 </p>
               </div>
 
-              <Button 
+              <Button
                 className="bg-[#80C342] hover:bg-[#5A9027] mr-2 text-white text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto"
                 onClick={() => setShowMeetingScheduler(true)}
               >

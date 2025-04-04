@@ -1,7 +1,6 @@
-import { StringifyOptions } from "querystring";
 import { FC, useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface ActionStep {
   id: number;
@@ -14,8 +13,8 @@ interface InitiativeModalProps {
 }
 
 interface FocusGroups {
-  name : string
-  focus_group_id : string
+  name: string;
+  focus_group_id: string;
 }
 
 const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
@@ -35,21 +34,22 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
   const [targetGroups, setTargetGroups] = useState<string[]>([]);
   const [targetGroupInput, setTargetGroupInput] = useState("");
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(["Morale"]);
-  const [suggestedTargetGroups, setSuggestedTargetGroups] = useState<FocusGroups[]>([]); 
+  const [suggestedTargetGroups, setSuggestedTargetGroups] = useState<
+    FocusGroups[]
+  >([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchFocusGroups = async () => {
       try {
-        const responseData = await fetch(`${BACKEND_URL}/api/groups/minified`)
+        const responseData = await fetch(`${BACKEND_URL}/api/groups/minified`);
         // console.log(responseData)
-        setSuggestedTargetGroups((await responseData.json()).data)
+        setSuggestedTargetGroups((await responseData.json()).data);
+      } catch (err) {
+        console.log(err);
       }
-      catch(err){
-        console.log(err)
-      }
-    }
+    };
     fetchFocusGroups();
-  },[])
+  }, []);
   const [isMetricDropdownOpen, setIsMetricDropdownOpen] = useState(false);
 
   // Action Steps state
@@ -118,31 +118,31 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
       purpose: purpose,
       metric: selectedMetrics,
       target_groups: targetGroups,
-      steps: actionSteps.map(step => step.title),
-      is_completed: false
+      steps: actionSteps.map((step) => step.title),
+      is_completed: false,
     };
-  
+
     // Log the formatted data (for testing)
     // console.log('Submitting initiative data:', formattedData);
-  
+
     // Here you would typically send this data to your API
     // Example using fetch:
     fetch(`${BACKEND_URL}/api/actions`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(formattedData)
+      body: JSON.stringify(formattedData),
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
         // Close the modal or show success message
         onClose();
-        window.location.reload()
+        window.location.reload();
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
         // Handle error (show error message, etc.)
       });
   };
@@ -199,15 +199,14 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
 
   const removeTargetGroup = (groupId: string) => {
     setTargetGroups(targetGroups.filter((id) => id !== groupId));
-  }
+  };
 
   const filterSuggestions = (input: string) => {
-    return suggestedTargetGroups
-      .filter(
-        (group) =>
-          group.name.toLowerCase().includes(input.toLowerCase()) &&
-          !targetGroups.includes(group.focus_group_id) // Exclude already selected groups by id
-      );
+    return suggestedTargetGroups.filter(
+      (group) =>
+        group.name.toLowerCase().includes(input.toLowerCase()) &&
+        !targetGroups.includes(group.focus_group_id) // Exclude already selected groups by id
+    );
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -367,7 +366,6 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
           >
             <svg
               className="mr-2 h-5 w-5"
-              
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -601,8 +599,6 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                   })}
                 </div>
 
-
-
                 {/* Input for new target group */}
                 <div className="flex">
                   <input
@@ -614,21 +610,23 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                     placeholder="Add target group and press Enter"
                     className="flex-1 rounded-l-md border border-gray-300 p-2 text-gray-700 focus:border-[#80C342] focus:outline-none"
                   />
-                  </div>
-                
-                {(
-                <ul className="mt-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto">
-                  {filterSuggestions(targetGroupInput).map((suggestion, index) => (
-                    <li
-                      key={index}
-                      onClick={() => addTargetGroup(suggestion)}
-                      className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                    >
-                      {suggestion.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
+                </div>
+
+                {
+                  <ul className="mt-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto">
+                    {filterSuggestions(targetGroupInput).map(
+                      (suggestion, index) => (
+                        <li
+                          key={index}
+                          onClick={() => addTargetGroup(suggestion)}
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                        >
+                          {suggestion.name}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                }
 
                 {showTargetGroupsError && targetGroups.length === 0 && (
                   <p className="mt-2 text-sm text-red-500">

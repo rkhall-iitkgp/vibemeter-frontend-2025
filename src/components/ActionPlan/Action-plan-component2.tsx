@@ -1,24 +1,26 @@
 import { ArrowRight, Trash2 } from "lucide-react";
 
 interface FocusGroups {
-  name : string
-  focus_group_id : string
+  name: string;
+  focus_group_id: string;
 }
 interface HorizontalRecognitionCardProps {
   title: string;
   created_at: string;
-  purpose : string;
-  target_groups : FocusGroups[];
+  purpose: string;
+  target_groups: FocusGroups[];
   metrics: string[];
   action_id: string;
-  is_completed ?: boolean 
+  is_completed?: boolean;
   onDelete: (actionId: string) => void;
 }
 
-export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps) {
+export function HorizontalRecognitionCard(
+  props: HorizontalRecognitionCardProps
+) {
   // Function to determine metric color based on metric content
   // console.log(props)
-  const getTagColor = (metric : any) => {
+  const getTagColor = (metric: any) => {
     const tagLower = metric.toLowerCase();
     if (tagLower.includes("moral") || tagLower === "morality") {
       return "bg-amber-100 text-amber-700";
@@ -41,15 +43,18 @@ export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps)
 
   return (
     <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4">
-      <h3 className="font-semibold text-gray-900 text-lg mb-1">{props.title}</h3>
+      <h3 className="font-semibold text-gray-900 text-lg mb-1">
+        {props.title}
+      </h3>
 
       <div className="flex items-center flex-wrap gap-2 mb-3">
         <p className="text-sm text-gray-500">
-              Created on {new Date(props.created_at).toLocaleDateString('en-US', {
-								year: 'numeric',
-								month: 'long',
-								day: '2-digit'
-							})}
+          Created on{" "}
+          {new Date(props.created_at).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+          })}
         </p>
         {Array.isArray(props.metrics) && props.metrics.length > 0 ? (
           props.metrics.map((metric, tagIndex) => (
@@ -86,18 +91,17 @@ export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps)
             />
           </svg>
           <span className="text-[#005587] font-semibold">Target Group:</span>
-          {props.target_groups?.map(targetGroup => {
-            return(
+          {props.target_groups?.map((targetGroup) => {
+            return (
               <span className="ml-1 font-semibold text-[#000]">
                 {targetGroup.name} ({targetGroup.focus_group_id})
               </span>
             );
           })}
-          
         </div>
 
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => props.onDelete(props.action_id)}
             className="text-red-600 text-sm font-medium flex items-center hover:text-red-800 transition-colors"
             aria-label="Delete action plan"
