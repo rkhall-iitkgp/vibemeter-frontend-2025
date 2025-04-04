@@ -18,6 +18,10 @@ function App() {
           path="/"
           element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
         />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+        />
       </Routes>
     </>
   );
