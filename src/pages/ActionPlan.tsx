@@ -232,152 +232,151 @@ export default function ActionPlan() {
 	};
 
 	return (
-		<div className="flex-1 overflow-auto ">
-			{/* Header with Icon and Title */}
-			<header className=" bg-gray-100 z-10 p-6 pt-8">
-				<div className="flex items-center gap-3">
-					<span className="text-[#80C342]">
-						<svg
-							className="text-[#80c342]"
-							xmlns="http://www.w3.org/2000/svg"
-							width="40"
-							height="40"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						>
-							<circle
-								cx="12"
-								cy="12"
-								r="10"
-								stroke="#80c342"
-								strokeWidth="2"
-								fill="none"
-							/>
-							<circle
-								cx="12"
-								cy="12"
-								r="6"
-								stroke="#80c342"
-								strokeWidth="2"
-								fill="none"
-							/>
-							<circle
-								cx="12"
-								cy="12"
-								r="2"
-								stroke="#80c342"
-								strokeWidth="2"
-								fill="none"
-							/>
-							<path d="M22 12 L18 10" stroke="#80c342" strokeWidth="2" />
-							<path d="M18 10 L20 6" stroke="#80c342" strokeWidth="2" />
-						</svg>
-					</span>
-					<h1 className="text-4xl font-semibold text-gray-800">Action Plans</h1>
+		<div className="flex-1 overflow-auto">
+		  {/* Header with Icon and Title */}
+		  <header className=" bg-gray-100 z-10 p-6 pt-8">
+			<div className="flex items-center gap-3">
+			  <span className="text-[#80C342]">
+				<svg
+				  className="text-[#80c342]"
+				  xmlns="http://www.w3.org/2000/svg"
+				  width="40"
+				  height="40"
+				  viewBox="0 0 24 24"
+				  fill="none"
+				  stroke="currentColor"
+				  strokeWidth="2"
+				  strokeLinecap="round"
+				  strokeLinejoin="round"
+				>
+				  <circle
+					cx="12"
+					cy="12"
+					r="10"
+					stroke="#80c342"
+					strokeWidth="2"
+					fill="none"
+				  />
+				  <circle
+					cx="12"
+					cy="12"
+					r="6"
+					stroke="#80c342"
+					strokeWidth="2"
+					fill="none"
+				  />
+				  <circle
+					cx="12"
+					cy="12"
+					r="2"
+					stroke="#80c342"
+					strokeWidth="2"
+					fill="none"
+				  />
+				  <path d="M22 12 L18 10" stroke="#80c342" strokeWidth="2" />
+				  <path d="M18 10 L20 6" stroke="#80c342" strokeWidth="2" />
+				</svg>
+			  </span>
+			  <h1 className="text-4xl font-semibold text-gray-800">Action Plans</h1>
+			</div>
+		  </header>
+		  <main className="p-6 pt-2">
+			{/* Carousel Section */}
+			<div className="mb-10">
+			  <ActionPlansCarousel />
+			</div>
+	  
+			{/* All Action Plans Section */}
+			<div className="mb-8">
+			  <h2 className="text-xl font-semibold mb-6">All Action Plans</h2>
+	  
+			  {/* Search, Filter, and Create Button Row */}
+			  <div className="flex justify-between items-center mb-6">
+				<div className="flex gap-2 items-center">
+				  <div className="w-100">
+					<SearchBar onSearch={handleSearch} />
+				  </div>
+	  
+				  <FilterComponent
+					filterOpen={filterOpen}
+					setFilterOpen={setFilterOpen}
+				  />
+	  
+				  <SortBy
+					sortBy={sortBy}
+					setSortBy={setSortBy}
+					sortOpen={sortOpen}
+					setSortOpen={setSortOpen}
+				  />
 				</div>
-			</header>
-			<main className="p-6 pt-2">
-				{/* Carousel Section */}
-				<div className="mb-10">
-					<ActionPlansCarousel />
+	  
+				<Button
+				  onClick={openInitiativeModal}
+				  className="flex items-center gap-2 bg-[#80c342] hover:bg-[#80c342] text-white rounded-[0.3rem]"
+				>
+				  <PlusIcon className="h-4 w-4" />
+				  Create Action Plan
+				</Button>
+			  </div>
+	  
+			  {/* Loading and Error States */}
+			  {isLoading && <p className="text-center py-8">Loading action plans...</p>}
+	  
+			  {!isLoading && error && (
+				<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
+				  {error}
 				</div>
-
-				{/* All Action Plans Section */}
-				<div className="mb-8">
-					<h2 className="text-xl font-semibold mb-6">All Action Plans</h2>
-
-					{/* Search, Filter, and Create Button Row */}
-					<div className="flex justify-between items-center mb-6">
-						<div className="flex gap-2 items-center">
-							<div className="w-100">
-								<SearchBar onSearch={handleSearch} />
-							</div>
-
-							<FilterComponent
-								filterOpen={filterOpen}
-								setFilterOpen={setFilterOpen}
-							/>
-
-							<SortBy
-								sortBy={sortBy}
-								setSortBy={setSortBy}
-								sortOpen={sortOpen}
-								setSortOpen={setSortOpen}
-							/>
-						</div>
-
-						<Button
-							onClick={openInitiativeModal}
-							className="flex items-center gap-2 bg-[#80c342] hover:bg-[#80c342] text-white rounded-[0.3rem]"
-						>
-							<PlusIcon className="h-4 w-4" />
-							Create Action Plan
-						</Button>
-					</div>
-
-					{/* Loading and Error States */}
-					{isLoading && <p className="text-center py-8">Loading action plans...</p>}
-
-					{!isLoading && error && (
-						<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
-							{error}
-						</div>
-					)}
-
-					{deleteError && (
-						<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
-							{deleteError}
-						</div>
-					)}
-
-          {/* Action Plans Cards */}
-          <div className="space-y-4">
-            {!isLoading && displayPlans.length === 0 && (
-              <p className="text-center py-8 text-gray-500">
-                No action plans found. Try adjusting your search or create a new one.
-              </p>
-            )}
-            
-            {!isLoading && displayPlans?.map((plan, index) => {
-              return (
-                <HorizontalRecognitionCard
-                  key={index}
-                  action_id={plan.action_id}
-                  title={plan.title}
-                  created_at={plan.created_at}
-                  purpose={plan.purpose}
-                  target_groups={plan.target_groups}
-                  metrics={plan.metric}
-                  onDelete={openDeleteModal}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-				{/* Initiative Modal */}
-				{isInitiativeModalOpen && (
-					<InitiativeModal
-						onClose={closeInitiativeModal}
-						onSuccess={fetchActionPlans}
-					/>
+			  )}
+	  
+			  {deleteError && (
+				<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
+				  {deleteError}
+				</div>
+			  )}
+	  
+			  {/* Action Plans Cards */}
+			  <div className="space-y-4">
+				{!isLoading && displayPlans.length === 0 && (
+				  <p className="text-center py-8 text-gray-500">
+					No action plans found. Try adjusting your search or create a new one.
+				  </p>
 				)}
-
-				{/* Delete Confirmation Modal */}
-				{isDeleteModalOpen && planToDelete && (
-					<DeleteConfirmationModal
-						onClose={closeDeleteModal}
-						onConfirm={confirmDelete}
-						actionTitle={planToDelete.title}
-						isDeleting={isDeleting}
+				
+				{!isLoading && displayPlans?.map((plan, index) => {
+				  return (
+					<HorizontalRecognitionCard
+					  key={index}
+					  action_id={plan.action_id}
+					  title={plan.title}
+					  created_at={plan.created_at}
+					  purpose={plan.purpose}
+					  target_groups={plan.target_groups}
+					  metrics={plan.metric}
+					  onDelete={openDeleteModal}
 					/>
-				)}
-			</main>
+				  );
+				})}
+			  </div>
+			</div>
+	  
+			{/* Initiative Modal */}
+			{isInitiativeModalOpen && (
+			  <InitiativeModal
+				onClose={closeInitiativeModal}
+				onSuccess={fetchActionPlans}
+			  />
+			)}
+	  
+			{/* Delete Confirmation Modal */}
+			{isDeleteModalOpen && planToDelete && (
+			  <DeleteConfirmationModal
+				onClose={closeDeleteModal}
+				onConfirm={confirmDelete}
+				actionTitle={planToDelete.title}
+				isDeleting={isDeleting}
+			  />
+			)}
+		  </main>
 		</div>
-	);
+	  );	  
 }
