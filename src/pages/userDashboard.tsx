@@ -1,4 +1,3 @@
-
 import { DashboardContent } from "@/components/dashboard-content"
 import { Sidebar } from "@/components/sidebar"
 
