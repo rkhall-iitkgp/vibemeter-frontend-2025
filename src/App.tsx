@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
+         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
         />
