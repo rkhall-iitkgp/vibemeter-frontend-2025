@@ -2,8 +2,8 @@ import { FocusGroup } from "../../types";
 import { FC, useState } from "react";
 
 interface FilterState {
-  tags: string[];
-  createdDate: string[];
+  metrics: string[];
+  created_at: string[];
 }
 
 interface FocusGroupFilterModalProps {
@@ -21,22 +21,22 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
 }) => {
   // Initialize with current filters
   const [tempTagFilters, setTempTagFilters] = useState<string[]>(
-    currentFilters.tags
+    currentFilters.metrics
   );
   const [tempDateFilters, setTempDateFilters] = useState<string[]>(
-    currentFilters.createdDate
+    currentFilters.created_at
   );
 
   // Get unique tags from all focus groups
   const uniqueTags = [
     "All",
-    ...new Set(focusGroups.flatMap((group) => group.tags)),
+    ...new Set(focusGroups.flatMap((group) => group.metrics)),
   ];
 
   // Get unique dates
   const uniqueDates = [
     "All",
-    ...new Set(focusGroups.map((group) => group.createdDate)),
+    ...new Set(focusGroups.map((group) => group.created_at)),
   ].sort();
 
   const toggleTagFilter = (tag: string) => {
@@ -94,8 +94,8 @@ const FocusGroupFilterModal: FC<FocusGroupFilterModalProps> = ({
 
   const applyFilters = () => {
     onApply({
-      tags: tempTagFilters,
-      createdDate: tempDateFilters,
+      metrics: tempTagFilters,
+      created_at: tempDateFilters,
     });
     onClose();
   };

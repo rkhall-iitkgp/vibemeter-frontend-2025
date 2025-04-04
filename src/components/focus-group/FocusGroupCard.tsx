@@ -23,13 +23,13 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/focus-groups/${focusGroup.id}`);
+    navigate(`/focus-groups/${focusGroup.focus_group_id}`);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     if (onDelete) {
-      onDelete(focusGroup.id);
+      onDelete(focusGroup.focus_group_id);
     }
   };
 
@@ -74,24 +74,24 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({
       <div className="flex flex-col">
         <div className="flex items-center">
           <h3 className="text-xl font-semibold text-gray-900">
-            {focusGroup.title}
+            {focusGroup.name}
           </h3>
           <span className="ml-2 text-sm font-medium text-green-500">
-            {focusGroup.participantCount} Members
+            {focusGroup.members} Members
           </span>
         </div>
 
         <p className="mt-2 text-sm text-gray-500">
-          Created on {focusGroup.createdDate}
+          Created on {focusGroup.created_at}
         </p>
 
         <div className="mt-2 flex flex-wrap gap-2">
-          {focusGroup.tags.map((tag, index) => (
+          {focusGroup.metrics.map((metric, index) => (
             <span
               key={index}
-              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${TagColors[tag] || "bg-gray-100 text-gray-800"}`}
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${TagColors[metric] || "bg-gray-100 text-gray-800"}`}
             >
-              {tag}
+              {metric}
             </span>
           ))}
         </div>
