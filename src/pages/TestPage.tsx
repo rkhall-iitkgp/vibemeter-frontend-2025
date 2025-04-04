@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { DataTable, type Employee } from "@/components/DataTable"
-import { SearchBar } from "@/components/Searchbar"
+import { SearchBar } from "@/components/SearchBar"
 
 // Mock data for High Concern Employees - using exact data from image
 const highConcernEmployees: Employee[] = [

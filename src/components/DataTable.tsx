@@ -2,16 +2,16 @@
 
 import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ChevronDown, ChevronLeft, ChevronRight, MoreVertical } from "lucide-react"
+import { Calendar, ChevronDown, ChevronLeft, ChevronRight, Eye, MoreVertical } from "lucide-react"
 
 export type Employee = {
   id: string
@@ -72,6 +72,17 @@ export function DataTable({ title, data, iconColor, searchQuery }: DataTableProp
     }
   }
 
+  // Handlers for row actions
+  const handleScheduleMeet = (employeeId: string) => {
+    console.log(`Schedule meeting with employee ${employeeId}`)
+    // Implement your scheduling logic here
+  }
+
+  const handleViewDetails = (employeeId: string) => {
+    console.log(`View details for employee ${employeeId}`)
+    // Implement your view details logic here
+  }
+
   return (
     <div className="w-full border rounded-lg mb-8">
       <div className="p-4 flex items-center justify-between border-b">
@@ -101,8 +112,7 @@ export function DataTable({ title, data, iconColor, searchQuery }: DataTableProp
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[40px]">
-            </TableHead>
+            <TableHead className="w-[40px]"></TableHead>
             <TableHead>Employee Name</TableHead>
             <TableHead>Employee ID</TableHead>
             <TableHead>Job Title</TableHead>
@@ -114,21 +124,29 @@ export function DataTable({ title, data, iconColor, searchQuery }: DataTableProp
           {paginatedData.length > 0 ? (
             paginatedData.map((employee) => (
               <TableRow key={employee.id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedRows.includes(employee.id)}
-                    onCheckedChange={() => handleSelectRow(employee.id)}
-                    className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
-                  />
-                </TableCell>
+                <TableCell></TableCell>
                 <TableCell>{employee.name}</TableCell>
                 <TableCell>{employee.id}</TableCell>
                 <TableCell>{employee.jobTitle}</TableCell>
                 <TableCell>{employee.dateAdded}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full  border-none">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" side="left" className="w-[180px]">
+                      <DropdownMenuItem onClick={() => handleScheduleMeet(employee.id)} className="cursor-pointer">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Schedule Meet
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleViewDetails(employee.id)} className="cursor-pointer">
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))
