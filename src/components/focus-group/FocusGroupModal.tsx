@@ -1,12 +1,12 @@
+import { Employee, FocusGroup } from "../../types";
 import { FC, useState, useEffect } from "react";
-import { FocusGroup } from "../../types";
 
 interface FocusGroupModalProps {
   onClose: () => void;
   onSubmit: (focusGroup: {
     title: string;
     description: string;
-    tags: string[];
+    metrics: string[];
     participants: string[];
   }) => void;
   editingFocusGroup?: FocusGroup | null;
@@ -23,20 +23,14 @@ const PREDEFINED_TAGS = [
 ];
 
 // Mock employee data
-const MOCK_EMPLOYEES = [
-  { id: "1", name: "Alex Johnson", department: "Marketing" },
-  { id: "2", name: "Jamie Smith", department: "Finance" },
-  { id: "3", name: "Taylor Brown", department: "HR" },
-  { id: "4", name: "Morgan Lee", department: "IT" },
-  { id: "5", name: "Casey Wilson", department: "Operations" },
-  { id: "6", name: "Jordan Taylor", department: "Sales" },
+const MOCK_EMPLOYEES: Employee[] = [
+  // { id: "1", name: "Alex Johnson", department: "Marketing" },
+  // { id: "2", name: "Jamie Smith", department: "Finance" },
+  // { id: "3", name: "Taylor Brown", department: "HR" },
+  // { id: "4", name: "Morgan Lee", department: "IT" },
+  // { id: "5", name: "Casey Wilson", department: "Operations" },
+  // { id: "6", name: "Jordan Taylor", department: "Sales" },
 ];
-
-interface Employee {
-  id: string;
-  name: string;
-  department: string;
-}
 
 const FocusGroupModal: FC<FocusGroupModalProps> = ({
   onClose,
@@ -65,7 +59,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
   // Form state
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [metrics, setMetrics] = useState<string[]>([]);
   const [tagSearchQuery, setTagSearchQuery] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([]);
 
@@ -82,17 +76,17 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
   useEffect(() => {
     if (editingFocusGroup) {
       console.log("Initializing form with focus group data");
-      setGroupName(editingFocusGroup.title || "");
+      setGroupName(editingFocusGroup.name || "");
       setDescription(editingFocusGroup.description || "");
-      setTags(editingFocusGroup.tags || []);
+      setMetrics(editingFocusGroup.metrics || []);
 
       // Initialize selected employees
-      if (editingFocusGroup.participantCount > 0) {
+      if (editingFocusGroup.members > 0) {
         // In a real app, you'd fetch the actual participants
         // This is just a simulation for mock data
         const mockSelectedEmployees = MOCK_EMPLOYEES.slice(
           0,
-          editingFocusGroup.participantCount
+          editingFocusGroup.members
         );
         setSelectedEmployees(mockSelectedEmployees);
       }
@@ -100,7 +94,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
       // Reset form when not editing
       setGroupName("");
       setDescription("");
-      setTags([]);
+      setMetrics([]);
       setSelectedEmployees([]);
     }
   }, [editingFocusGroup]);
@@ -125,33 +119,29 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
     if (employeeSearchQuery.trim() === "") {
       setFilteredEmployees(MOCK_EMPLOYEES);
     } else {
-      const filtered = MOCK_EMPLOYEES.filter(
-        (employee) =>
-          employee.name
-            .toLowerCase()
-            .includes(employeeSearchQuery.toLowerCase()) ||
-          employee.department
-            .toLowerCase()
-            .includes(employeeSearchQuery.toLowerCase())
+      const filtered = MOCK_EMPLOYEES.filter((employee) =>
+        employee.name.toLowerCase().includes(employeeSearchQuery.toLowerCase())
       );
       setFilteredEmployees(filtered);
     }
   }, [employeeSearchQuery]);
 
   const toggleTag = (tagName: string) => {
-    if (tags.includes(tagName)) {
-      setTags(tags.filter((tag) => tag !== tagName));
+    if (metrics.includes(tagName)) {
+      setMetrics(metrics.filter((tag) => tag !== tagName));
     } else {
-      setTags([...tags, tagName]);
+      setMetrics([...metrics, tagName]);
     }
   };
 
   const toggleEmployee = (employee: Employee) => {
-    const isSelected = selectedEmployees.some((e) => e.id === employee.id);
+    const isSelected = selectedEmployees.some(
+      (e) => e.employee_id === employee.employee_id
+    );
 
     if (isSelected) {
       setSelectedEmployees(
-        selectedEmployees.filter((e) => e.id !== employee.id)
+        selectedEmployees.filter((e) => e.employee_id !== employee.employee_id)
       );
     } else {
       setSelectedEmployees([...selectedEmployees, employee]);
@@ -164,12 +154,14 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
+    setMetrics(metrics.filter((tag) => tag !== tagToRemove));
   };
 
   const handleRemoveEmployee = (employeeId: string) => {
     setSelectedEmployees(
-      selectedEmployees.filter((employee) => employee.id !== employeeId)
+      selectedEmployees.filter(
+        (employee) => employee.employee_id !== employeeId
+      )
     );
   };
 
@@ -178,15 +170,15 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
       console.log("Submitting form data:", {
         title: groupName,
         description,
-        tags,
-        participants: selectedEmployees.map((emp) => emp.id),
+        tags: metrics,
+        participants: selectedEmployees.map((emp) => emp.employee_id),
       });
 
       onSubmit({
         title: groupName,
         description,
-        tags,
-        participants: selectedEmployees.map((emp) => emp.id),
+        metrics: metrics,
+        participants: selectedEmployees.map((emp) => emp.employee_id),
       });
     }
   };
@@ -207,7 +199,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
             </h2>
             {isEditMode && (
               <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                Editing {editingFocusGroup?.title}
+                Editing {editingFocusGroup?.name}
               </div>
             )}
           </div>
@@ -271,8 +263,8 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                 className="flex items-center gap-2 w-full overflow-x-auto whitespace-nowrap hide-scrollbar"
                 style={hideScrollbarStyle}
               >
-                {tags.length > 0 ? (
-                  tags.map((tag, index) => (
+                {metrics.length > 0 ? (
+                  metrics.map((tag, index) => (
                     <span
                       key={index}
                       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ${getTagColor(tag)}`}
@@ -346,7 +338,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                 >
                   {selectedEmployees.map((employee) => (
                     <span
-                      key={employee.id}
+                      key={employee.employee_id}
                       className="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs shrink-0"
                     >
                       <div className="h-4 w-4 rounded-full bg-gray-200 flex-shrink-0"></div>
@@ -354,7 +346,9 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                       <button
                         type="button"
                         className="ml-1 inline-flex text-blue-400 hover:text-blue-500"
-                        onClick={() => handleRemoveEmployee(employee.id)}
+                        onClick={() =>
+                          handleRemoveEmployee(employee.employee_id)
+                        }
                       >
                         <svg
                           className="h-3 w-3"
@@ -473,7 +467,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                   onClick={() => toggleTag(tag.name)}
                 >
                   <span
-                    className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${tag.color} ${tags.includes(tag.name) ? "ring-2 ring-offset-1 ring-green-500" : ""}`}
+                    className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${tag.color} ${metrics.includes(tag.name) ? "ring-2 ring-offset-1 ring-green-500" : ""}`}
                   >
                     {tag.name}
                   </span>
@@ -526,11 +520,11 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
             <div className="bg-gray-50 max-h-80 overflow-y-auto">
               {filteredEmployees.map((employee, index) => {
                 const isSelected = selectedEmployees.some(
-                  (e) => e.id === employee.id
+                  (e) => e.employee_id === employee.employee_id
                 );
                 return (
                   <button
-                    key={employee.id}
+                    key={employee.employee_id}
                     className={`w-full text-left px-4 py-3 flex items-center justify-between ${
                       index !== filteredEmployees.length - 1
                         ? "border-b border-gray-100"
@@ -544,9 +538,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                         <p className="text-sm font-medium text-gray-900">
                           {employee.name}
                         </p>
-                        <p className="text-xs text-gray-500">
-                          {employee.department}
-                        </p>
+                        <p className="text-xs text-gray-500">Department</p>
                       </div>
                     </div>
                     {isSelected && (

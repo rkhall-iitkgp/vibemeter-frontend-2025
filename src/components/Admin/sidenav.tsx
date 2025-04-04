@@ -78,8 +78,8 @@ const defaultMenuSections: MenuSection[] = [
   {
     title: "Support",
     items: [
-      { name: "Help Center", img_src: menuIcons["Help Center"], link: "#" },
-      { name: "HR Policies", img_src: menuIcons["HR Policies"], link: "#" },
+      { name: "Help Center", img_src: menuIcons["Help Center"], link: "help-center" },
+      { name: "HR Policies", img_src: menuIcons["HR Policies"], link: "hr-policies" },
     ],
   },
 ];

@@ -1,11 +1,5 @@
 import { FC, useState } from "react";
-
-interface Employee {
-  name: string;
-  id: string;
-  title: string;
-  dateAdded: string;
-}
+import { Employee } from "@/types";
 
 interface ParticipantFilterModalProps {
   onClose: () => void;
@@ -36,15 +30,15 @@ const ParticipantFilterModal: FC<ParticipantFilterModalProps> = ({
   // Get unique job titles and dates from participants
   const uniqueJobTitles = [
     "All",
-    ...Array.from(new Set(participants.map((p) => p.title))),
+    ...Array.from(new Set(participants.map((p) => p.job_title))),
   ];
   const uniqueDates = [
     "All",
-    ...Array.from(new Set(participants.map((p) => p.dateAdded))),
+    ...Array.from(new Set(participants.map((p) => p.joining_date))),
   ].sort();
 
-  const toggleJobTitleFilter = (title: string) => {
-    if (title === "All") {
+  const toggleJobTitleFilter = (job_title: string) => {
+    if (job_title === "All") {
       setTempJobTitleFilters(["All"]);
       return;
     }
@@ -52,16 +46,16 @@ const ParticipantFilterModal: FC<ParticipantFilterModalProps> = ({
     // If 'All' is currently selected, remove it
     let newFilters = tempJobTitleFilters.filter((t) => t !== "All");
 
-    if (newFilters.includes(title)) {
+    if (newFilters.includes(job_title)) {
       // Remove the title if it's already selected
-      newFilters = newFilters.filter((t) => t !== title);
+      newFilters = newFilters.filter((t) => t !== job_title);
       // If no filters left, select 'All'
       if (newFilters.length === 0) {
         newFilters = ["All"];
       }
     } else {
       // Add the title if it's not already selected
-      newFilters.push(title);
+      newFilters.push(job_title);
     }
 
     setTempJobTitleFilters(newFilters);

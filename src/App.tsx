@@ -7,6 +7,7 @@ import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import UnderConstruction from "./pages/UnderConstruction";
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -26,7 +27,14 @@ function App() {
         />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/graph" element={<Graph />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
         <Route
           path="/questions"
           element={
@@ -55,7 +63,7 @@ function App() {
           path="/employees"
           element={
             <AdminLayout>
-              <EmployeeList />
+              <UnderConstruction />
             </AdminLayout>
           }
         />
@@ -64,6 +72,38 @@ function App() {
           element={
             <AdminLayout>
               <ActionPlan />
+            </AdminLayout>
+          }
+        />
+		<Route
+          path="/initiatives"
+          element={
+            <AdminLayout>
+              <UnderConstruction />
+            </AdminLayout>
+          }
+        />
+		<Route
+          path="/surveys"
+          element={
+            <AdminLayout>
+              <UnderConstruction />
+            </AdminLayout>
+          }
+        />
+		<Route
+          path="/help-center"
+          element={
+            <AdminLayout>
+              <UnderConstruction />
+            </AdminLayout>
+          }
+        />
+		<Route
+          path="/hr-policies"
+          element={
+            <AdminLayout>
+              <UnderConstruction />
             </AdminLayout>
           }
         />

@@ -1,4 +1,7 @@
+import { StringifyOptions } from "querystring";
 import { FC, useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 interface ActionStep {
   id: number;
@@ -8,6 +11,11 @@ interface ActionStep {
 
 interface InitiativeModalProps {
   onClose: () => void;
+}
+
+interface FocusGroups {
+  name : string
+  focus_group_id : string
 }
 
 const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
@@ -27,6 +35,21 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
   const [targetGroups, setTargetGroups] = useState<string[]>([]);
   const [targetGroupInput, setTargetGroupInput] = useState("");
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(["Morale"]);
+  const [suggestedTargetGroups, setSuggestedTargetGroups] = useState<FocusGroups[]>([]); 
+
+  useEffect(()=>{
+    const fetchFocusGroups = async () => {
+      try {
+        const responseData = await fetch(`${BACKEND_URL}/api/groups/minified`)
+        // console.log(responseData)
+        setSuggestedTargetGroups((await responseData.json()).data)
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
+    fetchFocusGroups();
+  },[])
   const [isMetricDropdownOpen, setIsMetricDropdownOpen] = useState(false);
 
   // Action Steps state
@@ -88,6 +111,42 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
     }
   }, [activeTab, tabRefs]);
 
+  const submitInitiativeData = () => {
+    // Format the data according to the required structure
+    const formattedData = {
+      title: title,
+      purpose: purpose,
+      metric: selectedMetrics,
+      target_groups: targetGroups,
+      steps: actionSteps.map(step => step.title),
+      is_completed: false
+    };
+  
+    // Log the formatted data (for testing)
+    // console.log('Submitting initiative data:', formattedData);
+  
+    // Here you would typically send this data to your API
+    // Example using fetch:
+    fetch(`${BACKEND_URL}/api/actions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formattedData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // Close the modal or show success message
+        onClose();
+        window.location.reload()
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // Handle error (show error message, etc.)
+      });
+  };
+
   const isBasicInfoValid = () => {
     return title.trim() !== "" && purpose.trim() !== "";
   };
@@ -128,27 +187,33 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
     }
   };
 
-  const addTargetGroup = () => {
-    if (
-      targetGroupInput.trim() !== "" &&
-      !targetGroups.includes(targetGroupInput.trim())
-    ) {
-      setTargetGroups([...targetGroups, targetGroupInput.trim()]);
-      setTargetGroupInput("");
+  const addTargetGroup = (group: FocusGroups) => {
+    if (group && !targetGroups.includes(group.focus_group_id)) {
+      setTargetGroups([...targetGroups, group.focus_group_id]);
+      setTargetGroupInput(""); // Clear the input after adding
       if (inputRef.current) {
         inputRef.current.focus();
       }
     }
   };
 
-  const removeTargetGroup = (group: string) => {
-    setTargetGroups(targetGroups.filter((g) => g !== group));
+  const removeTargetGroup = (groupId: string) => {
+    setTargetGroups(targetGroups.filter((id) => id !== groupId));
+  }
+
+  const filterSuggestions = (input: string) => {
+    return suggestedTargetGroups
+      .filter(
+        (group) =>
+          group.name.toLowerCase().includes(input.toLowerCase()) &&
+          !targetGroups.includes(group.focus_group_id) // Exclude already selected groups by id
+      );
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      addTargetGroup();
+      // addTargetGroup();
     }
   };
 
@@ -302,6 +367,7 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
           >
             <svg
               className="mr-2 h-5 w-5"
+              
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -500,16 +566,20 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                 className={`mt-3 rounded-lg border ${showTargetGroupsError && targetGroups.length === 0 ? "border-red-500" : "border-dashed border-gray-300"} p-4`}
               >
                 {/* Selected Target Groups */}
-                {targetGroups.length > 0 && (
-                  <div className="mb-3 flex flex-wrap gap-2">
-                    {targetGroups.map((group, index) => (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {targetGroups.map((groupId, index) => {
+                    const group = suggestedTargetGroups.find(
+                      (g) => g.focus_group_id === groupId
+                    );
+                    return group ? (
                       <div
                         key={index}
                         className="flex items-center rounded-full bg-[#80C342]/10 px-3 py-1.5 text-sm text-[#80C342] border border-[#80C342]/20"
+                        style={{ whiteSpace: "nowrap" }} // Prevent text from wrapping inside the item
                       >
-                        <span>{group}</span>
+                        <span>{group.name}</span>
                         <button
-                          onClick={() => removeTargetGroup(group)}
+                          onClick={() => removeTargetGroup(groupId)}
                           className="ml-2 text-[#80C342] hover:text-[#6ba238]"
                         >
                           <svg
@@ -527,9 +597,11 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                           </svg>
                         </button>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    ) : null;
+                  })}
+                </div>
+
+
 
                 {/* Input for new target group */}
                 <div className="flex">
@@ -542,23 +614,21 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                     placeholder="Add target group and press Enter"
                     className="flex-1 rounded-l-md border border-gray-300 p-2 text-gray-700 focus:border-[#80C342] focus:outline-none"
                   />
-                  <button
-                    onClick={addTargetGroup}
-                    className="flex items-center justify-center rounded-r-md bg-gray-100 px-4 text-gray-700 hover:bg-gray-200 ml-0"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                  </div>
+                
+                {(
+                <ul className="mt-2 border border-gray-200 rounded-lg max-h-40 overflow-y-auto">
+                  {filterSuggestions(targetGroupInput).map((suggestion, index) => (
+                    <li
+                      key={index}
+                      onClick={() => addTargetGroup(suggestion)}
+                      className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                      {suggestion.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
                 {showTargetGroupsError && targetGroups.length === 0 && (
                   <p className="mt-2 text-sm text-red-500">
@@ -960,17 +1030,24 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                 Back
               </button>
             )}
-            <button
-              onClick={goToNextTab}
-              className={`flex items-center rounded-md ${
-                (activeTab === "basicInfo" && !isBasicInfoValid()) ||
-                (activeTab === "targetGroups" && !isTargetGroupsValid())
-                  ? "bg-[#80C342]/60 cursor-pointer"
-                  : "bg-[#80C342] hover:bg-[#6ba238]"
-              } px-6 py-2 font-medium text-white transition-colors`}
-            >
-              {activeTab === "actionSteps" ? "Apply Initiative" : "Continue"}
-              {activeTab !== "actionSteps" && (
+            {activeTab === "actionSteps" ? (
+              <button
+                onClick={submitInitiativeData}
+                className="flex items-center rounded-md bg-[#80C342] hover:bg-[#6ba238] px-6 py-2 font-medium text-white transition-colors"
+              >
+                Apply Initiative
+              </button>
+            ) : (
+              <button
+                onClick={goToNextTab}
+                className={`flex items-center rounded-md ${
+                  (activeTab === "basicInfo" && !isBasicInfoValid()) ||
+                  (activeTab === "targetGroups" && !isTargetGroupsValid())
+                    ? "bg-[#80C342]/60 cursor-pointer"
+                    : "bg-[#80C342] hover:bg-[#6ba238]"
+                } px-6 py-2 font-medium text-white transition-colors`}
+              >
+                Continue
                 <svg
                   className="ml-2 inline-block h-5 w-5"
                   viewBox="0 0 20 20"
@@ -982,8 +1059,8 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                     clipRule="evenodd"
                   />
                 </svg>
-              )}
-            </button>
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,11 +1,5 @@
 import { FC, useState, useEffect } from "react";
-
-interface Employee {
-  name: string;
-  id: string;
-  title: string;
-  dateAdded: string;
-}
+import { Employee } from "@/types";
 
 interface AddParticipantsModalProps {
   onClose: () => void;
@@ -43,11 +37,11 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
   // Get unique job titles and dates from all employees
   const uniqueJobTitles = [
     "All",
-    ...Array.from(new Set(allEmployees.map((emp) => emp.title))),
+    ...Array.from(new Set(allEmployees.map((emp) => emp.job_title))),
   ];
   const uniqueDates = [
     "All",
-    ...Array.from(new Set(allEmployees.map((emp) => emp.dateAdded))),
+    ...Array.from(new Set(allEmployees.map((emp) => emp.joining_date))),
   ].sort();
 
   // Initialize temp filters when opening the popup
@@ -60,9 +54,9 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
 
   // Initial load - filter out existing participants
   useEffect(() => {
-    const existingIds = existingParticipants.map((p) => p.id);
+    const existingIds = existingParticipants.map((p) => p.employee_id);
     const available = allEmployees.filter(
-      (emp) => !existingIds.includes(emp.id)
+      (emp) => !existingIds.includes(emp.employee_id)
     );
     setFilteredEmployees(available);
   }, [allEmployees, existingParticipants]);
@@ -70,7 +64,10 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
   // Handle search and filters
   useEffect(() => {
     let filtered = allEmployees.filter(
-      (emp) => !existingParticipants.map((p) => p.id).includes(emp.id)
+      (emp) =>
+        !existingParticipants
+          .map((p) => p.employee_id)
+          .includes(emp.employee_id)
     );
 
     // Apply search filter
@@ -79,20 +76,22 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
       filtered = filtered.filter(
         (emp) =>
           emp.name.toLowerCase().includes(query) ||
-          emp.id.toLowerCase().includes(query) ||
-          emp.title.toLowerCase().includes(query)
+          emp.employee_id.toLowerCase().includes(query) ||
+          emp.job_title.toLowerCase().includes(query)
       );
     }
 
     // Apply job title filter
     if (!jobTitleFilters.includes("All")) {
-      filtered = filtered.filter((emp) => jobTitleFilters.includes(emp.title));
+      filtered = filtered.filter((emp) =>
+        jobTitleFilters.includes(emp.job_title)
+      );
     }
 
     // Apply date added filter
     if (!dateAddedFilters.includes("All")) {
       filtered = filtered.filter((emp) =>
-        dateAddedFilters.includes(emp.dateAdded)
+        dateAddedFilters.includes(emp.joining_date)
       );
     }
 
@@ -432,15 +431,19 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
               ) : (
                 filteredEmployees.map((employee) => (
                   <div
-                    key={employee.id}
+                    key={employee.employee_id}
                     className="grid grid-cols-12 py-3 hover:bg-gray-50"
                   >
                     <div className="col-span-1 px-6 flex items-center justify-center">
                       <input
                         type="checkbox"
                         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        checked={selectedEmployees.includes(employee.id)}
-                        onChange={() => toggleEmployeeSelection(employee.id)}
+                        checked={selectedEmployees.includes(
+                          employee.employee_id
+                        )}
+                        onChange={() =>
+                          toggleEmployeeSelection(employee.employee_id)
+                        }
                       />
                     </div>
                     <div className="col-span-3 px-4 flex items-center">
@@ -449,16 +452,18 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
                       </div>
                     </div>
                     <div className="col-span-3 px-4 flex items-center">
-                      <div className="text-sm text-gray-500">{employee.id}</div>
+                      <div className="text-sm text-gray-500">
+                        {employee.employee_id}
+                      </div>
                     </div>
                     <div className="col-span-3 px-4 flex items-center">
                       <div className="text-sm text-gray-500">
-                        {employee.title}
+                        {employee.job_title}
                       </div>
                     </div>
                     <div className="col-span-2 px-4 flex items-center justify-between">
                       <div className="text-sm text-gray-500">
-                        {employee.dateAdded}
+                        {employee.joining_date}
                       </div>
                       <button className="text-gray-400 hover:text-gray-500">
                         <svg

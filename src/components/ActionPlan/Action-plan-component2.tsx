@@ -1,45 +1,73 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
 
+interface FocusGroups {
+  name : string
+  focus_group_id : string
+}
 interface HorizontalRecognitionCardProps {
   title: string;
-  createdDate: string;
-  description: string;
-  targetGroup: string;
-  groupId: string;
-  tags: string[];
+  created_at: string;
+  purpose : string;
+  target_groups : FocusGroups[];
+  metrics: string[];
+  action_id: string;
+  is_completed ?: boolean 
+  onDelete: (actionId: string) => void;
 }
 
-export function HorizontalRecognitionCard({
-  title = "Recognition Program",
-  createdDate = "March 17, 2025",
-  description = "Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
-  targetGroup = "Leadership Group",
-  groupId = "#GRP2345",
-  tags = ["Morality", "Engagement"],
-}: HorizontalRecognitionCardProps) {
+export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps) {
+  // Function to determine metric color based on metric content
+  // console.log(props)
+  const getTagColor = (metric : any) => {
+    const tagLower = metric.toLowerCase();
+    if (tagLower.includes("moral") || tagLower === "morality") {
+      return "bg-amber-100 text-amber-700";
+    } else if (tagLower.includes("engage") || tagLower === "engagement") {
+      return "bg-teal-100 text-teal-700";
+    } else if (tagLower.includes("perform") || tagLower === "performance") {
+      return "bg-purple-100 text-purple-700";
+    } else if (tagLower.includes("commun") || tagLower === "communication") {
+      return "bg-blue-100 text-blue-700";
+    } else if (tagLower.includes("lead") || tagLower === "leadership") {
+      return "bg-indigo-100 text-indigo-700";
+    } else if (tagLower.includes("innov") || tagLower === "innovation") {
+      return "bg-pink-100 text-pink-700";
+    } else if (tagLower.includes("well") || tagLower === "wellbeing") {
+      return "bg-green-100 text-green-700";
+    } else {
+      return "bg-gray-100 text-gray-700";
+    }
+  };
+
   return (
     <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4">
-      <h3 className="font-semibold text-gray-900 text-lg mb-1">{title}</h3>
+      <h3 className="font-semibold text-gray-900 text-lg mb-1">{props.title}</h3>
 
-      <div className="flex items-center gap-2 mb-3">
-        <p className="text-sm text-gray-500">Created on {createdDate}</p>
-        {tags.map((tag, tagIndex) => (
-          <span
-            key={tagIndex}
-            className={`px-3 py-1 text-xs rounded-sm ${
-              tag === "Morality"
-                ? "bg-amber-100 text-amber-700"
-                : tag === "Engagement"
-                  ? "bg-teal-100 text-teal-700"
-                  : "bg-blue-100 text-blue-700"
-            }`}
-          >
-            {tag}
+      <div className="flex items-center flex-wrap gap-2 mb-3">
+        <p className="text-sm text-gray-500">
+              Created on {new Date(props.created_at).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: '2-digit'
+							})}
+        </p>
+        {Array.isArray(props.metrics) && props.metrics.length > 0 ? (
+          props.metrics.map((metric, tagIndex) => (
+            <span
+              key={tagIndex}
+              className={`px-3 py-1 text-xs rounded-sm ${getTagColor(metric)}`}
+            >
+              {metric}
+            </span>
+          ))
+        ) : (
+          <span className="px-3 py-1 text-xs rounded-sm bg-gray-100 text-gray-700">
+            General
           </span>
-        ))}
+        )}
       </div>
 
-      <div className="text-gray-600 text-sm mb-4 ">{description}</div>
+      <div className="text-gray-600 text-sm mb-4">{props.purpose}</div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center text-sm text-gray-600">
@@ -58,15 +86,30 @@ export function HorizontalRecognitionCard({
             />
           </svg>
           <span className="text-[#005587] font-semibold">Target Group:</span>
-          <span className="ml-1 font-semibold text-[#000]">
-            {targetGroup} ({groupId})
-          </span>
+          {props.target_groups?.map(targetGroup => {
+            return(
+              <span className="ml-1 font-semibold text-[#000]">
+                {targetGroup.name} ({targetGroup.focus_group_id})
+              </span>
+            );
+          })}
+          
         </div>
 
-        <button className="text-[#012169] text-sm font-medium flex items-center hover:underline">
-          View Details
-          <ArrowRight className="h-4 w-4 ml-1" />
-        </button>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => props.onDelete(props.action_id)}
+            className="text-red-600 text-sm font-medium flex items-center hover:text-red-800 transition-colors"
+            aria-label="Delete action plan"
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            Delete
+          </button>
+          <button className="text-[#012169] text-sm font-medium flex items-center hover:underline">
+            View Details
+            <ArrowRight className="h-4 w-4 ml-1" />
+          </button>
+        </div>
       </div>
     </div>
   );

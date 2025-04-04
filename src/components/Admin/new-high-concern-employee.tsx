@@ -1,6 +1,8 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import MeetingScheduler from "@/pages/MeetingScheduler";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
@@ -23,6 +25,16 @@ type HighConcernEmployeesProps = {
   className?: string;
   employees?: Employee[];
   month?: string;
+};
+
+type MeetingDetails = {
+  participantName: string;
+  participantId: string;
+  meetingType: string;
+  date: string;
+  time: string;
+  meetLocationType: string;
+  agenda: string;
 };
 
 // Default employee data
@@ -115,56 +127,80 @@ const defaultEmployees: Employee[] = [
 
 // New Intervention Card Component
 const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
+  const [showMeetingScheduler, setShowMeetingScheduler] = useState(false);
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
-  return (
-    <Card className="border-2 border-red-500 rounded-lg mb-2 overflow-hidden">
-      <div className="p-3 sm:p-2">
-        <div className="flex items-start gap-3 sm:gap-4">
-          {/* Avatar with notification badge */}
-          <div className="relative shrink-0">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-teal-700">
-              <Avatar className="w-14 h-14 sm:w-16 sm:h-16">
-                <AvatarImage src={employee.avatar} alt={employee.name} />
-                <AvatarFallback className="bg-teal-700 text-white text-base sm:text-lg">
-                  {getInitials(employee.name)}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold border-2 border-white">
-              !
-            </div>
-          </div>
+  const handleScheduleMeeting = (meetingDetails: MeetingDetails) => {
+    console.log('Meeting scheduled:', meetingDetails);
+    setShowMeetingScheduler(false);
+  };
 
-          {/* Employee details */}
-          <div className="flex-grow min-w-0">
-            <div className="flex justify-between items-start w-full">
-              <div className="min-w-0 pr-2">
-                <h3 className="text-base sm:text-lg font-medium text-gray-900 truncate">
-                  {employee.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-600 mt-0.5 truncate">
-                  {employee.group}
-                </p>
-                <p className="text-red-500 font-medium text-xs sm:text-sm mt-1">
-                  Needs Immediate Intervention!
+  return (
+    <>
+      <Card className="border-2 border-red-500 rounded-lg mb-2 overflow-hidden">
+        <div className="p-3 sm:p-2">
+          <div className="flex items-start gap-3 sm:gap-4">
+            {/* Avatar with notification badge */}
+            <div className="relative shrink-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-teal-700">
+                <Avatar className="w-14 h-14 sm:w-16 sm:h-16">
+                  <AvatarImage src={employee.avatar} alt={employee.name} />
+                  <AvatarFallback className="bg-teal-700 text-white text-base sm:text-lg">
+                    {getInitials(employee.name)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold border-2 border-white">
+                !
+              </div>
+            </div>
+
+            {/* Employee details */}
+            <div className="flex-grow min-w-0">
+              <div className="flex justify-between items-start w-full">
+                <div className="min-w-0 pr-2">
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 truncate">
+                    {employee.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-0.5 truncate">
+                    {employee.group}
+                  </p>
+                  <p className="text-red-500 font-medium text-xs sm:text-sm mt-1">
+                    Needs Immediate Intervention!
+                  </p>
+                </div>
+                <p className="text-xs text-gray-400 whitespace-nowrap">
+                  #{employee.id}
                 </p>
               </div>
-              <p className="text-xs text-gray-400 whitespace-nowrap">
-                #{employee.id}
-              </p>
-            </div>
 
-            <Button className="bg-[#80C342] hover:bg-[#5A9027] mr-2 text-white text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
-              Schedule a Meet
-            </Button>
-            <Button className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
-              View
-            </Button>
+              <Button 
+                className="bg-[#80C342] hover:bg-[#5A9027] mr-2 text-white text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto"
+                onClick={() => setShowMeetingScheduler(true)}
+              >
+                Schedule a Meet
+              </Button>
+              <Button className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
+                View
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+
+      {showMeetingScheduler && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/60 z-50 flex items-center justify-center p-4">
+          <MeetingScheduler
+            participantName={employee.name}
+            participantId={employee.id}
+            participantGroup={employee.group}
+            onSchedule={handleScheduleMeeting}
+            onCancel={() => setShowMeetingScheduler(false)}
+            onClose={() => setShowMeetingScheduler(false)}
+          />
+        </div>
+      )}
+    </>
   );
 };
 
