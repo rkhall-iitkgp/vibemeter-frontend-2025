@@ -73,7 +73,7 @@ const Questions = () => {
 	const fetchQuestions = async () => {
 		try {
 			setIsLoading(true);
-			const response = await fetch(`${BACKEND_URL}:8000/api/question`);
+			const response = await fetch(`${BACKEND_URL}/api/question`);
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
@@ -233,7 +233,7 @@ const Questions = () => {
 
 			if (modalType === "create") {
 				// Create a new question
-				response = await fetch(`${BACKEND_URL}:8000/api/question`, {
+				response = await fetch(`${BACKEND_URL}/api/question`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -243,7 +243,7 @@ const Questions = () => {
 			} else if (modalType === "edit" && currentQuestion) {
 				// For edit, we'll ensure we're using the format expected by your API
 				response = await fetch(
-					`${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+					`${BACKEND_URL}/api/question/${currentQuestion.id}`,
 					{
 						method: "PUT",
 						headers: {
@@ -339,7 +339,7 @@ const Questions = () => {
 
 		try {
 			const response = await fetch(
-				`${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+				`${BACKEND_URL}/api/question/${currentQuestion.id}`,
 				{
 					method: "DELETE",
 				}

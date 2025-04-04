@@ -126,7 +126,7 @@ export default function ActionPlan() {
   const fetchActionPlans = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${BACKEND_URL}:8000/api/actions`);
+      const response = await fetch(`${BACKEND_URL}/api/actions`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -203,7 +203,7 @@ export default function ActionPlan() {
       setIsDeleting(true);
       setDeleteError(null);
       
-      const response = await fetch(`${BACKEND_URL}:8000/api/actions/${actionId}`, {
+      const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

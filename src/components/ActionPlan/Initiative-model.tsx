@@ -106,7 +106,7 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
   
     // Here you would typically send this data to your API
     // Example using fetch:
-    fetch(`${BACKEND_URL}:8000/api/actions`, {
+    fetch(`${BACKEND_URL}/api/actions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
