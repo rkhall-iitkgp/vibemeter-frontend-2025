@@ -1,5 +1,7 @@
 import { FC, useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+
 interface ActionStep {
   id: number;
   title: string;
@@ -87,6 +89,42 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
       });
     }
   }, [activeTab, tabRefs]);
+
+  const submitInitiativeData = () => {
+    // Format the data according to the required structure
+    const formattedData = {
+      title: title,
+      purpose: purpose,
+      metric: selectedMetrics,
+      target_groups: targetGroups,
+      steps: actionSteps.map(step => step.title),
+      is_completed: false
+    };
+  
+    // Log the formatted data (for testing)
+    console.log('Submitting initiative data:', formattedData);
+  
+    // Here you would typically send this data to your API
+    // Example using fetch:
+    fetch(`${BACKEND_URL}:8000/api/actions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formattedData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // Close the modal or show success message
+        onClose();
+        window.location.reload()
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // Handle error (show error message, etc.)
+      });
+  };
 
   const isBasicInfoValid = () => {
     return title.trim() !== "" && purpose.trim() !== "";
@@ -302,6 +340,7 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
           >
             <svg
               className="mr-2 h-5 w-5"
+              
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -960,17 +999,24 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                 Back
               </button>
             )}
-            <button
-              onClick={goToNextTab}
-              className={`flex items-center rounded-md ${
-                (activeTab === "basicInfo" && !isBasicInfoValid()) ||
-                (activeTab === "targetGroups" && !isTargetGroupsValid())
-                  ? "bg-[#80C342]/60 cursor-pointer"
-                  : "bg-[#80C342] hover:bg-[#6ba238]"
-              } px-6 py-2 font-medium text-white transition-colors`}
-            >
-              {activeTab === "actionSteps" ? "Apply Initiative" : "Continue"}
-              {activeTab !== "actionSteps" && (
+            {activeTab === "actionSteps" ? (
+              <button
+                onClick={submitInitiativeData}
+                className="flex items-center rounded-md bg-[#80C342] hover:bg-[#6ba238] px-6 py-2 font-medium text-white transition-colors"
+              >
+                Apply Initiative
+              </button>
+            ) : (
+              <button
+                onClick={goToNextTab}
+                className={`flex items-center rounded-md ${
+                  (activeTab === "basicInfo" && !isBasicInfoValid()) ||
+                  (activeTab === "targetGroups" && !isTargetGroupsValid())
+                    ? "bg-[#80C342]/60 cursor-pointer"
+                    : "bg-[#80C342] hover:bg-[#6ba238]"
+                } px-6 py-2 font-medium text-white transition-colors`}
+              >
+                Continue
                 <svg
                   className="ml-2 inline-block h-5 w-5"
                   viewBox="0 0 20 20"
@@ -982,8 +1028,8 @@ const InitiativeModal: FC<InitiativeModalProps> = ({ onClose }) => {
                     clipRule="evenodd"
                   />
                 </svg>
-              )}
-            </button>
+              </button>
+            )}
           </div>
         </div>
       </div>
