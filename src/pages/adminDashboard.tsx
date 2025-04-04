@@ -6,55 +6,47 @@ import Sidebar from "@/components/Admin/sidenav";
 import { FaChartBar } from "react-icons/fa";
 
 export default function AdminDashboard() {
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar - fixed on desktop, toggleable on mobile */}
-      <div className="fixed inset-y-0 left-0 z-50 md:relative md:flex">
-        <Sidebar activeTab="Overview" />
-      </div>
+	return (
+		<div className="flex-1 overflow-auto">
+			{/* Header - consistent padding with main content */}
+			<header className="bg-gray-100 z-10 py-6 px-6">
+				<div className="flex items-center gap-3">
+					<span className="text-[#80C342]">
+						<FaChartBar size={44} />
+					</span>
+					<h1 className="text-4xl font-semibold text-gray-800">Overview</h1>
+				</div>
+			</header>
 
-      {/* Main content area */}
-      <div className="flex-1 overflow-auto">
-        {/* Header - consistent padding with main content */}
-        <header className="bg-gray-100 z-10 py-6 px-6">
-          <div className="flex items-center gap-3">
-            <span className="text-[#80C342]">
-              <FaChartBar size={44} />
-            </span>
-            <h1 className="text-4xl font-semibold text-gray-800">Overview</h1>
-          </div>
-        </header>
+			{/* Dashboard content - consistent padding with smaller gaps */}
+			<main className="p-4">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					{/* Left column */}
+					<div className="space-y-4">
+						{/* Employee Satisfaction Gauge */}
+						<div className="bg-white rounded-lg shadow overflow-hidden">
+							<EmployeeSatisfactionGauge />
+						</div>
 
-        {/* Dashboard content - consistent padding with smaller gaps */}
-        <main className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Left column */}
-            <div className="space-y-4">
-              {/* Employee Satisfaction Gauge */}
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <EmployeeSatisfactionGauge />
-              </div>
+						{/* Average Vibemeter Score */}
+						<div className="bg-white rounded-lg shadow overflow-hidden">
+							<VibemeterChart />
+						</div>
+					</div>
 
-              {/* Average Vibemeter Score */}
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <VibemeterChart />
-              </div>
-            </div>
+					{/* Right column - High Concern Employees */}
+					<div className="bg-white rounded-lg shadow overflow-hidden h-full">
+						<HighConcernEmployees />
+					</div>
+				</div>
 
-            {/* Right column - High Concern Employees */}
-            <div className="bg-white rounded-lg shadow overflow-hidden h-full">
-              <HighConcernEmployees />
-            </div>
-          </div>
-
-          {/* Bubble Chart - consistent top margin */}
-          <div className="mt-4">
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <BubbleChartPreview />
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+				{/* Bubble Chart - consistent top margin */}
+				<div className="mt-4">
+					<div className="bg-white rounded-lg shadow overflow-hidden">
+						<BubbleChartPreview />
+					</div>
+				</div>
+			</main>
+		</div>
+	);
 }

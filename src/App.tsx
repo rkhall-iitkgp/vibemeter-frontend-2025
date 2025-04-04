@@ -26,7 +26,14 @@ function App() {
         />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/graph" element={<Graph />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
         <Route
           path="/questions"
           element={
