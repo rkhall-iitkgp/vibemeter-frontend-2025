@@ -3,9 +3,38 @@ import { ActionPlansCarousel } from "@/components/action-plan-carousel";
 import AddParticipantsModal from "../components/AddParticipantsModal";
 import FilterButton from "@/components/FilterButton";
 import SearchBar from "@/components/SearchBar";
+import { ChevronRight, Filter, Minus, Plus, Search, MoreVertical } from "lucide-react";
 import { Employee, FocusGroup } from "@/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+
+// Skeleton component for loading states
+interface SkeletonProps {
+  className?: string;
+}
+
+const Skeleton = ({ className = "" }: SkeletonProps) => (
+  <div 
+    className={`bg-gray-200 animate-pulse ${className}`} 
+    style={{
+      animation: "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+    }}
+  ></div>
+);
+
+// Add keyframes for the animation
+const styleElement = document.createElement("style");
+document.head.appendChild(styleElement);
+styleElement.sheet?.insertRule(`
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+`, 0);
 
 export default function FocusGroupDetails({
 	selectedGroup,
@@ -22,6 +51,7 @@ export default function FocusGroupDetails({
 }) {
 	const [participants, setParticipants] = useState<Employee[]>([]);
 	const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	// Track filtered participants
 	const [filteredParticipants, setFilteredParticipants] =
@@ -46,6 +76,7 @@ export default function FocusGroupDetails({
 	});
 
 	useEffect(() => {
+		setIsLoading(true);
 		fetch(
 			`${import.meta.env.VITE_BACKEND_URL}/api/groups/${selectedGroup.focus_group_id}`
 		)
@@ -55,6 +86,11 @@ export default function FocusGroupDetails({
 				setParticipants(data.data.users);
 				setFilteredParticipants(data.data.users);
 				setAllEmployees(data.data.users);
+				setIsLoading(false);
+			})
+			.catch(error => {
+				console.error("Error fetching data:", error);
+				setIsLoading(false);
 			});
 	}, [selectedGroup]);
 
@@ -182,6 +218,175 @@ export default function FocusGroupDetails({
 
 		return jobTitleMatches && dateAddedMatches;
 	};
+
+	// Show skeleton loading state
+	if (isLoading) {
+		return (
+			<div className="flex-1 overflow-auto overflow-x-hidden">
+				{/* Header - consistent padding with main content */}
+				<header className="bg-gray-100 z-10 p-6 pt-10 pb-4">
+					<div className="flex items-center text-sm">
+						<span className="text-gray-600 whitespace-nowrap">Focus Groups</span>
+						<ChevronRight className="mx-2 h-5 w-5 text-gray-400 flex-shrink-0" />
+						<Skeleton className="h-5 w-48 rounded-md flex-shrink-0" />
+					</div>
+				</header>
+
+				{/* Dashboard content - consistent padding with smaller gaps */}
+				<main className="p-6 pt-0">
+					{/* Focus Group Details Card */}
+					<div className="rounded-lg border border-gray-200 bg-white p-6 mb-6">
+						<div className="flex justify-between items-center">
+							<div>
+								<Skeleton className="h-8 w-64 rounded-md" />
+								<Skeleton className="h-4 w-40 rounded-md mt-2" />
+							</div>
+							<Skeleton className="h-4 w-48 rounded-md flex-shrink-0" />
+						</div>
+
+						<div className="mt-6 border-t border-gray-200 pt-6 -mx-6 px-6">
+							<h2 className="text-lg font-semibold text-gray-900 mb-2 whitespace-nowrap">
+								Description:
+							</h2>
+							<Skeleton className="h-4 w-full rounded-md mb-2" />
+							<Skeleton className="h-4 w-full rounded-md mb-2" />
+							<Skeleton className="h-4 w-3/4 rounded-md" />
+						</div>
+
+						<div className="mt-6 border-t border-gray-200 pt-6 -mx-6 px-6">
+							<div className="flex items-center gap-3">
+								<h2 className="text-lg font-semibold text-gray-900 mb-0 whitespace-nowrap">
+									Target Metrics:
+								</h2>
+								<div className="flex gap-2">
+									<Skeleton className="h-6 w-28 rounded-full" />
+									<Skeleton className="h-6 w-24 rounded-full" />
+									<Skeleton className="h-6 w-32 rounded-full" />
+								</div>
+							</div>
+						</div>
+
+						<div className="mt-6 border-t border-gray-200 pt-6 -mx-6 px-6">
+							<div className="flex items-center gap-2">
+								<h2 className="text-lg font-semibold text-gray-900 mb-0 whitespace-nowrap">
+									No. of Participants:
+								</h2>
+								<Skeleton className="h-8 w-8 rounded-full" />
+							</div>
+						</div>
+					</div>
+
+					{/* Suggested Action Plans Section */}
+					<div className="mb-6">
+						<div className="flex justify-between items-center mb-4">
+							<h2 className="text-xl font-bold text-gray-900 whitespace-nowrap">Suggested Action Plans</h2>
+							<Skeleton className="h-9 w-32 rounded-md flex-shrink-0" />
+						</div>
+						
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+							{[1, 2, 3].map((i) => (
+								<div key={i} className="border rounded-lg bg-white overflow-hidden shadow-sm">
+									<Skeleton className="h-64 w-full rounded-md" />
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* Participants Section */}
+					<div className="mt-8">
+						<h2 className="text-xl font-bold text-gray-900 mb-4 whitespace-nowrap">
+							All Participants
+						</h2>
+
+						<div className="mb-4 flex justify-between items-center">
+							<div className="w-1/2 relative">
+								<Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+								<Skeleton className="h-10 w-full rounded-md" />
+							</div>
+							<div className="flex items-center space-x-3">
+								<button className="flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700">
+									<Filter className="mr-2 h-5 w-5 text-gray-400" />
+									Filter
+								</button>
+								<button className="flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700">
+									<Minus className="mr-2 h-5 w-5 text-gray-400" />
+									Remove Selected
+								</button>
+								<button className="flex items-center rounded-md bg-[#80C342] px-4 py-2 text-sm font-medium text-white">
+									<Plus className="mr-2 h-5 w-5" />
+									Add Participant
+								</button>
+							</div>
+						</div>
+
+						{/* Participants Table */}
+						<div className="mt-4 overflow-hidden border border-gray-200 rounded-lg">
+							<table className="min-w-full divide-y divide-gray-200">
+								<thead className="bg-gray-50">
+									<tr>
+										<th scope="col" className="w-12 px-6 py-3">
+											<span className="sr-only">Select</span>
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>
+											Employee Name
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>
+											Employee ID
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>
+											Job Title
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+										>
+											Date Added
+										</th>
+										<th scope="col" className="relative px-6 py-3">
+											<span className="sr-only">Actions</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody className="bg-white divide-y divide-gray-200">
+									{[1, 2, 3, 4, 5, 6].map((i) => (
+										<tr key={i}>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<Skeleton className="h-4 w-4 rounded" />
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<Skeleton className="h-5 w-32 rounded-md" />
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<Skeleton className="h-5 w-24 rounded-md" />
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<Skeleton className="h-5 w-28 rounded-md" />
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<Skeleton className="h-5 w-24 rounded-md" />
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap text-right">
+												<MoreVertical className="h-5 w-5 text-gray-400 ml-auto" />
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</main>
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex-1 overflow-auto">
