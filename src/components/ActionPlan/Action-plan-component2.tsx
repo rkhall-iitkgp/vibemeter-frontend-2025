@@ -17,7 +17,7 @@ interface HorizontalRecognitionCardProps {
 
 export function HorizontalRecognitionCard(props: HorizontalRecognitionCardProps) {
   // Function to determine metric color based on metric content
-  console.log(props)
+  // console.log(props)
   const getTagColor = (metric : any) => {
     const tagLower = metric.toLowerCase();
     if (tagLower.includes("moral") || tagLower === "morality") {
