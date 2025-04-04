@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import { LandingPage, LoginPage } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import ChatPage from "./components/Chat";
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
         />
         <Route
           path="/"
-          element={isAuthenticated ? <LandingPage /> : <Navigate to="/login" />}
+          element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}
         />
       </Routes>
     </>
