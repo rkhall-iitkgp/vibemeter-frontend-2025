@@ -8,6 +8,7 @@ import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Action } from "@reduxjs/toolkit";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -73,21 +74,21 @@ const sampleActionPlans = [
 ];
 
 export default function ActionPlan() {
-	const [actionPlans, setActionPlans] = useState([]);
-	const [displayPlans, setDisplayPlans] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState(null);
-	const [searchQuery, setSearchQuery] = useState("");
-	const [sortOpen, setSortOpen] = useState(false);
-	const [filterOpen, setFilterOpen] = useState(false);
-	const [sortBy, setSortBy] = useState("Priority");
-	const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [deleteError, setDeleteError] = useState(null);
-
-	// State for delete confirmation modal
-	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-	const [planToDelete, setPlanToDelete] = useState(null);
+  const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
+  const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("Priority");
+  const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  
+  // State for delete confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState(null);
 
 	useEffect(() => {
 		fetchActionPlans();
@@ -132,35 +133,32 @@ export default function ActionPlan() {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const responseData = await response.json();
-
-			// Handle the API response format
-			if (Array.isArray(responseData)) {
-				// Direct array of action plans
-				const formattedActionPlans = responseData.map(mapResponseToActionPlan);
-				setActionPlans(formattedActionPlans);
-				setDisplayPlans(formattedActionPlans);
-				setError(null);
-			} else if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
-				// Wrapped in a success response object
-				const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
-				setActionPlans(formattedActionPlans);
-				setDisplayPlans(formattedActionPlans);
-				setError(null);
-			} else {
-				throw new Error("Invalid response format");
-			}
-		} catch (err) {
-			console.error("Failed to fetch action plans:", err);
-			setError("Failed to load action plans. Please try again later.");
-
-			// Fall back to sample data for development
-			setActionPlans(sampleActionPlans);
-			setDisplayPlans(sampleActionPlans);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+      const responseData: { data: ActionPlan[], status: string } = await response.json();
+//      console.log(responseData.data)
+      // Handle the API response format
+      if (Array.isArray(responseData)) {
+        // // Direct array of action plans
+        // const formattedActionPlans = responseData.map(mapResponseToActionPlan);
+        setActionPlans(responseData.data);
+        setDisplayPlans(responseData.data);
+        setError(null);
+      } else if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
+        // Wrapped in a success response object
+        // const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
+        setActionPlans(responseData.data);
+        setDisplayPlans(responseData.data);
+        setError(null);
+      } else {
+        throw new Error("Invalid response format");
+      }
+    } catch (err) {
+      console.error("Failed to fetch action plans:", err);
+      setError("Failed to load action plans. Please try again later.");
+      
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 	const handleSearch = (query) => {
 		setSearchQuery(query);
@@ -336,29 +334,31 @@ export default function ActionPlan() {
 						</div>
 					)}
 
-					{/* Action Plans Cards */}
-					<div className="space-y-4">
-						{!isLoading && displayPlans.length === 0 && (
-							<p className="text-center py-8 text-gray-500">
-								No action plans found. Try adjusting your search or create a new one.
-							</p>
-						)}
-
-						{!isLoading && displayPlans.map((plan, index) => (
-							<HorizontalRecognitionCard
-								key={index}
-								actionId={plan.actionId}
-								title={plan.title}
-								createdDate={plan.createdDate}
-								description={plan.description}
-								targetGroup={plan.targetGroup}
-								groupId={plan.groupId}
-								tags={plan.tags}
-								onDelete={openDeleteModal}
-							/>
-						))}
-					</div>
-				</div>
+          {/* Action Plans Cards */}
+          <div className="space-y-4">
+            {!isLoading && displayPlans.length === 0 && (
+              <p className="text-center py-8 text-gray-500">
+                No action plans found. Try adjusting your search or create a new one.
+              </p>
+            )}
+            
+            {!isLoading && displayPlans?.map((plan, index) => {
+              return (
+                <HorizontalRecognitionCard
+                  key={index}
+                  action_id={plan.action_id}
+                  title={plan.title}
+                  created_at={plan.created_at}
+                  purpose={plan.purpose}
+                  target_groups={plan.target_groups}
+                  metrics={plan.metric}
+                  onDelete={openDeleteModal}
+                />
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
 				{/* Initiative Modal */}
 				{isInitiativeModalOpen && (
