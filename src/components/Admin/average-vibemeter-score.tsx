@@ -90,14 +90,21 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
     loadData();
   }, [fetchData]);
 
+  // Calculate responsive bar width based on number of data points
+  const calculateBarSize = () => {
+    const dataLength = data.length;
+    if (dataLength <= 0) return 40;
+    return Math.min(50, 280 / dataLength); // Ensure bars aren't too wide with few data points
+  };
+
   return (
-    <div className={`px-4 pt-4 pb-3 w-full h-full ${className}`}>
+    <div className={`px-4 pt-4 pb-9 w-full ${className}`}>
       {/* Header section */}
       <div className="mb-2">
-        <h2 className="text-lg font-semibold text-gray-800">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
           Average Vibemeter Scores
         </h2>
-        <p className="text-sm text-gray-500">Average Vibe Scores per month</p>
+        <p className="text-xs text-gray-500">Average Vibe Scores per month</p>
       </div>
 
       {/* Stats section */}
@@ -114,13 +121,13 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
         </div>
       </div>
 
-      {/* Chart section */}
-      <div className="mt-2 h-[180px]">
+      {/* Chart section - removed border and adjusted container */}
+      <div className="mt-2 h-[180px] w-full flex justify-center">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            barSize={30}
-            margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
+            barSize={calculateBarSize()}
+            margin={{ top: 10, right: 30, left: 30, bottom: 5 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"

@@ -64,21 +64,38 @@ export default function EmployeeSatisfactionGauge({
   const arcLength = Math.PI * radius; // Length of a semicircle arc
 
   return (
-    <div className={`w-full text-center bg-white rounded-lg ${className}`}>
-      <div className="px-4 pt-4">
-        <div className="text-lg font-semibold mb-1">{title}</div>
-        <div className="text-sm text-gray-500 mb-3">{subtitle}</div>
+    <div className={`w-full bg-white rounded-lg shadow-sm ${className}`}>
+      <div className="pt-4 pl-4">
+        <div className="text-lg sm:text-xl font-semibold text-gray-900">
+          {title}
+        </div>
+        <div className="text-xs text-gray-500">{subtitle}</div>
       </div>
 
       <div className="px-2 pb-4">
-        <div className="relative max-w-xs mx-auto aspect-[2/1]">
+        <div className="relative max-w-xs mx-auto">
           <svg
-            className="w-full h-auto"
+            className="w-full h-48"
             viewBox="0 0 200 105"
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="xMidYMid meet"
           >
-            {/* Tick marks and labels */}
+            {/* Concentric half circles - just two as requested */}
+            <path
+              d="M 30,100 A 70,70 0 0 1 170,100"
+              fill="none"
+              stroke="#CBD5E1"
+              strokeWidth="1"
+              strokeDasharray="2,2"
+            />
+
+            <path
+              d="M 60,100 A 40,40 0 0 1 140,100"
+              fill="none"
+              stroke="#CBD5E1"
+              strokeWidth="1"
+              strokeDasharray="2,2"
+            />
 
             {/* Background arc */}
             <path
@@ -86,6 +103,7 @@ export default function EmployeeSatisfactionGauge({
               fill="none"
               stroke="#e5e7eb"
               strokeWidth="20"
+              strokeLinecap="round"
             />
 
             {/* Filled arc - animated */}
@@ -137,11 +155,11 @@ export default function EmployeeSatisfactionGauge({
         </div>
 
         {/* Animated percentage display */}
-        <div className="text-2xl font-bold mt-2">
+        <div className="text-2xl font-bold mt-2 text-center">
           {Math.round(animatedRatio * 100 * 10) / 10}%
         </div>
 
-        <div className={`mt-1 text-sm ${changeColor}`}>
+        <div className={`mt-1 text-sm text-center ${changeColor}`}>
           {changeSign}
           {monthlyChange.toFixed(1)}%{" "}
           <span className="text-gray-400">({monthLabel})</span>

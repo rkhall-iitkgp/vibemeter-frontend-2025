@@ -214,7 +214,7 @@ const FocusGroupPage: FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-full">
       <div className="container mx-auto px-4 py-6">
         <div className="mt-8">
           <div className="flex items-center">

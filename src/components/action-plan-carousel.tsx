@@ -84,7 +84,7 @@ export function ActionPlansCarousel() {
           slidesToScroll: 1,
         }}
       >
-        <CarouselContent className="-ml-4">
+        <CarouselContent className="">
           {actionPlans.map((plan) => (
             <CarouselItem
               key={plan.id}
