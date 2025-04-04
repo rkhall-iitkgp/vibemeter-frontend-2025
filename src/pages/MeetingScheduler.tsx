@@ -77,18 +77,16 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
       </div>
       
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="meetingType" className="block font-bold mb-2">Meeting Type</label>
+      <div className="mb-4">
+          <label htmlFor="meetLocationType" className="block font-bold mb-2">Meet Type</label>
           <select 
-            id="meetingType" 
+            id="meetLocationType" 
             className="w-full p-2 border border-gray-300 rounded"
-            value={meetingType}
-            onChange={(e) => setMeetingType(e.target.value)}
+            value={meetLocationType}
+            onChange={(e) => setMeetLocationType(e.target.value)}
           >
-            <option value="One-on-One Intervention">One-on-One Intervention</option>
-            <option value="Progress Review">Progress Review</option>
-            <option value="Goal Setting">Goal Setting</option>
-            <option value="General Discussion">General Discussion</option>
+            <option value="Virtual Meeting">Virtual Meeting</option>
+            <option value="Offline Meeting">Offline Meeting</option>
           </select>
         </div>
         
@@ -104,54 +102,33 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
               required
             />
           </div>
-          <div className="flex-1">
+            <div className="flex-1">
             <label htmlFor="time" className="block font-bold mb-2">Time</label>
-            <select 
+            <input 
+              type="time" 
               id="time" 
               className="w-full p-2 border border-gray-300 rounded"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-            >
-              <option value="9:00 AM - 9:30 AM">9:00 AM - 9:30 AM</option>
-              <option value="9:30 AM - 10:00 AM">9:30 AM - 10:00 AM</option>
-              <option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
-              <option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
-              <option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
-              <option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
-              <option value="1:00 PM - 1:30 PM">1:00 PM - 1:30 PM</option>
-              <option value="1:30 PM - 2:00 PM">1:30 PM - 2:00 PM</option>
-              <option value="2:00 PM - 2:30 PM">2:00 PM - 2:30 PM</option>
-              <option value="2:30 PM - 3:00 PM">2:30 PM - 3:00 PM</option>
-              <option value="3:00 PM - 3:30 PM">3:00 PM - 3:30 PM</option>
-              <option value="3:30 PM - 4:00 PM">3:30 PM - 4:00 PM</option>
-              <option value="4:00 PM - 4:30 PM">4:00 PM - 4:30 PM</option>
-              <option value="4:30 PM - 5:00 PM">4:30 PM - 5:00 PM</option>
-            </select>
+              min="09:00"
+              max="17:00"
+              step="1800"
+              required
+            />
+            </div>
+        </div>
+        
+        
+        <div className="mb-4">
+          <label htmlFor="agenda" className="block font-bold mb-2">Duration</label>
+          <div className="flex items-center">
+            <input 
+              type="number" 
+              min="1"
+              className="w-24 p-2 border border-gray-300 rounded"
+            />
+            <span className="ml-2">mins</span>
           </div>
-        </div>
-        
-        <div className="mb-4">
-          <label htmlFor="meetLocationType" className="block font-bold mb-2">Meet Type</label>
-          <select 
-            id="meetLocationType" 
-            className="w-full p-2 border border-gray-300 rounded"
-            value={meetLocationType}
-            onChange={(e) => setMeetLocationType(e.target.value)}
-          >
-            <option value="Virtual Meeting">Virtual Meeting</option>
-            <option value="Offline Meeting">Offline Meeting</option>
-          </select>
-        </div>
-        
-        <div className="mb-4">
-          <label htmlFor="agenda" className="block font-bold mb-2">Meeting Agenda</label>
-          <textarea 
-            id="agenda" 
-            className="w-full p-2 border border-gray-300 rounded"
-            placeholder="Enter the meeting Agenda and Discussion points..."
-            value={agenda}
-            onChange={(e) => setAgenda(e.target.value)}
-          ></textarea>
         </div>
         
         <div className="flex gap-4 mt-6">
