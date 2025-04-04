@@ -1,4 +1,5 @@
 import { DashboardPage, LoginPage, Graph, AdminDashboard } from "./pages";
+import ActionPlanDetails from "./pages/ActionPlanDetails";
 import { Navigate, Route, Routes } from "react-router";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
@@ -64,6 +65,14 @@ function App() {
           element={
             <AdminLayout>
               <ActionPlan />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/action-plan/:id"
+          element={
+            <AdminLayout>
+              <ActionPlanDetails />
             </AdminLayout>
           }
         />

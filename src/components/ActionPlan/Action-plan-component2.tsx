@@ -1,5 +1,5 @@
+import { useNavigate } from "react-router";
 import { ArrowRight } from "lucide-react";
-
 interface HorizontalRecognitionCardProps {
   title: string;
   createdDate: string;
@@ -17,8 +17,15 @@ export function HorizontalRecognitionCard({
   groupId = "#GRP2345",
   tags = ["Morality", "Engagement"],
 }: HorizontalRecognitionCardProps) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/action-plan/ap-1`);
+  };
   return (
-    <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4">
+    <div
+      className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4"
+      onClick={handleClick}
+    >
       <h3 className="font-semibold text-gray-900 text-lg mb-1">{title}</h3>
 
       <div className="flex items-center gap-2 mb-3">

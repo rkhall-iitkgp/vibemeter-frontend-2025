@@ -11,6 +11,7 @@ import { useState } from "react";
 // Sample data for horizontal cards
 const actionPlans = [
   {
+    id: "ap-1", // Add unique ID
     title: "Recognition Program",
     createdDate: "March 17, 2025",
     description:
@@ -20,6 +21,7 @@ const actionPlans = [
     tags: ["Morality", "Engagement"],
   },
   {
+    id: "ap-2", // Add unique ID
     title: "Recognition Program",
     createdDate: "March 12, 2025",
     description:
@@ -151,7 +153,8 @@ export default function ActionPlan() {
               )
               .map((plan, index) => (
                 <HorizontalRecognitionCard
-                  key={index}
+                  key={plan.id}
+                  id={plan.id} // Pass the ID
                   title={plan.title}
                   createdDate={plan.createdDate}
                   description={plan.description}
