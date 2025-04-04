@@ -380,7 +380,7 @@ const Questions = () => {
 	return (
 		<div className="flex-1 overflow-auto">
 			{/* Header - now in gray area */}
-			<header className=" bg-gray-100 z-10 p-6 flex w-full justify-between items-center">
+			<header className=" bg-gray-100 z-10 p-6 pt-8 flex w-full justify-between items-center">
 				<div className="flex items-center gap-3">
 					<span className="text-[#80C342]">
 						<img src="/icons/Questions.svg" alt="Question Icon" width={40} height={40} />

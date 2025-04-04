@@ -12,231 +12,231 @@ import { useState, useEffect } from "react";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface ActionStep {
-  title: string;
-  description: string;
+	title: string;
+	description: string;
 }
 
 interface ActionPlan {
-  action_id: string;
-  title: string;
-  purpose: string;
-  metric: string[];
-  steps: ActionStep[];
-  is_completed: boolean;
-  target_groups: any[];
-  created_at: string;
+	action_id: string;
+	title: string;
+	purpose: string;
+	metric: string[];
+	steps: ActionStep[];
+	is_completed: boolean;
+	target_groups: any[];
+	created_at: string;
 }
 
 // Map the backend response to the format expected by the UI
 const mapResponseToActionPlan = (item) => {
-  return {
-    actionId: item.action_id,
-    title: item.title || "Untitled Action Plan",
-    createdDate: new Date(item.created_at).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    }),
-    description: item.purpose || "No description available",
-    targetGroup: item.target_groups && item.target_groups.length > 0 
-      ? item.target_groups[0].name 
-      : "All Groups",
-    groupId: item.target_groups && item.target_groups.length > 0 
-      ? `#${item.target_groups[0].focus_group_id}` 
-      : "#N/A",
-    tags: item.metric || [],
-  };
+	return {
+		actionId: item.action_id,
+		title: item.title || "Untitled Action Plan",
+		createdDate: new Date(item.created_at).toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		}),
+		description: item.purpose || "No description available",
+		targetGroup: item.target_groups && item.target_groups.length > 0
+			? item.target_groups[0].name
+			: "All Groups",
+		groupId: item.target_groups && item.target_groups.length > 0
+			? `#${item.target_groups[0].focus_group_id}`
+			: "#N/A",
+		tags: item.metric || [],
+	};
 };
 
 // Sample data as fallback
 const sampleActionPlans = [
-  {
-    actionId: "SAMPLE001",
-    title: "Recognition Program",
-    createdDate: "March 17, 2025",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
-    targetGroup: "Leadership Group",
-    groupId: "#GRP2345",
-    tags: ["Morality", "Engagement"],
-  },
-  {
-    actionId: "SAMPLE002",
-    title: "Communication Improvement",
-    createdDate: "March 12, 2025",
-    description:
-      "Establish regular team meetings and feedback sessions to improve internal communication and transparency across departments",
-    targetGroup: "All Departments",
-    groupId: "#GRP2346",
-    tags: ["Communication", "Collaboration"],
-  },
+	{
+		actionId: "SAMPLE001",
+		title: "Recognition Program",
+		createdDate: "March 17, 2025",
+		description:
+			"Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
+		targetGroup: "Leadership Group",
+		groupId: "#GRP2345",
+		tags: ["Morality", "Engagement"],
+	},
+	{
+		actionId: "SAMPLE002",
+		title: "Communication Improvement",
+		createdDate: "March 12, 2025",
+		description:
+			"Establish regular team meetings and feedback sessions to improve internal communication and transparency across departments",
+		targetGroup: "All Departments",
+		groupId: "#GRP2346",
+		tags: ["Communication", "Collaboration"],
+	},
 ];
 
 export default function ActionPlan() {
-  const [actionPlans, setActionPlans] = useState([]);
-  const [displayPlans, setDisplayPlans] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOpen, setSortOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("Priority");
-  const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
-  
-  // State for delete confirmation modal
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [planToDelete, setPlanToDelete] = useState(null);
+	const [actionPlans, setActionPlans] = useState([]);
+	const [displayPlans, setDisplayPlans] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [sortOpen, setSortOpen] = useState(false);
+	const [filterOpen, setFilterOpen] = useState(false);
+	const [sortBy, setSortBy] = useState("Priority");
+	const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [deleteError, setDeleteError] = useState(null);
 
-  useEffect(() => {
-    fetchActionPlans();
-  }, []);
+	// State for delete confirmation modal
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [planToDelete, setPlanToDelete] = useState(null);
 
-  // Update displayed plans when search query changes
-  useEffect(() => {
-    if (actionPlans.length > 0) {
-      filterAndSortPlans();
-    }
-  }, [searchQuery, sortBy, actionPlans]);
+	useEffect(() => {
+		fetchActionPlans();
+	}, []);
 
-  const filterAndSortPlans = () => {
-    let filtered = [...actionPlans];
-    
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (plan) =>
-          plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          plan.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    // Apply sorting
-    if (sortBy === "Date") {
-      filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-    } else if (sortBy === "Alphabetical") {
-      filtered.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    // Priority sorting would need implementation based on your priority system
-    
-    setDisplayPlans(filtered);
-  };
+	// Update displayed plans when search query changes
+	useEffect(() => {
+		if (actionPlans.length > 0) {
+			filterAndSortPlans();
+		}
+	}, [searchQuery, sortBy, actionPlans]);
 
-  const fetchActionPlans = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${BACKEND_URL}/api/actions`);
+	const filterAndSortPlans = () => {
+		let filtered = [...actionPlans];
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+		// Apply search filter
+		if (searchQuery) {
+			filtered = filtered.filter(
+				(plan) =>
+					plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+					plan.description.toLowerCase().includes(searchQuery.toLowerCase())
+			);
+		}
 
-      const responseData = await response.json();
+		// Apply sorting
+		if (sortBy === "Date") {
+			filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+		} else if (sortBy === "Alphabetical") {
+			filtered.sort((a, b) => a.title.localeCompare(b.title));
+		}
+		// Priority sorting would need implementation based on your priority system
 
-      // Handle the API response format
-      if (Array.isArray(responseData)) {
-        // Direct array of action plans
-        const formattedActionPlans = responseData.map(mapResponseToActionPlan);
-        setActionPlans(formattedActionPlans);
-        setDisplayPlans(formattedActionPlans);
-        setError(null);
-      } else if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
-        // Wrapped in a success response object
-        const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
-        setActionPlans(formattedActionPlans);
-        setDisplayPlans(formattedActionPlans);
-        setError(null);
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (err) {
-      console.error("Failed to fetch action plans:", err);
-      setError("Failed to load action plans. Please try again later.");
-      
-      // Fall back to sample data for development
-      setActionPlans(sampleActionPlans);
-      setDisplayPlans(sampleActionPlans);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+		setDisplayPlans(filtered);
+	};
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-  };
+	const fetchActionPlans = async () => {
+		try {
+			setIsLoading(true);
+			const response = await fetch(`${BACKEND_URL}/api/actions`);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const responseData = await response.json();
+
+			// Handle the API response format
+			if (Array.isArray(responseData)) {
+				// Direct array of action plans
+				const formattedActionPlans = responseData.map(mapResponseToActionPlan);
+				setActionPlans(formattedActionPlans);
+				setDisplayPlans(formattedActionPlans);
+				setError(null);
+			} else if (responseData && responseData.status === "success" && Array.isArray(responseData.data)) {
+				// Wrapped in a success response object
+				const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
+				setActionPlans(formattedActionPlans);
+				setDisplayPlans(formattedActionPlans);
+				setError(null);
+			} else {
+				throw new Error("Invalid response format");
+			}
+		} catch (err) {
+			console.error("Failed to fetch action plans:", err);
+			setError("Failed to load action plans. Please try again later.");
+
+			// Fall back to sample data for development
+			setActionPlans(sampleActionPlans);
+			setDisplayPlans(sampleActionPlans);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleSearch = (query) => {
+		setSearchQuery(query);
+	};
 
 	const openInitiativeModal = () => {
 		setIsInitiativeModalOpen(true);
 	};
 
 
-  const closeInitiativeModal = () => {
-    setIsInitiativeModalOpen(false);
-  };
-  
-  // Opens the delete confirmation modal
-  const openDeleteModal = (actionId) => {
-    if (!actionId) return;
-    
-    // Find the plan to delete to display its title in the confirmation modal
-    const planToDelete = actionPlans.find(plan => plan.actionId === actionId);
-    if (planToDelete) {
-      setPlanToDelete(planToDelete);
-      setIsDeleteModalOpen(true);
-    }
-  };
-  
-  // Closes the delete confirmation modal
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setPlanToDelete(null);
-  };
-  
-  // Handles the actual deletion after confirmation
-  const confirmDelete = async () => {
-    if (!planToDelete || isDeleting) return;
-    
-    const actionId = planToDelete.actionId;
-    
-    try {
-      setIsDeleting(true);
-      setDeleteError(null);
-      
-      const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to delete action plan. Status: ${response.status}`);
-      }
-      
-      // Remove the deleted plan from state
-      setActionPlans(prevPlans => prevPlans.filter(plan => plan.actionId !== actionId));
-      setDisplayPlans(prevPlans => prevPlans.filter(plan => plan.actionId !== actionId));
-      
-      // Close the modal
-      closeDeleteModal();
-      
-      // Show success message (optional)
-      // toast.success("Action plan deleted successfully");
-      
-    } catch (err) {
-      console.error("Error deleting action plan:", err);
-      setDeleteError("Failed to delete action plan. Please try again later.");
-      // toast.error("Failed to delete action plan");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+	const closeInitiativeModal = () => {
+		setIsInitiativeModalOpen(false);
+	};
+
+	// Opens the delete confirmation modal
+	const openDeleteModal = (actionId) => {
+		if (!actionId) return;
+
+		// Find the plan to delete to display its title in the confirmation modal
+		const planToDelete = actionPlans.find(plan => plan.actionId === actionId);
+		if (planToDelete) {
+			setPlanToDelete(planToDelete);
+			setIsDeleteModalOpen(true);
+		}
+	};
+
+	// Closes the delete confirmation modal
+	const closeDeleteModal = () => {
+		setIsDeleteModalOpen(false);
+		setPlanToDelete(null);
+	};
+
+	// Handles the actual deletion after confirmation
+	const confirmDelete = async () => {
+		if (!planToDelete || isDeleting) return;
+
+		const actionId = planToDelete.actionId;
+
+		try {
+			setIsDeleting(true);
+			setDeleteError(null);
+
+			const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to delete action plan. Status: ${response.status}`);
+			}
+
+			// Remove the deleted plan from state
+			setActionPlans(prevPlans => prevPlans.filter(plan => plan.actionId !== actionId));
+			setDisplayPlans(prevPlans => prevPlans.filter(plan => plan.actionId !== actionId));
+
+			// Close the modal
+			closeDeleteModal();
+
+			// Show success message (optional)
+			// toast.success("Action plan deleted successfully");
+
+		} catch (err) {
+			console.error("Error deleting action plan:", err);
+			setDeleteError("Failed to delete action plan. Please try again later.");
+			// toast.error("Failed to delete action plan");
+		} finally {
+			setIsDeleting(false);
+		}
+	};
 
 	return (
 		<div className="flex-1 overflow-auto ">
 			{/* Header with Icon and Title */}
-			<header className=" bg-gray-100 z-10 p-6">
+			<header className=" bg-gray-100 z-10 p-6 pt-8">
 				<div className="flex items-center gap-3">
 					<span className="text-[#80C342]">
 						<svg
@@ -282,14 +282,13 @@ export default function ActionPlan() {
 					<h1 className="text-4xl font-semibold text-gray-800">Action Plans</h1>
 				</div>
 			</header>
+			<main className="p-6 pt-2">
+				{/* Carousel Section */}
+				<div className="mb-10">
+					<ActionPlansCarousel />
+				</div>
 
-			{/* Carousel Section */}
-			<div className="mb-10">
-				<ActionPlansCarousel />
-			</div>
-
-			{/* All Action Plans Section */}
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				{/* All Action Plans Section */}
 				<div className="mb-8">
 					<h2 className="text-xl font-semibold mb-6">All Action Plans</h2>
 
@@ -322,63 +321,63 @@ export default function ActionPlan() {
 						</Button>
 					</div>
 
-          {/* Loading and Error States */}
-          {isLoading && <p className="text-center py-8">Loading action plans...</p>}
-          
-          {!isLoading && error && (
-            <div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
-              {error}
-            </div>
-          )}
-          
-          {deleteError && (
-            <div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
-              {deleteError}
-            </div>
-          )}
+					{/* Loading and Error States */}
+					{isLoading && <p className="text-center py-8">Loading action plans...</p>}
 
-          {/* Action Plans Cards */}
-          <div className="space-y-4">
-            {!isLoading && displayPlans.length === 0 && (
-              <p className="text-center py-8 text-gray-500">
-                No action plans found. Try adjusting your search or create a new one.
-              </p>
-            )}
-            
-            {!isLoading && displayPlans.map((plan, index) => (
-              <HorizontalRecognitionCard
-                key={index}
-                actionId={plan.actionId}
-                title={plan.title}
-                createdDate={plan.createdDate}
-                description={plan.description}
-                targetGroup={plan.targetGroup}
-                groupId={plan.groupId}
-                tags={plan.tags}
-                onDelete={openDeleteModal}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+					{!isLoading && error && (
+						<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
+							{error}
+						</div>
+					)}
 
-      {/* Initiative Modal */}
-      {isInitiativeModalOpen && (
-        <InitiativeModal 
-          onClose={closeInitiativeModal} 
-          onSuccess={fetchActionPlans}
-        />
-      )}
-      
-      {/* Delete Confirmation Modal */}
-      {isDeleteModalOpen && planToDelete && (
-        <DeleteConfirmationModal
-          onClose={closeDeleteModal}
-          onConfirm={confirmDelete}
-          actionTitle={planToDelete.title}
-          isDeleting={isDeleting}
-        />
-      )}
-    </div>
-  );
+					{deleteError && (
+						<div className="bg-red-50 p-4 rounded-md text-red-700 mb-4">
+							{deleteError}
+						</div>
+					)}
+
+					{/* Action Plans Cards */}
+					<div className="space-y-4">
+						{!isLoading && displayPlans.length === 0 && (
+							<p className="text-center py-8 text-gray-500">
+								No action plans found. Try adjusting your search or create a new one.
+							</p>
+						)}
+
+						{!isLoading && displayPlans.map((plan, index) => (
+							<HorizontalRecognitionCard
+								key={index}
+								actionId={plan.actionId}
+								title={plan.title}
+								createdDate={plan.createdDate}
+								description={plan.description}
+								targetGroup={plan.targetGroup}
+								groupId={plan.groupId}
+								tags={plan.tags}
+								onDelete={openDeleteModal}
+							/>
+						))}
+					</div>
+				</div>
+
+				{/* Initiative Modal */}
+				{isInitiativeModalOpen && (
+					<InitiativeModal
+						onClose={closeInitiativeModal}
+						onSuccess={fetchActionPlans}
+					/>
+				)}
+
+				{/* Delete Confirmation Modal */}
+				{isDeleteModalOpen && planToDelete && (
+					<DeleteConfirmationModal
+						onClose={closeDeleteModal}
+						onConfirm={confirmDelete}
+						actionTitle={planToDelete.title}
+						isDeleting={isDeleting}
+					/>
+				)}
+			</main>
+		</div>
+	);
 }
