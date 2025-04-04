@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams,Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
@@ -92,16 +92,38 @@ const ActionPlanHeader = ({ plan }) => {
 
   return (
     <div>
-      <Button
-        variant="outline"
-        size="sm"
-        className="mb-3"
-        onClick={() => navigate(-1)}
-      >
-        <ChevronLeft className="mr-2 h-4 w-4" /> Back
-      </Button>
+          <div className="mb-6">
+            <div className="flex items-center text-sm">
+              <Link
+                to="/action-plan"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Action Plans
+              </Link>
+              <svg
+                className="mx-2 h-5 w-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="text-blue-600 font-medium">
+                {plan.title}
+              </span>
+
+            </div>
+          </div>
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 pb-3">
-        <h1 className="text-xl font-bold">{plan.title}</h1>
+        <div>
+        <h1 className="text-xl font-bold pb-2">{plan.title}</h1>
+        <div className="flex items-center text-gray-500 text-xs px-1">
+          <span>Group ID: {plan.groupId}</span>
+        </div>
+        </div>
         <span className="text-sm text-gray-500">
           Created on {plan.createdOn}
         </span>
@@ -251,9 +273,7 @@ const ActionPlanDetails = () => {
   return (
     <div className=" mx-auto p-4 sm:p-6 bg-gray-50">
       <div className="bg-white p-5 rounded-lg shadow-sm">
-        <div className="flex items-center text-gray-500 text-xs mb-2">
-          <span>Group ID: {plan.groupId}</span>
-        </div>
+
         <ActionPlanHeader plan={plan} />
         <TargetMetrics metrics={plan.targetMetrics} />
         <FocusGroups groups={plan.focusGroups} />
