@@ -7,6 +7,7 @@ import SearchBar from "../components/ActionPlan/Search-bar";
 import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { useState, useEffect } from "react";
+import { PlusIcon } from "lucide-react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
