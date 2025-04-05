@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react"
-import { Smile, Send } from "lucide-react"
+import { Smile, Send, RefreshCcw, Award, Battery, Phone, Clipboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -45,6 +45,46 @@ export default function ChatPage() {
 		connectionStatus,
 		reconnect
 	} = useChat();
+
+	const [persona, setPersona] = useState<string>("") // Persona state for the AI assistant
+	// Array of available AI personas
+	const availablePersonas = [
+		{
+			"name": "Alex",
+			"identifier": "Dedicated but Burning Out",
+			"iconColor": "#FF5733",
+			"backgroundColor": "#FFF0EC",
+			"icon": <Battery />
+		},
+		{
+			"name": "Morgan",
+			"identifier": "Skilled but Disconnected",
+			"iconColor": "#3498DB",
+			"backgroundColor": "#E8F4FD",
+			"icon": <Phone />
+		},
+		{
+			"name": "Jamie",
+			"identifier": "Promoted but Overwhelmed",
+			"iconColor": "#9B59B6",
+			"backgroundColor": "#F4ECF7",
+			"icon": <Clipboard />
+		},
+		{
+			"name": "Taylor",
+			"identifier": "Productive but Imbalanced",
+			"iconColor": "#2ECC71",
+			"backgroundColor": "#E8F8F1",
+			"icon": <Award />
+		},
+		{
+			"name": "Jordan",
+			"identifier": "Talented but Undervalued",
+			"iconColor": "#F1C40F",
+			"backgroundColor": "#FEF9E7",
+			"icon": <Award />
+		}
+	]
 
 	// Predefined quick reply options for common responses
 	const suggestedReplies = useMemo(() => [
@@ -124,7 +164,7 @@ export default function ChatPage() {
 		<div className="flex flex-col mx-auto bg-white"
 			style={{
 				height: '100vh',
-				width: '390px',
+				width: '400px',
 				maxHeight: '844px',
 				display: 'grid',
 				gridTemplateRows: 'auto 1fr auto auto'
@@ -141,79 +181,101 @@ export default function ChatPage() {
 						<p className="text-lime-500">Online</p>
 						:
 						<div className="flex gap-2">
-							<p className="text-red-500">Disconnected</p>
-							<button onClick={reconnect}>Refresh</button>
+							{connectionStatus === 'connecting' ?
+								<p className="text-yellow-600">Connecting...</p>
+								:
+								<p className="text-red-500">Disconnected</p>
+							}
+							<button onClick={reconnect}><RefreshCcw size={16} className={connectionStatus === 'connecting' ? 'animate-spin' : ''} /></button>
 						</div>
 					}
 				</div>
 			</div>
 
-			{/* Messages Area - Displays conversation history */}
-			<div className="flex-1 overflow-y-auto p-3 space-y-3 will-change-scroll"
-				style={{ scrollBehavior: 'smooth', overscrollBehavior: 'contain' }}>
-				{messages.map((message: any) => {
-					// Apply animation to all messages
-					return (
-						<div
-							key={message.id}
-							className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-							style={{
-								animation: `fadeIn 0.3s ease-out forwards`,
-								opacity: 0,
-								transform: 'translateY(10px)'
-							}}
+			{persona === '' ?
+				<div className="flex gap-4 w-full h-full items-center justify-around flex-wrap content-center">
+					{availablePersonas.map((p) => (
+						<button
+							key={p.name}
+							className={`flex-1 whitespace-nowrap rounded-md hover:bg-gray-100 border border-gray-400 text-gray-700 px-4 py-6 transition-all duration-200 active:scale-95`}
+							onClick={() => setPersona(p.identifier)}
+							style={{ backgroundColor: p.backgroundColor }}
 						>
-							{/* Show avatar only for AI messages */}
-							{message.role === "assistant" && (
-								<Avatar className="h-10 w-10 mr-3">
-									<AvatarImage src="/api/placeholder/40/40" alt="AI Assistant" />
-									<AvatarFallback>AI</AvatarFallback>
-								</Avatar>
-							)}
-							{/* Message bubble with different styling for user vs AI */}
-							<div className={cn(
-								"max-w-[75%] p-3 relative",
-								message.role === "user"
-									? "bg-lime-500 text-white rounded-tl-xl rounded-bl-xl rounded-br-xl hover:bg-lime-600"
-									: "bg-gray-100 text-gray-700 rounded-tr-xl rounded-bl-xl rounded-br-xl hover:bg-gray-200"
-							)}>
-								<p className="whitespace-pre-wrap break-words">{message.content}</p>
+							<div className="flex flex-col items-center justify-center">
+								{React.cloneElement(p.icon, { className: "mb-2 text-gray-500", size: 40, color: p.iconColor })}
+								<p className="font-semibold">{p.name}</p>
+								<p className="text-xs font-normal text-gray-500">{p.identifier}</p>
+							</div>
+						</button>
+					))}
+				</div>
+				:
+				<div className="flex-1 overflow-y-auto p-3 space-y-3 will-change-scroll"
+					style={{ scrollBehavior: 'smooth', overscrollBehavior: 'contain' }}>
+					{messages.map((message: any) => {
+						// Apply animation to all messages
+						return (
+							<div
+								key={message.id}
+								className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+								style={{
+									animation: `fadeIn 0.3s ease-out forwards`,
+									opacity: 0,
+									transform: 'translateY(10px)'
+								}}
+							>
+								{/* Show avatar only for AI messages */}
+								{message.role === "assistant" && (
+									<Avatar className="h-10 w-10 mr-3">
+										<AvatarImage src="/api/placeholder/40/40" alt="AI Assistant" />
+										<AvatarFallback>AI</AvatarFallback>
+									</Avatar>
+								)}
+								{/* Message bubble with different styling for user vs AI */}
+								<div className={cn(
+									"max-w-[75%] p-3 relative",
+									message.role === "user"
+										? "bg-lime-500 text-white rounded-tl-xl rounded-bl-xl rounded-br-xl hover:bg-lime-600"
+										: "bg-gray-100 text-gray-700 rounded-tr-xl rounded-bl-xl rounded-br-xl hover:bg-gray-200"
+								)}>
+									<p className="whitespace-pre-wrap break-words">{message.content}</p>
+								</div>
+							</div>
+						);
+					})}
+
+					{/* Typing indicator - Animated dots to show AI is typing */}
+					{isThinking && (
+						<div className="flex justify-start" style={{
+							animation: 'fadeIn 0.2s ease-out forwards',
+							opacity: 0,
+						}}>
+							<Avatar className="h-10 w-10 mr-3">
+								<AvatarImage src="/api/placeholder/40/40" alt="AI Assistant" />
+								<AvatarFallback>AI</AvatarFallback>
+							</Avatar>
+							<div className="bg-gray-100 text-gray-700 p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl flex items-center">
+								<span className="flex space-x-1">
+									{[1, 2, 3].map((dot) => (
+										<span
+											key={dot}
+											className="h-2 w-2 bg-gray-400 rounded-full"
+											style={{
+												animation: 'bounce 1.4s infinite ease-in-out',
+												animationDelay: `${dot * 0.16}s`,
+												animationFillMode: 'both',
+											}}
+										/>
+									))}
+								</span>
 							</div>
 						</div>
-					);
-				})}
+					)}
 
-				{/* Typing indicator - Animated dots to show AI is typing */}
-				{isThinking && (
-					<div className="flex justify-start" style={{
-						animation: 'fadeIn 0.2s ease-out forwards',
-						opacity: 0,
-					}}>
-						<Avatar className="h-10 w-10 mr-3">
-							<AvatarImage src="/api/placeholder/40/40" alt="AI Assistant" />
-							<AvatarFallback>AI</AvatarFallback>
-						</Avatar>
-						<div className="bg-gray-100 text-gray-700 p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl flex items-center">
-							<span className="flex space-x-1">
-								{[1, 2, 3].map((dot) => (
-									<span
-										key={dot}
-										className="h-2 w-2 bg-gray-400 rounded-full"
-										style={{
-											animation: 'bounce 1.4s infinite ease-in-out',
-											animationDelay: `${dot * 0.16}s`,
-											animationFillMode: 'both',
-										}}
-									/>
-								))}
-							</span>
-						</div>
-					</div>
-				)}
-
-				{/* Anchor element for auto-scrolling */}
-				<div ref={messagesEndRef} />
-			</div>
+					{/* Anchor element for auto-scrolling */}
+					<div ref={messagesEndRef} />
+				</div>
+			}
 
 			{/* Suggested Replies - Quick response options */}
 			<div className="p-2 border-t max-h-32 overflow-y-auto">

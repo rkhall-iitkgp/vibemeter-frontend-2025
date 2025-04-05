@@ -12,13 +12,17 @@ function App() {
   return (
     <>
       <Routes>
-         <Route
+         {/* <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
         />
         <Route
           path="/"
           element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}
+        /> */}
+		<Route
+          path="/"
+          element={<ChatPage />}
         />
       </Routes>
     </>

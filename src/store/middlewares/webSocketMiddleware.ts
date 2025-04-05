@@ -47,6 +47,9 @@ export const websocketMiddleware: Middleware<unknown, RootState> = store => next
 			// Connection opened
 			socket.onopen = () => {
 				dispatch(setConnectionStatus('connected'));
+				dispatch(setError(null)); // Clear any previous errors
+				dispatch(setBotTyping(false)); // Reset bot typing state
+				dispatch(setBotThinking(false)); // Reset bot thinking state
 				console.log('WebSocket connected');
 			};
 
