@@ -35,7 +35,7 @@ const FocusGroupPage: FC = () => {
   });
 
   useEffect(() => {
-    console.log(BACKEND_URL);
+    // console.log(BACKEND_URL);
     fetch(`${BACKEND_URL}/api/groups`)
       .then((res) => res.json())
       .then((data) => {
