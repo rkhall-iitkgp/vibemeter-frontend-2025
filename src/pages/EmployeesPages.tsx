@@ -4,7 +4,6 @@ import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
-
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Updated Employee type to match backend format
