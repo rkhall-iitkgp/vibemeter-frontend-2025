@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import {
   Select,
@@ -10,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -30,10 +27,7 @@ const ActionPlanHeader = ({ plan }) => {
     <div>
       <div className="mb-6">
         <div className="flex items-center text-sm">
-          <Link
-            to="/action-plan"
-            className="text-gray-600 hover:text-gray-900"
-          >
+          <Link to="/action-plan" className="text-gray-600 hover:text-gray-900">
             Action Plans
           </Link>
           <svg
@@ -47,9 +41,7 @@ const ActionPlanHeader = ({ plan }) => {
               clipRule="evenodd"
             />
           </svg>
-          <span className="text-blue-600 font-medium">
-            {plan?.title || ""}
-          </span>
+          <span className="text-blue-600 font-medium">{plan?.title || ""}</span>
         </div>
       </div>
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 pb-3">
@@ -60,7 +52,7 @@ const ActionPlanHeader = ({ plan }) => {
           </div>
         </div>
         <span className="text-sm text-gray-500">
-          Created on {" "}
+          Created on{" "}
           {new Date(plan.created_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -104,7 +96,7 @@ const TargetMetrics = ({ metrics }) => {
 };
 
 // Focus Groups Component with Sort
-const FocusGroups = ({ groups }) => { 
+const FocusGroups = ({ groups }) => {
   const navigate = useNavigate();
   const [sortedGroups, setSortedGroups] = useState([]);
   const [sortBy, setSortBy] = useState("priority");
@@ -149,7 +141,7 @@ const FocusGroups = ({ groups }) => {
           <div
             key={group.focus_group_id}
             className="border rounded-md overflow-hidden bg-white shadow-sm"
-            onClick = {() => navigate(`/focus-groups/${group.focus_group_id}`)}
+            onClick={() => navigate(`/focus-groups/${group.focus_group_id}`)}
             style={{ cursor: "pointer" }}
           >
             <div className="p-4">
@@ -242,7 +234,6 @@ const ActionSteps = ({ steps }) => {
 
 // Main Component
 const ActionPlanDetails = () => {
-  const navigate = useNavigate();
   const { actionId } = useParams(); // Get id from URL params
   const [plan, setPlan] = useState({}); // State to hold the action plan data
 

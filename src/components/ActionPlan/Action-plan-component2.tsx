@@ -43,13 +43,16 @@ export function HorizontalRecognitionCard(
   };
 
   const navigate = useNavigate();
-  const handleClick = () => { 
+  const handleClick = () => {
     // Redirect to the action plan details page with action_id as a parameter
     navigate(`/action-plan/${props.action_id}`);
-  }
+  };
 
   return (
-    <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4" onClick={handleClick}>
+    <div
+      className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4"
+      onClick={handleClick}
+    >
       <h3 className="font-semibold text-gray-900 text-lg mb-1">
         {props.title}
       </h3>

@@ -1,14 +1,15 @@
 import { DashboardPage, LoginPage, Graph, AdminDashboard } from "./pages";
 import UnderConstruction from "./pages/UnderConstruction";
+import ActionPlanDetails from "./pages/ActionPlanDetails";
 import { Navigate, Route, Routes } from "react-router";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
+import EmployeesPage from "./pages/EmployeesPages";
 import SurveysPage from "./pages/SurveysPage";
 import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
-import ActionPlanDetails from "./pages/ActionPlanDetails";
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -64,7 +65,7 @@ function App() {
           path="/employees"
           element={
             <AdminLayout>
-              <UnderConstruction />
+              <EmployeesPage />
             </AdminLayout>
           }
         />
