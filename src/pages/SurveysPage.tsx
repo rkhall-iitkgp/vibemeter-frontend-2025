@@ -1,5 +1,6 @@
 import { Search, ChevronRight, ChevronDown, Plus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import SurveysSkeleton from "../components/Survey/SurveysSkeleton"; // Adjust the import path as necessary
 
 interface Survey {
   id: number;
@@ -13,6 +14,7 @@ const SurveysPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("Date");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Sample data
   const surveys: Survey[] = [
@@ -61,9 +63,25 @@ const SurveysPage: React.FC = () => {
       survey.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Simulate loading data
+  useEffect(() => {
+    const loadData = async () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    };
+
+    loadData();
+  }, []);
+
+  // Return skeleton while loading
+  if (isLoading) {
+    return <SurveysSkeleton />;
+  }
+
   return (
     <div className="flex-1 overflow-auto">
-      {/* Header - consistent padding with main content */}
+      {/* Header */}
       <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
@@ -85,7 +103,7 @@ const SurveysPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Dashboard content - consistent padding with smaller gaps */}
+      {/* Main Content */}
       <main className="p-6 pt-2">
         <div className="flex justify-between mb-4">
           <div className="flex items-center gap-4">
