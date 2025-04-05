@@ -1,9 +1,8 @@
 import { Navigate, Route, Routes } from "react-router";
-import { LandingPage, LoginPage } from "./pages";
+import { LoginPage, Bot } from "./pages";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
 import ChatPage from "./components/Chat";
-
 
 function App() {
   const isAuthenticated = useSelector(
@@ -12,18 +11,15 @@ function App() {
   return (
     <>
       <Routes>
-         {/* <Route
+        <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
         />
         <Route
           path="/"
           element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}
-        /> */}
-		<Route
-          path="/"
-          element={<ChatPage />}
         />
+        <Route path="/bot" element={<Bot />} />
       </Routes>
     </>
   );
