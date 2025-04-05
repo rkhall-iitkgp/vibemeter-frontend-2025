@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Award, Users, Star, BookOpen, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -35,25 +40,7 @@ const dummyAwards = [
     title: "Best Team Player",
     icon: "users",
     date: "01/2025",
-  },
-  {
-    id: 4,
-    title: "Star Performer",
-    icon: "star",
-    date: "12/2024",
-  },
-  {
-    id: 5,
-    title: "Quick Learner",
-    icon: "book",
-    date: "11/2024",
-  },
-  {
-    id: 6,
-    title: "Goal Achiever",
-    icon: "target",
-    date: "10/2024",
-  },
+  }
 ];
 
 const AwardsCard: React.FC<AwardsCardProps> = ({
@@ -124,24 +111,29 @@ const AwardsCard: React.FC<AwardsCardProps> = ({
   };
 
   return (
-    <Card className={`mb-4 py-4 gap-2 ${className}`}>
+    <Card className={`mb-4 py-4 gap-2 shadow-sm ${className}`}>
       <CardHeader className="py-0">
         <div className="flex justify-between items-center ">
-          <CardTitle className="text-lg text-green-600 ">Awards</CardTitle>
-          <Button variant="link" className="text-sm p-0" onClick={onViewAll}>
+          <CardTitle className="text-lg ">Awards</CardTitle>
+          <Button variant="link" className="text-sm text-[#8CC427] p-0" onClick={onViewAll}>
             View All
           </Button>
         </div>
       </CardHeader>
       <CardContent className="py-0">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-1 px-4 py-4">
           {awards.slice(0, 6).map((award) => (
             <div
               key={award.id}
-              className="flex flex-col items-center text-center "
+              className="flex flex-col items-center text-cente"
             >
               {renderIcon(award.icon)}
-              <h4 className="mt-2 text-xs font-medium">{award.title}</h4>
+              <h4
+                className="mt-2 text-xs font-medium overflow-hidden text-ellipsis whitespace-normal max-w-full"
+                style={{ minWidth: "120px", wordBreak: "break-word" }}
+              >
+                {award.title}
+              </h4>
               <p className="text-xs text-gray-400 mt-1">{award.date}</p>
             </div>
           ))}
