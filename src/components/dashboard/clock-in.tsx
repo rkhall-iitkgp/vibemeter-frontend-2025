@@ -104,8 +104,8 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
             {clockOutTime
               ? "Completed"
               : clockInTime
-              ? "Active"
-              : "Not started"}
+                ? "Active"
+                : "Not started"}
           </span>
         </div>
         <div className="flex items-center text-xs sm:text-sm text-gray-500 mt-1">
@@ -156,8 +156,8 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
               {isOnBreak
                 ? `On break: ${formatTime(breakStartTime)}`
                 : totalBreakMinutes > 0
-                ? `Total break: ${Math.floor(totalBreakMinutes / 60)}h ${totalBreakMinutes % 60}m`
-                : "No breaks taken"}
+                  ? `Total break: ${Math.floor(totalBreakMinutes / 60)}h ${totalBreakMinutes % 60}m`
+                  : "No breaks taken"}
             </p>
           </div>
         )}

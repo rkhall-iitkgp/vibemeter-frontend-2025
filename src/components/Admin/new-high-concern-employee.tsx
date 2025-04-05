@@ -27,16 +27,6 @@ type HighConcernEmployeesProps = {
   month?: string;
 };
 
-type MeetingDetails = {
-  participantName: string;
-  participantId: string;
-  meetingType: string;
-  date: string;
-  time: string;
-  meetLocationType: string;
-  agenda: string;
-};
-
 // Default employee data
 const defaultEmployees: Employee[] = [
   {
@@ -130,11 +120,6 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
   const [showMeetingScheduler, setShowMeetingScheduler] = useState(false);
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
 
-  const handleScheduleMeeting = (meetingDetails: MeetingDetails) => {
-    console.log("Meeting scheduled:", meetingDetails);
-    setShowMeetingScheduler(false);
-  };
-
   return (
     <>
       <Card className="border-2 border-red-500 rounded-lg mb-2 overflow-hidden">
@@ -194,7 +179,6 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
             participantName={employee.name}
             participantId={employee.id}
             participantGroup={employee.group}
-            onSchedule={handleScheduleMeeting}
             onCancel={() => setShowMeetingScheduler(false)}
             onClose={() => setShowMeetingScheduler(false)}
           />

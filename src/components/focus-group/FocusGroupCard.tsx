@@ -56,11 +56,11 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Modal Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black/60 transition-opacity"
             onClick={handleCancelDelete}
           ></div>
-          
+
           {/* Modal Content */}
           <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4 z-50">
             <div className="p-6">
@@ -68,8 +68,8 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({
                 Confirm Deletion
               </h3>
               <p className="text-sm text-gray-500 mb-6">
-                Are you sure you want to delete the focus group "{focusGroup.name}"? 
-                This action cannot be undone.
+                Are you sure you want to delete the focus group "
+                {focusGroup.name}"? This action cannot be undone.
               </p>
               <div className="flex justify-end space-x-3">
                 <button

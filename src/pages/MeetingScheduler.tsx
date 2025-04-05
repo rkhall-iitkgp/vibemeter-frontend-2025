@@ -4,26 +4,14 @@ interface MeetingSchedulerProps {
   participantName: string;
   participantId: string;
   participantGroup: string;
-  onSchedule?: (meetingDetails: MeetingDetails) => void;
   onCancel?: () => void;
   onClose?: () => void;
-}
-
-interface MeetingDetails {
-  participantName: string;
-  participantId: string;
-  meetingType: string;
-  date: string;
-  time: string;
-  meetLocationType: string;
-  agenda: string;
 }
 
 const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
   participantName,
   participantId,
   participantGroup,
-  onSchedule,
   onCancel,
   onClose,
 }) => {
