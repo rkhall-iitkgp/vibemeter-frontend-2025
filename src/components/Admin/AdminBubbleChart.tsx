@@ -39,6 +39,14 @@ const categoryColorMap: Record<string, string> = {
   "Very Low": "#E0E0E0", // gray
 };
 
+// Text colors for each category
+const categoryTextColorMap: Record<string, string> = {
+  High: "#2C5234", // dark green for green bubbles
+  Moderate: "#0076A8", // dark blue for light blue bubbles
+  Low: "#BC8725", // brown/gold for light green bubbles
+  "Very Low": "#393939", // dark gray for gray bubbles
+};
+
 // Fixed scaling factors for each category's radius (based on value)
 const getDynamicRadius = (value: number): number => {
   const maxValue = 100; // Max value you can scale to
@@ -191,7 +199,7 @@ const AdminBubbleChart: React.FC<AdminBubbleChartProps> = ({ data }) => {
                 y={bubble.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill="#fff"
+                fill={categoryTextColorMap[bubble.category]}
                 className="pointer-events-none"
                 style={{ fontSize: Math.max(bubble.radius / 3, 10) }}
               >
@@ -222,7 +230,9 @@ const AdminBubbleChart: React.FC<AdminBubbleChartProps> = ({ data }) => {
                 style={{ backgroundColor: color }}
                 className="w-4 h-4 rounded-full mr-1"
               />
-              <span>{category}</span>
+              <span style={{ color: categoryTextColorMap[category] }}>
+                {category}
+              </span>
             </div>
           ))}
         </div>

@@ -96,7 +96,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="bg-[#7CC243] h-2 rounded-full"
                   style={{ width: `${100 - employee.retentionRisk}%` }}
                 ></div>
               </div>
@@ -109,7 +109,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="bg-[#7CC243] h-2 rounded-full"
                   style={{ width: `${employee.moraleScore}%` }}
                 ></div>
               </div>
@@ -122,7 +122,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="bg-[#7CC243] h-2 rounded-full"
                   style={{ width: `${employee.cultureScore}%` }}
                 ></div>
               </div>
@@ -135,7 +135,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="bg-[#7CC243] h-2 rounded-full"
                   style={{ width: `${employee.engagementScore}%` }}
                 ></div>
               </div>
@@ -178,7 +178,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
                 <div className="flex items-center gap-4">
                   <span>{slot.date}</span>
                   {slot.confirmed ? (
-                    <Check className="h-5 w-5 text-green-500" />
+                    <Check className="h-5 w-5 text-[#7CC243]" />
                   ) : selectedSlot === slot.id ? (
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" className="h-8">
@@ -186,7 +186,7 @@ const EmployeeDialog: React.FC<EmployeeDialogProps> = ({
                       </Button>
                       <Button
                         size="sm"
-                        className="h-8 bg-green-500 hover:bg-green-600"
+                        className="h-8 bg-[#7CC243] hover:bg-[#7CC243]/80"
                       >
                         Confirm Meet
                       </Button>

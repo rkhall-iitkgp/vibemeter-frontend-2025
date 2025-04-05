@@ -259,7 +259,7 @@ export default function FocusGroupDetails({
                       Morality: "bg-amber-100 text-amber-800",
                       Engagement: "bg-teal-100 text-teal-800",
                       "Cultural Score": "bg-pink-100 text-pink-800",
-                      "Leave Impact": "bg-green-100 text-green-800",
+                      "Leave Impact": "bg-green-100 text-[#7CC243]",
                     }[tag] || "bg-gray-100 text-gray-800"
                   }`}
                 >
@@ -385,7 +385,7 @@ export default function FocusGroupDetails({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="h-4 w-4 rounded border-gray-300 text-[#7CC243]-600 focus:ring-green-500"
                         checked={selectedParticipants.includes(index)}
                         onChange={() => toggleSelectParticipant(index)}
                       />

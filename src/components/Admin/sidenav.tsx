@@ -1,13 +1,14 @@
 import { FaUsers, FaChevronRight } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router"; // Fixed import from react-router to react-router-dom
+import { useLocation, useNavigate } from "react-router";
 import React from "react";
 
-// Updated MenuItem type to support image sources
+// Extend MenuItem to include a disabled flag
 type MenuItem = {
   name: string;
   img_src: string; // Path to icon image
   link: string;
   notifications?: number; // Optional notifications count
+  disabled?: boolean; // New property to disable the item
 };
 
 type MenuSection = {
@@ -34,7 +35,7 @@ const menuIcons: Record<string, string> = {
   "HR Policies": "/icons/HR-policies.svg",
 };
 
-// Updated defaultMenuSections with img_src instead of icon
+// Update defaultMenuSections to mark the items to disable
 const defaultMenuSections: MenuSection[] = [
   {
     title: "Main",
@@ -72,6 +73,7 @@ const defaultMenuSections: MenuSection[] = [
         name: "Initiatives",
         img_src: menuIcons["Initiatives"],
         link: "initiatives",
+        disabled: true, // Disabled item
       },
     ],
   },
@@ -82,11 +84,13 @@ const defaultMenuSections: MenuSection[] = [
         name: "Help Center",
         img_src: menuIcons["Help Center"],
         link: "help-center",
+        disabled: true, // Disabled item
       },
       {
         name: "HR Policies",
         img_src: menuIcons["HR Policies"],
         link: "hr-policies",
+        disabled: true, // Disabled item
       },
     ],
   },
@@ -102,6 +106,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   // Handle the click on menu items
   const handleItemClick = (item: MenuItem) => {
+    if (item.disabled) {
+      return; // Do nothing if the item is disabled
+    }
     if (onTabChange) {
       onTabChange(item.name);
     }
@@ -132,11 +139,16 @@ const Sidebar: React.FC<SidebarProps> = ({
                   ? activeTab === item.name
                   : location.pathname.split("/")[1] === item.link;
 
+                // Additional styling if the item is disabled
+                const disabledClasses = item.disabled
+                  ? "cursor-not-allowed" // Disabled styling
+                  : "cursor-pointer"; // Default styling
+
                 return (
                   <li
                     key={itemIndex}
                     onClick={() => handleItemClick(item)}
-                    className={`relative flex items-center p-3 rounded-lg cursor-pointer ${
+                    className={`relative flex items-center p-3 rounded-lg ${disabledClasses} ${
                       isActive
                         ? "bg-green-50 text-[#80C342]"
                         : "text-gray-500 hover:bg-gray-100"
@@ -159,7 +171,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {/* Name and notification in same area */}
                     <div className="flex-1 flex items-center">
                       <span
-                        className={`text-sm font-medium ${isActive ? "text-[#80C342]" : "text-gray-500"}`}
+                        className={`text-sm font-medium ${
+                          isActive ? "text-[#80C342]" : "text-gray-500"
+                        }`}
                       >
                         {item.name}
                       </span>
@@ -197,17 +211,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Add CSS to colorize SVGs - fixed style tag */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-          .filter-green {
-            filter: brightness(0) saturate(100%) invert(65%) sepia(49%) saturate(1612%) hue-rotate(54deg) brightness(103%) contrast(90%);
-          }
-        `,
-        }}
-      />
     </div>
   );
 };

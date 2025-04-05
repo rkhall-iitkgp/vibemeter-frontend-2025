@@ -14,10 +14,10 @@ interface FocusGroupModalProps {
 
 // Predefined tags with their colors
 const PREDEFINED_TAGS = [
-  { name: "Engagement", color: "bg-green-100 text-green-800" },
+  { name: "Engagement", color: "bg-green-100 text-[#7CC243]" },
   { name: "Morality", color: "bg-amber-100 text-amber-800" },
   { name: "Cultural Score", color: "bg-pink-100 text-pink-800" },
-  { name: "Leave Impact", color: "bg-green-100 text-green-800" },
+  { name: "Leave Impact", color: "bg-green-100 text-[#7CC243]" },
   { name: "Leadership", color: "bg-blue-100 text-blue-800" },
   { name: "Innovation", color: "bg-purple-100 text-purple-800" },
 ];
@@ -563,7 +563,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({
                     </div>
                     {isSelected && (
                       <svg
-                        className="h-5 w-5 text-green-500"
+                        className="h-5 w-5 text-[#7CC243]"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >

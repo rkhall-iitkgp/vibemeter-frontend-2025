@@ -13,7 +13,7 @@ const TabNavigation: FC<TabNavigationProps> = ({ activeTab }) => {
           to="/overall"
           className={`px-4 py-4 text-base font-medium ${
             activeTab === "overall"
-              ? "border-b-2 border-green-500 text-green-600"
+              ? "border-b-2 border-green-500 text-[#7CC243]-600"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -23,7 +23,7 @@ const TabNavigation: FC<TabNavigationProps> = ({ activeTab }) => {
           to="/employee"
           className={`px-4 py-4 text-base font-medium ${
             activeTab === "employee"
-              ? "border-b-2 border-green-500 text-green-600"
+              ? "border-b-2 border-green-500 text-[#7CC243]-600"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -33,7 +33,7 @@ const TabNavigation: FC<TabNavigationProps> = ({ activeTab }) => {
           to="/focus-groups"
           className={`px-4 py-4 text-base font-medium ${
             activeTab === "focus-group"
-              ? "border-b-2 border-green-500 text-green-600"
+              ? "border-b-2 border-green-500 text-[#7CC243]-600"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >

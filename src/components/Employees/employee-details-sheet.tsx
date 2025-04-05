@@ -133,7 +133,7 @@ export function EmployeeDetailsSheet({
           <div className="p-4 sm:p-6">
             {/* Header with close button */}
             <div className="relative flex items-center mb-4 sm:mb-6">
-              <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-500" />
+              <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-[#7CC243]" />
               <h2 className="text-lg sm:text-xl font-bold">Employee Details</h2>
               <SheetClose className="absolute right-0 top-0 rounded-full p-1 hover:bg-muted">
                 <span className="sr-only">Close</span>
@@ -237,7 +237,7 @@ export function EmployeeDetailsSheet({
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${
                             employee.vibeScore.change.direction === "increase"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-green-100 text-[#7CC243]"
                               : "bg-red-100 text-red-800"
                           }`}
                         >

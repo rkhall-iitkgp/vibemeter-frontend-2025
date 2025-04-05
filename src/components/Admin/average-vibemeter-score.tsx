@@ -51,7 +51,7 @@ const CustomTooltip = ({
     return (
       <div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md text-sm">
         <p className="font-medium">{label}</p>
-        <p className="text-green-600 font-semibold">{`Score: ${payload[0].value}`}</p>
+        <p className="text-[#7CC243]-600 font-semibold">{`Score: ${payload[0].value}`}</p>
       </div>
     );
   }
@@ -112,7 +112,7 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
         <div className="text-3xl font-bold text-gray-800">{averageScore}</div>
         <div className="ml-3 flex items-center">
           <span
-            className={`text-sm font-medium ${percentageChange >= 0 ? "text-green-600" : "text-red-600"}`}
+            className={`text-sm font-medium ${percentageChange >= 0 ? "text-[#7CC243]-600" : "text-red-600"}`}
           >
             {percentageChange >= 0 ? "↑" : "↓"}
             {Math.abs(percentageChange)}%

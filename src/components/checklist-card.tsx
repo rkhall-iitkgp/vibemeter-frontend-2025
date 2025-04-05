@@ -38,7 +38,7 @@ const taskTypeConfig: Record<
     icon: CalendarDays,
     bgColor: "bg-green-50",
     iconBgColor: "bg-green-100",
-    iconColor: "text-green-500",
+    iconColor: "text-[#7CC243]",
   },
   meeting: {
     icon: Building,

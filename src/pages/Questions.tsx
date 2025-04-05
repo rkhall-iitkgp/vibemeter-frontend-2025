@@ -513,7 +513,7 @@ const Questions = () => {
                         ? "bg-red-100 text-red-800"
                         : question.severity === "moderate"
                           ? "bg-yellow-100 text-yellow-800"
-                          : "bg-green-100 text-green-800"
+                          : "bg-green-100 text-[#7CC243]"
                     }`}
                   >
                     {question.severity.charAt(0).toUpperCase() +

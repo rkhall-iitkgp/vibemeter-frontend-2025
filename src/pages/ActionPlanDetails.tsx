@@ -172,7 +172,7 @@ const FocusGroups = ({ groups }) => {
                 </div>
                 <div className="text-right mt-2 md:mt-0">
                   <div className="text-xs text-gray-500">Participants:</div>
-                  <div className="font-semibold text-green-600">
+                  <div className="font-semibold text-[#7CC243]-600">
                     {group.users?.length || 0} Members
                   </div>
                 </div>

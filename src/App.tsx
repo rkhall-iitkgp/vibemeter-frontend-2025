@@ -74,34 +74,10 @@ function App() {
           }
         />
         <Route
-          path="/initiatives"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
           path="/surveys"
           element={
             <AdminLayout>
               <SurveysPage />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/help-center"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/hr-policies"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
             </AdminLayout>
           }
         />
