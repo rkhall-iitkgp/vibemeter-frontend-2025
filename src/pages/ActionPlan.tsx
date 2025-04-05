@@ -230,6 +230,7 @@ export default function ActionPlan() {
 
       // Close the modal
       closeDeleteModal();
+	  window.location.reload()
 
       // Show success message (optional)
       // toast.success("Action plan deleted successfully");
