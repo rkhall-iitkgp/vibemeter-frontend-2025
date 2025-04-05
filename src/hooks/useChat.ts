@@ -6,9 +6,9 @@ import {
   disconnectWebSocket,
   sendMessage,
   stopBotResponse,
-} from "../store/actions/webSocketActions";
+} from "@/store/actions/webSocketActions"
 
-import { RootState } from "../store";
+import { RootState } from "@/store/store";
 
 export const useChat = () => {
   const dispatch = useDispatch();

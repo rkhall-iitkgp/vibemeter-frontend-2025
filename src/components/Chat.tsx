@@ -4,6 +4,7 @@ import React, {
   useRef,
   useCallback,
   useMemo,
+  use,
 } from "react";
 import { Smile, Send, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,8 @@ export default function ChatPage() {
     [],
   );
 
+
+
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
   const [showSuggestions, setShowSuggestions] = useState(false); // Suggested replies visibility
@@ -69,6 +72,11 @@ export default function ChatPage() {
   /**
    * Auto-scrolls to the most recent message with enhanced smoothness
    */
+
+  useEffect(() => {
+    console.log("Working!!!");
+  },[]);
+
   useEffect(() => {
     // Optimized smooth scrolling using native browser animation
     const scrollToBottom = () => {
@@ -83,6 +91,8 @@ export default function ChatPage() {
     requestAnimationFrame(scrollToBottom);
   }, [messages, isTyping]);
 
+
+  
   /**
    * Form submission handler for sending messages
    * @param {React.FormEvent} e - Form event
