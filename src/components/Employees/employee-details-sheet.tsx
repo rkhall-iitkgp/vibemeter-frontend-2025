@@ -8,13 +8,12 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, Phone, Calendar, FileText, User, Trophy, Award } from "lucide-react";
+import { Mail, Phone, Calendar, FileText, User, Award } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ActionPlanCard } from "./action-plan-card";
 import { useState, useRef, useEffect } from "react";
 import { TaskForceCard } from "./task-force-card";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
 import VibemeterChart from "./VibemeterChart"; // This is your existing component
 
 // Updated employee interface with new data structure
@@ -58,6 +57,7 @@ interface EmployeeDetailsSheetProps {
       }[];
     };
     // Allow for any additional properties
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   };
   open?: boolean;
@@ -75,9 +75,7 @@ const employeeData = {
   phone: "+1 (555) 123-4567",
   dateAdded: "01-03-2025",
   employeeId: "EMP0000",
-  recentAchievements: [
-    { title: "Top Contributor", date: "March 2025" },
-  ],
+  recentAchievements: [{ title: "Top Contributor", date: "March 2025" }],
   chatInteractionSummary: "No chat interactions found.",
   focusGroups: [],
   actionPlans: [],
@@ -89,7 +87,6 @@ export function EmployeeDetailsSheet({
   onOpenChange,
   isLoading = false,
 }: EmployeeDetailsSheetProps) {
-  const navigate = useNavigate();
   const [localOpen, setLocalOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
 
@@ -200,7 +197,8 @@ export function EmployeeDetailsSheet({
                   <h3 className="text-base sm:text-lg font-medium mb-2 sm:mb-3">
                     Awards & Achievements
                   </h3>
-                  {employee.recentAchievements && employee.recentAchievements.length > 0 ? (
+                  {employee.recentAchievements &&
+                  employee.recentAchievements.length > 0 ? (
                     <ul className="space-y-2">
                       {employee.recentAchievements.map((achievement, index) => (
                         <li key={index} className="flex items-center gap-3">
@@ -211,7 +209,8 @@ export function EmployeeDetailsSheet({
                             </span>
                             <span className="text-xs text-gray-500">
                               {achievement.date}
-                              {achievement.points && ` • ${achievement.points} points`}
+                              {achievement.points &&
+                                ` • ${achievement.points} points`}
                             </span>
                           </div>
                         </li>
@@ -235,19 +234,25 @@ export function EmployeeDetailsSheet({
                         <span className="text-lg font-bold mr-2">
                           {employee.vibeScore.average}
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          employee.vibeScore.change.direction === 'increase' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {employee.vibeScore.change.direction === 'increase' ? '+' : '-'}
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            employee.vibeScore.change.direction === "increase"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {employee.vibeScore.change.direction === "increase"
+                            ? "+"
+                            : "-"}
                           {employee.vibeScore.change.percentage}%
                         </span>
                       </div>
                     </div>
-                    
+
                     {/* Render the VibemeterChart with the monthly scores data */}
-                    <VibemeterChart monthlyScores={employee.vibeScore.monthlyScores} />
+                    <VibemeterChart
+                      monthlyScores={employee.vibeScore.monthlyScores}
+                    />
                   </div>
                 ) : (
                   <div className="mb-4 sm:mb-6 bg-white p-4 rounded-md border">
@@ -266,11 +271,13 @@ export function EmployeeDetailsSheet({
                     Chat Interaction Summary
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Summary of the Chat Interactions the employee has participated in
+                    Summary of the Chat Interactions the employee has
+                    participated in
                   </p>
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-md">
                     <p className="text-xs sm:text-sm text-muted-foreground">
-                      {employee.chatInteractionSummary || "No chat interactions recorded."}
+                      {employee.chatInteractionSummary ||
+                        "No chat interactions recorded."}
                     </p>
                   </div>
                 </div>
@@ -286,14 +293,13 @@ export function EmployeeDetailsSheet({
                   <div className="bg-white rounded-md">
                     {employee.focusGroups && employee.focusGroups.length > 0 ? (
                       employee.focusGroups.map((group, index) => (
-                        <div 
-                          key={index} 
-                          className="cursor-pointer"
-                        >
+                        <div key={index} className="cursor-pointer">
                           <TaskForceCard
                             title={group.title || "Unnamed Group"}
                             date={group.date || "No date provided"}
-                            description={group.description || "No description available"}
+                            description={
+                              group.description || "No description available"
+                            }
                             memberCount={group.memberCount || 0}
                           />
                         </div>
@@ -323,7 +329,9 @@ export function EmployeeDetailsSheet({
                           key={index}
                           title={plan.title || "Unnamed Plan"}
                           date={plan.date || "No date provided"}
-                          description={plan.description || "No description available"}
+                          description={
+                            plan.description || "No description available"
+                          }
                         />
                       ))
                     ) : (
@@ -346,7 +354,7 @@ export function EmployeeDetailsSheet({
         {/* Schedule Meet Button */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t z-10">
           <SheetFooter className="w-full">
-            <Button 
+            <Button
               className="w-full bg-[#80c342] hover:bg-[#80c342] text-white h-10 sm:h-12"
               disabled={isLoading}
             >

@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Award, Users, Star, BookOpen, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -40,7 +35,7 @@ const dummyAwards = [
     title: "Best Team Player",
     icon: "users",
     date: "01/2025",
-  }
+  },
 ];
 
 const AwardsCard: React.FC<AwardsCardProps> = ({
@@ -115,7 +110,11 @@ const AwardsCard: React.FC<AwardsCardProps> = ({
       <CardHeader className="py-0">
         <div className="flex justify-between items-center ">
           <CardTitle className="text-lg ">Awards</CardTitle>
-          <Button variant="link" className="text-sm text-[#8CC427] p-0" onClick={onViewAll}>
+          <Button
+            variant="link"
+            className="text-sm text-[#8CC427] p-0"
+            onClick={onViewAll}
+          >
             View All
           </Button>
         </div>

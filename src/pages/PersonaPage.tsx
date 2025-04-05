@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import React, { useState } from "react";
 
 interface Profile {
   id: number;
@@ -17,10 +17,10 @@ const ProfileSelectPage: React.FC = () => {
     { id: 4, name: "Bansal", avatar: "/placeholder.svg?height=150&width=150" },
   ];
 
-  const handleProfileSelect = (profileId: number) => {
+  const handleProfileSelect = () => {
     // Navigate to the dashboard with the selected profile ID
     navigate(`/dashboard/`);
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">

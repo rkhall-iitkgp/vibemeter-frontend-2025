@@ -41,7 +41,9 @@ type EmployeeDetail = {
     }[];
   };
   chat_summary: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   focus_groups: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action_plans: any[];
 };
 
@@ -49,12 +51,12 @@ type EmployeeDetail = {
 const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
   return {
     id: employee.employee_id,
-    name: employee.email.split('@')[0].replace('_', ' '), // Extracting name from email
+    name: employee.email.split("@")[0].replace("_", " "), // Extracting name from email
     jobTitle: employee.job_title,
     dateAdded: formatDate(employee.date_added),
     email: employee.email,
     riskScore: employee.risk_score,
-    isVerified: employee.is_verified
+    isVerified: employee.is_verified,
   };
 };
 
@@ -62,17 +64,22 @@ const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
 const formatDate = (dateString: string): string => {
   if (!dateString) return "";
   const date = new Date(dateString);
-  return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+  return `${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getDate().toString().padStart(2, "0")}/${date.getFullYear()}`;
 };
 
 export default function EmployeesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { employee_id } = useParams<{ employee_id: string }>();
   const [highRiskEmployees, setHighRiskEmployees] = useState<Employee[]>([]);
-  const [mediumRiskEmployees, setMediumRiskEmployees] = useState<Employee[]>([]);
+  const [mediumRiskEmployees, setMediumRiskEmployees] = useState<Employee[]>(
+    []
+  );
   const [lowRiskEmployees, setLowRiskEmployees] = useState<Employee[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [selectedEmployeeDetails, setSelectedEmployeeDetails] = useState<EmployeeDetail | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [selectedEmployeeDetails, setSelectedEmployeeDetails] =
+    useState<EmployeeDetail | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
@@ -81,7 +88,7 @@ export default function EmployeesPage() {
     console.log(`View details for employee ${employee.id}`);
     setSelectedEmployee(employee);
     setSheetOpen(true);
-    
+
     // Fetch detailed employee information
     await fetchEmployeeDetails(employee.id);
   };
@@ -115,28 +122,37 @@ export default function EmployeesPage() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        
+
         // Convert backend data to frontend format
-        setHighRiskEmployees(data.high_risk_employees.map(convertToFrontendFormat));
-        setMediumRiskEmployees(data.medium_risk_employees.map(convertToFrontendFormat));
-        setLowRiskEmployees(data.low_risk_employees.map(convertToFrontendFormat));
+        setHighRiskEmployees(
+          data.high_risk_employees.map(convertToFrontendFormat)
+        );
+        setMediumRiskEmployees(
+          data.medium_risk_employees.map(convertToFrontendFormat)
+        );
+        setLowRiskEmployees(
+          data.low_risk_employees.map(convertToFrontendFormat)
+        );
       } catch (error) {
         console.error("Error fetching employee data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     fetchEmployeeData();
   }, []);
-  
+
   // If employee_id is provided in URL params, fetch details for that employee
   useEffect(() => {
     if (employee_id) {
       // Find the employee in our lists
-      const employee = [...highRiskEmployees, ...mediumRiskEmployees, ...lowRiskEmployees]
-        .find(emp => emp.id === employee_id);
-      
+      const employee = [
+        ...highRiskEmployees,
+        ...mediumRiskEmployees,
+        ...lowRiskEmployees,
+      ].find((emp) => emp.id === employee_id);
+
       if (employee) {
         setSelectedEmployee(employee);
         setSheetOpen(true);
@@ -144,60 +160,81 @@ export default function EmployeesPage() {
       }
     }
   }, [employee_id, highRiskEmployees, mediumRiskEmployees, lowRiskEmployees]);
-  
+
   // Map detailed employee data to the format expected by EmployeeDetailsSheet
   const mapEmployeeDetailsToSheetFormat = () => {
     if (!selectedEmployee || !selectedEmployeeDetails) return null;
-    
+
     // Ensure we're handling all focus groups and action plans correctly
-    const mappedFocusGroups = Array.isArray(selectedEmployeeDetails.focus_groups) 
-      ? selectedEmployeeDetails.focus_groups.map(fg => ({
+    const mappedFocusGroups = Array.isArray(
+      selectedEmployeeDetails.focus_groups
+    )
+      ? selectedEmployeeDetails.focus_groups.map((fg) => ({
           title: fg.title || fg.name || "Unnamed Group",
-          date: fg.date || fg.created_at || formatDate(new Date().toISOString()),
-          description: fg.description || fg.summary || "No description available",
-          memberCount: fg.memberCount || fg.member_count || fg.members?.length || 0,
+          date:
+            fg.date || fg.created_at || formatDate(new Date().toISOString()),
+          description:
+            fg.description || fg.summary || "No description available",
+          memberCount:
+            fg.memberCount || fg.member_count || fg.members?.length || 0,
         }))
       : [];
-    
-    const mappedActionPlans = Array.isArray(selectedEmployeeDetails.action_plans)
-      ? selectedEmployeeDetails.action_plans.map(ap => ({
+
+    const mappedActionPlans = Array.isArray(
+      selectedEmployeeDetails.action_plans
+    )
+      ? selectedEmployeeDetails.action_plans.map((ap) => ({
           title: ap.title || ap.name || "Unnamed Plan",
-          date: ap.date || ap.created_at || formatDate(new Date().toISOString()),
-          description: ap.description || ap.summary || "No description available",
-          memberCount: ap.memberCount || ap.member_count || ap.members?.length || 0,
+          date:
+            ap.date || ap.created_at || formatDate(new Date().toISOString()),
+          description:
+            ap.description || ap.summary || "No description available",
+          memberCount:
+            ap.memberCount || ap.member_count || ap.members?.length || 0,
         }))
       : [];
-      
+
     return {
       ...selectedEmployee,
       name: selectedEmployeeDetails.name || selectedEmployee.name,
       jobTitle: selectedEmployeeDetails.job_title || selectedEmployee.jobTitle,
       email: selectedEmployeeDetails.email || selectedEmployee.email,
-      phone: selectedEmployeeDetails.phone_number || selectedEmployee.phone || "+1 (555) 123-4567",
-      dateAdded: formatDate(selectedEmployeeDetails.created_at) || selectedEmployee.dateAdded,
+      phone:
+        selectedEmployeeDetails.phone_number ||
+        selectedEmployee.phone ||
+        "+1 (555) 123-4567",
+      dateAdded:
+        formatDate(selectedEmployeeDetails.created_at) ||
+        selectedEmployee.dateAdded,
       employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
       avatar: "/placeholder.svg?height=80&width=80",
-      recentAchievements: Array.isArray(selectedEmployeeDetails.awards) 
-        ? selectedEmployeeDetails.awards.map(award => ({
+      recentAchievements: Array.isArray(selectedEmployeeDetails.awards)
+        ? selectedEmployeeDetails.awards.map((award) => ({
             title: award.award_type,
             date: formatDate(award.award_date),
-            points: award.reward_points
+            points: award.reward_points,
           }))
         : [],
-      chatInteractionSummary: selectedEmployeeDetails.chat_summary || "No chat interactions recorded.",
+      chatInteractionSummary:
+        selectedEmployeeDetails.chat_summary ||
+        "No chat interactions recorded.",
       focusGroups: mappedFocusGroups,
       actionPlans: mappedActionPlans,
-      vibeScore: selectedEmployeeDetails.vibemeter ? {
-        average: selectedEmployeeDetails.vibemeter.average_vibe_score,
-        change: {
-          percentage: selectedEmployeeDetails.vibemeter.score_change.percentage,
-          direction: selectedEmployeeDetails.vibemeter.score_change.direction
-        },
-        monthlyScores: selectedEmployeeDetails.vibemeter.monthly_scores
-      } : undefined
+      vibeScore: selectedEmployeeDetails.vibemeter
+        ? {
+            average: selectedEmployeeDetails.vibemeter.average_vibe_score,
+            change: {
+              percentage:
+                selectedEmployeeDetails.vibemeter.score_change.percentage,
+              direction:
+                selectedEmployeeDetails.vibemeter.score_change.direction,
+            },
+            monthlyScores: selectedEmployeeDetails.vibemeter.monthly_scores,
+          }
+        : undefined,
     };
   };
-  
+
   return (
     <div className="flex-1 overflow-auto">
       {/* Header - now in gray area */}
@@ -228,9 +265,9 @@ export default function EmployeesPage() {
       {/* Dashboard content */}
       <main className="p-6">
         <div className="mb-4">
-          <SearchBar onSearch={handleSearch} placeholder="Search Employees"/>
+          <SearchBar onSearch={handleSearch} placeholder="Search Employees" />
         </div>
-        
+
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-gray-500">Loading employee data...</p>
@@ -262,22 +299,26 @@ export default function EmployeesPage() {
             />
           </div>
         )}
-        
+
         {selectedEmployee && (
           <EmployeeDetailsSheet
             employee={
-              selectedEmployeeDetails 
-                ? mapEmployeeDetailsToSheetFormat() 
+              selectedEmployeeDetails
+                ? mapEmployeeDetailsToSheetFormat()
                 : {
                     ...selectedEmployee,
-                    email: selectedEmployee.email || `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
+                    email:
+                      selectedEmployee.email ||
+                      `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
                     phone: selectedEmployee.phone || "+1 (555) 123-4567",
                     employeeId: selectedEmployee.id,
                     avatar: "/placeholder.svg?height=80&width=80",
                     recentAchievements: [],
-                    chatInteractionSummary: isLoadingDetails ? "Loading..." : "",
+                    chatInteractionSummary: isLoadingDetails
+                      ? "Loading..."
+                      : "",
                     focusGroups: [],
-                    actionPlans: []
+                    actionPlans: [],
                   }
             }
             isLoading={isLoadingDetails}
@@ -289,5 +330,3 @@ export default function EmployeesPage() {
     </div>
   );
 }
-
-
