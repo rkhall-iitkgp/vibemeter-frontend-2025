@@ -56,7 +56,6 @@ const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
     dateAdded: formatDate(employee.date_added),
     email: employee.email,
     riskScore: employee.risk_score,
-    isVerified: employee.is_verified,
   };
 };
 
@@ -204,7 +203,7 @@ export default function EmployeesPage() {
         selectedEmployee.phone ||
         "+1 (555) 123-4567",
       dateAdded:
-        formatDate(selectedEmployeeDetails.created_at) ||
+        formatDate(selectedEmployeeDetails.created_at!) ||
         selectedEmployee.dateAdded,
       employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
       avatar: "/placeholder.svg?height=80&width=80",
@@ -241,31 +240,39 @@ export default function EmployeesPage() {
       <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
+            <img src="/icons/Employees.svg" className="w-[40px] h-[40px]" />
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Employees</h1>
         </div>
       </header>
 
       {/* Dashboard content */}
-      <main className="p-6">
-        <div className="mb-4">
-          <SearchBar onSearch={handleSearch} placeholder="Search Employees" />
+      <main className="p-6 pt-2">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div className="flex items-center">
+            <div className="relative w-128 mr-3">
+              <SearchBar
+                onSearch={handleSearch}
+                placeholder="Search Focus groups"
+              />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         {isLoading ? (
@@ -305,21 +312,38 @@ export default function EmployeesPage() {
             employee={
               selectedEmployeeDetails
                 ? mapEmployeeDetailsToSheetFormat()
-                : {
-                    ...selectedEmployee,
-                    email:
-                      selectedEmployee.email ||
-                      `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
-                    phone: selectedEmployee.phone || "+1 (555) 123-4567",
-                    employeeId: selectedEmployee.id,
-                    avatar: "/placeholder.svg?height=80&width=80",
-                    recentAchievements: [],
-                    chatInteractionSummary: isLoadingDetails
-                      ? "Loading..."
-                      : "",
-                    focusGroups: [],
-                    actionPlans: [],
-                  }
+                : selectedEmployee
+                  ? {
+                      ...selectedEmployee,
+                      email:
+                        selectedEmployee.email ||
+                        `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
+                      phone: selectedEmployee.phone || "+1 (555) 123-4567",
+                      employeeId: selectedEmployee.id,
+                      avatar: "/placeholder.svg?height=80&width=80",
+                      recentAchievements: [],
+                      chatInteractionSummary: isLoadingDetails
+                        ? "Loading..."
+                        : "",
+                      focusGroups: [],
+                      actionPlans: [],
+                    }
+                  : {
+                      id: "unknown",
+                      name: "Unknown",
+                      jobTitle: "N/A",
+                      email: "unknown@deloitte.com",
+                      phone: "+1 (555) 123-4567",
+                      dateAdded: new Date().toISOString(),
+                      employeeId: "unknown",
+                      avatar: "/placeholder.svg?height=80&width=80",
+                      recentAchievements: [],
+                      chatInteractionSummary: isLoadingDetails
+                        ? "Loading..."
+                        : "",
+                      focusGroups: [],
+                      actionPlans: [],
+                    }
             }
             isLoading={isLoadingDetails}
             open={sheetOpen}

@@ -345,7 +345,7 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
                     Clear All
                   </button>
                   <button
-                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                    className="px-4 py-2 bg-[#7CC243] text-white rounded-md hover:bg-green-600"
                     onClick={applyFilters}
                   >
                     Apply

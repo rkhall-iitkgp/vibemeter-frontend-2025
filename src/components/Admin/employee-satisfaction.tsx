@@ -57,7 +57,8 @@ export default function EmployeeSatisfactionGauge({
 
   // Format monthly change display
   const changeSign = monthlyChange >= 0 ? "+" : "";
-  const changeColor = monthlyChange >= 0 ? "text-green-600" : "text-red-600";
+  const changeColor =
+    monthlyChange >= 0 ? "text-[#7CC243]-600" : "text-red-600";
 
   // Arc properties
   const radius = 90;

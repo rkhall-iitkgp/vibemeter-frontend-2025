@@ -12,7 +12,7 @@ const TagColors: Record<string, string> = {
   Morality: "bg-amber-100 text-amber-800",
   Engagement: "bg-teal-100 text-teal-800",
   "Cultural Score": "bg-pink-100 text-pink-800",
-  "Leave Impact": "bg-green-100 text-green-800",
+  "Leave Impact": "bg-green-100 text-[#7CC243]",
 };
 
 const FocusGroupCard: FC<FocusGroupCardProps> = ({
@@ -126,7 +126,7 @@ const FocusGroupCard: FC<FocusGroupCardProps> = ({
             <h3 className="text-xl font-semibold text-gray-900">
               {focusGroup.name}
             </h3>
-            <span className="ml-2 text-sm font-medium text-green-500">
+            <span className="ml-2 text-sm font-medium text-[#7CC243]">
               {focusGroup.members} Members
             </span>
           </div>

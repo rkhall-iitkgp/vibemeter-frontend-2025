@@ -85,7 +85,7 @@ export default function UpcomingMeetings() {
                         Today, April 4, 2025
                       </div>
                     </div>
-                    <span className="text-xs font-medium bg-green-100 text-green-800 rounded px-2 py-0.5">
+                    <span className="text-xs font-medium bg-green-100 text-[#7CC243] rounded px-2 py-0.5">
                       {meeting.meeting_type}
                     </span>
                   </div>

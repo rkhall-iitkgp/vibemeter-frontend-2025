@@ -40,7 +40,7 @@ export function TaskForceCard({
         <p className="text-sm text-muted-foreground mb-3">{description}</p>
 
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1 text-sm text-green-600">
+          <div className="flex items-center gap-1 text-sm text-[#7CC243]-600">
             <Users size={16} />
             <span>{memberCount} Members</span>
           </div>

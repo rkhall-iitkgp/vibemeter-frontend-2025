@@ -34,6 +34,7 @@ export type Employee = {
   phone?: string;
   avatar?: string;
   employeeId?: string;
+  riskScore?: number;
   recentAchievements?: {
     title: string;
     date: string;
@@ -230,7 +231,7 @@ export function DataTable({
               key={index}
               variant={currentPage === index + 1 ? "default" : "outline"}
               size="icon"
-              className={`h-8 w-8 rounded-md ${currentPage === index + 1 ? "bg-green-500 hover:bg-green-600" : ""}`}
+              className={`h-8 w-8 rounded-md ${currentPage === index + 1 ? "bg-[#7CC243] hover:bg-[#7CC243]/80" : ""}`}
               onClick={() => setCurrentPage(index + 1)}
             >
               {index + 1}

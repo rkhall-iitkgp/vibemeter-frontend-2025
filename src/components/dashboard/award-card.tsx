@@ -75,7 +75,7 @@ const AwardsCard: React.FC<AwardsCardProps> = ({
       case "users":
         return (
           <div className="bg-green-100 p-3 rounded-full">
-            <Users className="h-6 w-6 text-green-600" />
+            <Users className="h-6 w-6 text-[#7CC243]-600" />
           </div>
         );
       case "star":

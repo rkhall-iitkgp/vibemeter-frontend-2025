@@ -31,7 +31,7 @@ export function Card({
       case "medium":
         return "bg-amber-100 text-amber-600";
       case "low":
-        return "bg-green-100 text-green-600";
+        return "bg-green-100 text-[#7CC243]-600";
       default:
         return "bg-red-100 text-red-600";
     }

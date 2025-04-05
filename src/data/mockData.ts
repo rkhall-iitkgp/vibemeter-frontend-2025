@@ -2,39 +2,39 @@ import { FocusGroup } from "../types";
 
 export const mockFocusGroups: FocusGroup[] = [
   {
-    id: "1wdf647",
-    title: "Employee Engagement Task Force",
-    createdDate: "March 17, 2025",
+    focus_group_id: "1wdf647",
+    name: "Employee Engagement Task Force",
+    created_at: "March 17, 2025",
     description:
       "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-    tags: ["Morality", "Engagement"],
-    participantCount: 12,
+    metrics: ["Morality", "Engagement"],
+    members: 12,
   },
   {
-    id: "2",
-    title: "Leadership Development Training",
-    createdDate: "March 17, 2025",
+    focus_group_id: "2",
+    name: "Leadership Development Training",
+    created_at: "March 17, 2025",
     description:
       "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-    tags: ["Cultural Score", "Leave Impact"],
-    participantCount: 12,
+    metrics: ["Cultural Score", "Leave Impact"],
+    members: 12,
   },
   {
-    id: "3",
-    title: "Leadership Development Training",
-    createdDate: "March 17, 2025",
+    focus_group_id: "3",
+    name: "Leadership Development Training",
+    created_at: "March 17, 2025",
     description:
       "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-    tags: ["Engagement"],
-    participantCount: 12,
+    metrics: ["Engagement"],
+    members: 12,
   },
   {
-    id: "4",
-    title: "Leadership Development Training",
-    createdDate: "March 17, 2025",
+    focus_group_id: "4",
+    name: "Leadership Development Training",
+    created_at: "March 17, 2025",
     description:
       "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-    tags: [],
-    participantCount: 12,
+    metrics: [],
+    members: 12,
   },
 ];

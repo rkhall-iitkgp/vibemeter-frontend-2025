@@ -1,5 +1,4 @@
 import { DashboardPage, Graph, AdminDashboard } from "./pages";
-import UnderConstruction from "./pages/UnderConstruction";
 import ActionPlanDetails from "./pages/ActionPlanDetails";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
@@ -74,14 +73,6 @@ function App() {
           }
         />
         <Route
-          path="/initiatives"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
           path="/surveys"
           element={
             <AdminLayout>
@@ -94,22 +85,6 @@ function App() {
           element={
             <AdminLayout>
               <SurveysPage />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/help-center"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/hr-policies"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
             </AdminLayout>
           }
         />

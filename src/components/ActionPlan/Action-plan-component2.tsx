@@ -36,7 +36,7 @@ export function HorizontalRecognitionCard(
     } else if (tagLower.includes("innov") || tagLower === "innovation") {
       return "bg-pink-100 text-pink-700";
     } else if (tagLower.includes("well") || tagLower === "wellbeing") {
-      return "bg-green-100 text-green-700";
+      return "bg-green-100 text-[#7CC243]-700";
     } else {
       return "bg-gray-100 text-gray-700";
     }

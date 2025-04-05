@@ -8,42 +8,26 @@ import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
+import { ActionPlan } from "@/types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-interface ActionStep {
-  title: string;
-  description: string;
-}
-
-interface ActionPlan {
-  action_id: string;
-  title: string;
-  purpose: string;
-  metric: string[];
-  steps: ActionStep[];
-  is_completed: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  target_groups: any[];
-  created_at: string;
-}
-
-export default function ActionPlan() {
+export default function ActionPlanComponent() {
   const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
   const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>();
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState("Priority");
   const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState<string>();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // State for delete confirmation modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [planToDelete, setPlanToDelete] = useState<ActionPlan>();
+  const [planToDelete, setPlanToDelete] = useState<ActionPlan | null>(null);
 
   useEffect(() => {
     fetchActionPlans();
@@ -54,19 +38,20 @@ export default function ActionPlan() {
     const filterAndSortPlans = () => {
       let filtered = [...actionPlans];
 
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (plan) =>
-          plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          plan.purpose.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
+      // Apply search filter
+      if (searchQuery) {
+        filtered = filtered.filter(
+          (plan) =>
+            plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            plan.purpose.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
 
       // Apply sorting
       if (sortBy === "Date") {
         filtered.sort(
-          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       } else if (sortBy === "Alphabetical") {
         filtered.sort((a, b) => a.title.localeCompare(b.title));
@@ -250,7 +235,7 @@ export default function ActionPlan() {
       </header>
       <main className="p-6 pt-2">
         {/* Carousel Section */}
-        <div className="mb-10">
+        <div className="mb-10 w-[95%] mx-auto">
           <ActionPlansCarousel />
         </div>
 
@@ -333,10 +318,7 @@ export default function ActionPlan() {
 
         {/* Initiative Modal */}
         {isInitiativeModalOpen && (
-          <InitiativeModal
-            onClose={closeInitiativeModal}
-            onSuccess={fetchActionPlans}
-          />
+          <InitiativeModal onClose={closeInitiativeModal} />
         )}
 
         {/* Delete Confirmation Modal */}

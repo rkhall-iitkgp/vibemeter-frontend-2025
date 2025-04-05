@@ -32,7 +32,7 @@ const employees = [
       {
         label: "Leave Impact",
         value: "+38%",
-        color: "bg-green-200 text-green-800",
+        color: "bg-green-200 text-[#7CC243]",
       },
       {
         label: "Morality",
