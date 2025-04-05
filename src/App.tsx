@@ -8,7 +8,6 @@ import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
-import SurveysPage from "./pages/SurveysPage";
 import ActionPlanDetails from "./pages/ActionPlanDetails";
 function App() {
   const isAuthenticated = useSelector(
