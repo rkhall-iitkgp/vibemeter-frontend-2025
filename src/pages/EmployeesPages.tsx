@@ -3,7 +3,6 @@ import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { useState } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
