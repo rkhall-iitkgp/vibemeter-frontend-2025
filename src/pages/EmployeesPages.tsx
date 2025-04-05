@@ -3,6 +3,7 @@ import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import EmployeesSkeleton from "../components/Employees/EmployeesSkeleton";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -235,6 +236,11 @@ export default function EmployeesPage() {
     };
   };
 
+  // Show skeleton while loading
+  if (isLoading) {
+    return <EmployeesSkeleton />;
+  }
+
   return (
     <div className="flex-1 overflow-auto">
       {/* Header - now in gray area */}
@@ -268,37 +274,31 @@ export default function EmployeesPage() {
           <SearchBar onSearch={handleSearch} placeholder="Search Employees" />
         </div>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <p className="text-gray-500">Loading employee data...</p>
-          </div>
-        ) : (
-          <div className="space-y-0">
-            <DataTable
-              title="High Risk Employees"
-              data={highRiskEmployees}
-              iconColor="#ff0000"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
+        <div className="space-y-0">
+          <DataTable
+            title="High Risk Employees"
+            data={highRiskEmployees}
+            iconColor="#ff0000"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+          />
 
-            <DataTable
-              title="Medium Risk Employees"
-              data={mediumRiskEmployees}
-              iconColor="#ffa500"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
+          <DataTable
+            title="Medium Risk Employees"
+            data={mediumRiskEmployees}
+            iconColor="#ffa500"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+          />
 
-            <DataTable
-              title="Low Risk Employees"
-              data={lowRiskEmployees}
-              iconColor="#00ff00"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
-          </div>
-        )}
+          <DataTable
+            title="Low Risk Employees"
+            data={lowRiskEmployees}
+            iconColor="#00ff00"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+          />
+        </div>
 
         {selectedEmployee && (
           <EmployeeDetailsSheet
