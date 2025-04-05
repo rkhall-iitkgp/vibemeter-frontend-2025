@@ -33,6 +33,7 @@ interface Survey {
 	questions: Question[]
 	is_active: boolean
 	created_at: string
+	survey_status: { total_responses: number, responses_filled: number }
 }
 
 interface QuestionProps {
@@ -105,9 +106,6 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 	const [survey, setSurvey] = useState<Survey>()
 	const [loaded, setLoaded] = useState<boolean>(false);
 	const navigate = useNavigate();
-
-	const responseRate = 30
-	const totalResponses = 120
 
 	useEffect(() => {
 		// Fetch surveys from the API (replace with your actual API endpoint)
@@ -198,20 +196,20 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 								<div className="flex justify-between mb-1">
 									<span>Response Rate</span>
 									<span className="font-medium">
-										{responseRate}% ({totalResponses}/300)
+										{Math.floor(survey?.survey_status?.responses_filled || 0)*100/(survey?.survey_status?.total_responses || 1)}% ({survey?.survey_status?.responses_filled || 0}/{survey?.survey_status?.total_responses || 0})
 									</span>
 								</div>
 								<div className="w-full bg-gray-200 rounded-full h-2.5">
 									<div className="bg-[#80C342] h-2.5 rounded-full transition-all duration-1000 ease-out"
 										style={{
-											width: `${responseRate}%`,
+											width: `${Math.floor(survey?.survey_status?.responses_filled || 0)*100/(survey?.survey_status?.total_responses || 1)}%`,
 											animation: 'growWidth 600ms ease'
 										}}
 									></div>
 									<style>{`
 										@keyframes growWidth {
 											from { width: 0%; }
-											to { width: ${responseRate}%; }
+											to { width: ${Math.floor(survey?.survey_status?.responses_filled || 0)*100/(survey?.survey_status?.total_responses || 1)}%; }
 										}
 									`}</style>
 								</div>
