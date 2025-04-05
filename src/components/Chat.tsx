@@ -95,6 +95,7 @@ export default function ChatPage() {
 
 	// State variables for managing the chat interface
 	const [showEmojiPicker, setShowEmojiPicker] = useState(false) // Emoji picker visibility
+	const [showSuggestions, setShowSuggestions] = useState(false) // Suggested replies visibility
 
 	// Common emoji options for the emoji picker
 	const emojis = useMemo(() => ["😊", "👍", "🎉", "❤️", "🙏", "👋"], [])
@@ -159,6 +160,12 @@ export default function ChatPage() {
 		// Only show scrollbar when content exceeds max height
 		textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden'
 	}, [])
+
+	useEffect(() => {
+		if (!showSuggestions) {
+			setShowSuggestions(messages.length > 1 && !isTyping)
+		}
+	}, [showSuggestions, messages, isTyping])
 
 	return (
 		<div className="flex flex-col mx-auto bg-white"
@@ -278,7 +285,15 @@ export default function ChatPage() {
 			}
 
 			{/* Suggested Replies - Quick response options */}
-			<div className="p-2 border-t max-h-32 overflow-y-auto">
+			{/* Suggested Replies - Quick response options */}
+			<div
+				className={`p-2 border-t max-h-32 overflow-y-auto ${showSuggestions ? "block" : "hidden"}`}
+				style={{
+					animation: 'slideUp 0.2s ease-out forwards',
+					opacity: 0,
+					transform: 'translateY(10px)'
+				}}
+			>
 				<p className="text-gray-500 mb-1 text-xs font-normal">Suggested replies:</p>
 				<div className="flex flex-wrap gap-1 pb-1">
 					{suggestedReplies.map((reply, index) => (
