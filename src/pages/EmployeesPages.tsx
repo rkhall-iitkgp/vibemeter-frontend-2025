@@ -1,5 +1,5 @@
-import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import { EmployeeDetailsSheet } from "@/components/Employees/employee-details-sheet";
+import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
@@ -289,3 +289,5 @@ export default function EmployeesPage() {
     </div>
   );
 }
+
+
