@@ -8,8 +8,8 @@ import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
-import SurveysPage from "./pages/SurveysPage";
 import ActionPlanDetails from "./pages/ActionPlanDetails";
+import EmployeesPage from "./pages/EmployeesPages";
 function App() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -65,7 +65,7 @@ function App() {
           path="/employees"
           element={
             <AdminLayout>
-              <UnderConstruction />
+              <EmployeesPage />
             </AdminLayout>
           }
         />
