@@ -170,28 +170,28 @@ export default function EmployeesPage() {
       selectedEmployeeDetails.focus_groups
     )
       ? selectedEmployeeDetails.focus_groups.map((fg) => ({
-        title: fg.title || fg.name || "Unnamed Group",
-        date:
-          fg.date || fg.created_at || formatDate(new Date().toISOString()),
-        description:
-          fg.description || fg.summary || "No description available",
-        memberCount:
-          fg.memberCount || fg.member_count || fg.members?.length || 0,
-      }))
+          title: fg.title || fg.name || "Unnamed Group",
+          date:
+            fg.date || fg.created_at || formatDate(new Date().toISOString()),
+          description:
+            fg.description || fg.summary || "No description available",
+          memberCount:
+            fg.memberCount || fg.member_count || fg.members?.length || 0,
+        }))
       : [];
 
     const mappedActionPlans = Array.isArray(
       selectedEmployeeDetails.action_plans
     )
       ? selectedEmployeeDetails.action_plans.map((ap) => ({
-        title: ap.title || ap.name || "Unnamed Plan",
-        date:
-          ap.date || ap.created_at || formatDate(new Date().toISOString()),
-        description:
-          ap.description || ap.summary || "No description available",
-        memberCount:
-          ap.memberCount || ap.member_count || ap.members?.length || 0,
-      }))
+          title: ap.title || ap.name || "Unnamed Plan",
+          date:
+            ap.date || ap.created_at || formatDate(new Date().toISOString()),
+          description:
+            ap.description || ap.summary || "No description available",
+          memberCount:
+            ap.memberCount || ap.member_count || ap.members?.length || 0,
+        }))
       : [];
 
     return {
@@ -210,10 +210,10 @@ export default function EmployeesPage() {
       avatar: "/placeholder.svg?height=80&width=80",
       recentAchievements: Array.isArray(selectedEmployeeDetails.awards)
         ? selectedEmployeeDetails.awards.map((award) => ({
-          title: award.award_type,
-          date: formatDate(award.award_date),
-          points: award.reward_points,
-        }))
+            title: award.award_type,
+            date: formatDate(award.award_date),
+            points: award.reward_points,
+          }))
         : [],
       chatInteractionSummary:
         selectedEmployeeDetails.chat_summary ||
@@ -222,15 +222,15 @@ export default function EmployeesPage() {
       actionPlans: mappedActionPlans,
       vibeScore: selectedEmployeeDetails.vibemeter
         ? {
-          average: selectedEmployeeDetails.vibemeter.average_vibe_score,
-          change: {
-            percentage:
-              selectedEmployeeDetails.vibemeter.score_change.percentage,
-            direction:
-              selectedEmployeeDetails.vibemeter.score_change.direction,
-          },
-          monthlyScores: selectedEmployeeDetails.vibemeter.monthly_scores,
-        }
+            average: selectedEmployeeDetails.vibemeter.average_vibe_score,
+            change: {
+              percentage:
+                selectedEmployeeDetails.vibemeter.score_change.percentage,
+              direction:
+                selectedEmployeeDetails.vibemeter.score_change.direction,
+            },
+            monthlyScores: selectedEmployeeDetails.vibemeter.monthly_scores,
+          }
         : undefined,
     };
   };
@@ -314,20 +314,20 @@ export default function EmployeesPage() {
               selectedEmployeeDetails
                 ? mapEmployeeDetailsToSheetFormat()
                 : {
-                  ...selectedEmployee,
-                  email:
-                    selectedEmployee.email ||
-                    `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
-                  phone: selectedEmployee.phone || "+1 (555) 123-4567",
-                  employeeId: selectedEmployee.id,
-                  avatar: "/placeholder.svg?height=80&width=80",
-                  recentAchievements: [],
-                  chatInteractionSummary: isLoadingDetails
-                    ? "Loading..."
-                    : "",
-                  focusGroups: [],
-                  actionPlans: [],
-                }
+                    ...selectedEmployee,
+                    email:
+                      selectedEmployee.email ||
+                      `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
+                    phone: selectedEmployee.phone || "+1 (555) 123-4567",
+                    employeeId: selectedEmployee.id,
+                    avatar: "/placeholder.svg?height=80&width=80",
+                    recentAchievements: [],
+                    chatInteractionSummary: isLoadingDetails
+                      ? "Loading..."
+                      : "",
+                    focusGroups: [],
+                    actionPlans: [],
+                  }
             }
             isLoading={isLoadingDetails}
             open={sheetOpen}

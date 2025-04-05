@@ -1,5 +1,4 @@
 import { DashboardPage, Graph, AdminDashboard } from "./pages";
-import UnderConstruction from "./pages/UnderConstruction";
 import ActionPlanDetails from "./pages/ActionPlanDetails";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
