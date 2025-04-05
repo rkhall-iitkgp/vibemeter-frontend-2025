@@ -51,7 +51,6 @@ export function HorizontalRecognitionCard(
   return (
     <div
       className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4"
-      onClick={handleClick}
     >
       <h3 className="font-semibold text-gray-900 text-lg mb-1">
         {props.title}
@@ -119,7 +118,7 @@ export function HorizontalRecognitionCard(
             <Trash2 className="h-4 w-4 mr-1" />
             Delete
           </button>
-          <button className="text-[#012169] text-sm font-medium flex items-center hover:underline">
+          <button className="text-[#012169] text-sm font-medium flex items-center hover:underline" onClick={handleClick}>
             View Details
             <ArrowRight className="h-4 w-4 ml-1" />
           </button>
