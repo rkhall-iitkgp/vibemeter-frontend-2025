@@ -1,16 +1,108 @@
 import React, { useState } from "react"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useEffect } from "react"
 import { useNavigate } from "react-router"
 import CreateSurveyModal from "./create-survey-modal"
+import { FocusGroup } from "@/types"
 
 interface SurveyDetailsProps {
 	survey_id: string
 }
 
+interface Question {
+	id: string;
+	text: string;
+	average: number;
+	delta: number;
+	options: Array<{
+		value: string;
+		label: string;
+	}>;
+	responses: Array<{
+		count: number;
+		percentage: number;
+	}>;
+}
+
+interface Survey {
+	survey_id: string
+	title: string
+	description: string
+	target_groups: FocusGroup[]
+	ends_at: string
+	questions: Question[]
+	is_active: boolean
+	created_at: string
+}
+
+interface QuestionProps {
+	question: Question;
+}
+
+
+const TagColors: Record<string, string> = {
+	Morality: "bg-amber-100 text-amber-800",
+	Engagement: "bg-teal-100 text-teal-800",
+	"Cultural Score": "bg-pink-100 text-pink-800",
+	"Leave Impact": "bg-green-100 text-green-800",
+};
+
+const QuestionAccordion: React.FC<QuestionProps> = ({ question }) => {
+	const [isExpanded, setIsExpanded] = useState(false);
+
+	return (
+		<div className="border rounded-lg p-4 bg-white shadow-sm">
+			<button className="p-1 w-full" onClick={() => setIsExpanded(!isExpanded)}>
+				<div className="flex items-center justify-between py-2">
+					<div>
+						<div className="font-medium text-left">{question.text}</div>
+						<div className="text-sm text-gray-500">
+							Average Score: {question.average}/5
+							<span className="text-green-500">+{question.delta}</span>
+						</div>
+					</div>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						className={`text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+					>
+						<polyline points="6 9 12 15 18 9"></polyline>
+					</svg>
+				</div>
+			</button>
+
+			<div
+				className={`overflow-hidden transition-all duration-500 ease-in-out`}
+				style={{ maxHeight: isExpanded ? '100vh' : '0px' }}
+			>
+				<div className="pt-4">
+					{question.options.map((option, rIndex) => (
+						<div key={rIndex} className="mb-3">
+							<div className="flex justify-between text-sm mb-1">
+								<span>{option.value}: {option.label}</span>
+								<span>{question.responses[rIndex].count} ({question.responses[rIndex].percentage}%)</span>
+							</div>
+							<div className="w-full bg-gray-200 rounded-full h-2">
+								<div className="bg-[#80C342] h-2 rounded-full" style={{ width: `${question.responses[rIndex].percentage}%` }}></div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+};
+
 const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 	// Mock data for the survey details view
-	const [survey, setSurvey] = useState<any>()
+	const [survey, setSurvey] = useState<Survey>()
 	const [loaded, setLoaded] = useState<boolean>(false);
 	const navigate = useNavigate();
 
@@ -22,9 +114,9 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 		const fetchSurveys = async () => {
 			try {
 				const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/survey/${survey_id}`,);
-				const data = await response.json();
+				const data: { status: string, data: Survey } = await response.json();
 				if (data.status === "success") {
-					setSurvey(data.data || []);
+					setSurvey(data.data);
 				}
 			} catch (error) {
 				console.error("Error fetching surveys:", error);
@@ -51,10 +143,10 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 
 
 	// Calculate start and end dates based on the created date
-	const createdDate = new Date(survey?.created_at)
+	const createdDate = new Date(survey?.created_at || '')
 	const startDate = new Date(createdDate)
 	startDate.setDate(startDate.getDate() + 5)
-	const endDate = new Date(survey?.ends_at)
+	const endDate = new Date(survey?.ends_at || '')
 	endDate.setDate(startDate.getDate() + 30)
 
 	const formatDate = (date: Date) => {
@@ -79,11 +171,11 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 						<div className="border-b pb-4">
 							<div className="flex justify-between items-start">
 								<div>
-									<h1 className="text-2xl font-bold">{survey.title}</h1>
-									<p className="text-gray-500">Group ID: {survey.target_groups[0].focus_group_id}</p>
+									<h1 className="text-2xl font-bold">{survey?.title}</h1>
+									<p className="text-gray-500">Group ID: {survey?.target_groups[0].focus_group_id}</p>
 								</div>
 								<div className="text-right text-gray-500">
-									Created at: {new Date(survey.created_at).toLocaleDateString("en-US", {
+									Created at: {new Date(survey?.created_at || '').toLocaleDateString("en-US", {
 										year: "numeric",
 										month: "long",
 										day: "2-digit",
@@ -95,7 +187,7 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 						<div className="border-b py-4">
 							<h2 className="text-lg font-semibold mb-2">Description:</h2>
 							<p className="text-gray-700">
-								{survey.description ||
+								{survey?.description ||
 									"The Workplace Stress & Well-being Group is a focus group formed by employees who share similar challenges regarding stress management and overall well-being at work. This group aims to discuss the common causes of workplace stress, explore potential solutions, and collaborate on strategies to improve mental health, work-life balance, and support structures."}
 							</p>
 						</div>
@@ -133,29 +225,48 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 						<div className="border-b py-4">
 							<h2 className="text-lg font-semibold mb-3">Target Focus Groups:</h2>
 							<div className="space-y-4">
-								{survey.target_groups.map(group => (
-									<div key={group.focus_group_id} className="border rounded-lg p-4">
-										<div className="flex justify-between">
+								{survey?.target_groups.map(group => (
+									<div
+										className="mb-4 rounded-lg border border-gray-200 bg-white p-6 cursor-pointer hover:shadow-md transition-shadow relative"
+										onClick={() => navigate(`/focus-groups/${group.focus_group_id}`)}
+										key={group.focus_group_id}
+									>
+										<div className="absolute bottom-4 right-10 flex items-center gap-2 text-[#80C342] font-semibold cursor-pointer">
 											<div>
-												<h3 className="font-medium">{group.name}</h3>
-												<div className="text-sm text-gray-500">Created on {group.created_at}</div>
+												View Details
 											</div>
-											<div className="text-right">
-												<div className="text-[#80C342]">Participants</div>
-												<div className="text-sm">3 Members</div>
+											<ArrowRight />
+										</div>
+										<div className="flex flex-col">
+											<div className="flex items-center">
+												<h3 className="text-xl font-semibold text-gray-900">
+													{group.name}
+												</h3>
 											</div>
+											<div className="flex gap-4">
+												<p className="mt-2 text-sm text-gray-500">
+													Created on{" "}
+													{new Date(group.created_at).toLocaleDateString("en-US", {
+														year: "numeric",
+														month: "long",
+														day: "2-digit",
+													})}
+												</p>
+
+												<div className="mt-2 flex flex-wrap gap-2">
+													{group.metrics.map((metric, index) => (
+														<span
+															key={index}
+															className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${TagColors[metric] || "bg-gray-100 text-gray-800"}`}
+														>
+															{metric}
+														</span>
+													))}
+												</div>
+											</div>
+
+											<p className="mt-3 text-sm text-gray-700">{group.description}</p>
 										</div>
-										<div className="flex gap-2 mt-2">
-											{group.metrics.map((tag, index) => (
-												<span
-													key={index}
-													className={`px-2 py-1 bg-gray-300 text-black text-xs rounded`}
-												>
-													{tag}
-												</span>
-											))}
-										</div>
-										<p className="mt-2 text-gray-700">{group.description}</p>
 									</div>
 								))}
 							</div>
@@ -163,7 +274,7 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 
 						<div className="py-4">
 							<h2 className="text-lg font-semibold mb-3">Survey Questions</h2>
-							<div className="mb-4">
+							{/* <div className="mb-4">
 								<input
 									type="text"
 									placeholder="Search questions..."
@@ -175,39 +286,13 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 										});
 									}}
 								/>
-							</div>
-							<div className="border rounded-lg p-4">
-								{survey.questions.map((question, index) => (
-									<div key={question.id} className={index < survey.questions.length - 1 ? "border-b pb-4" : ""}>
-										<div className="flex items-center justify-between py-4">
-											<div>
-												<div className="font-medium">{question.text}</div>
-												<div className="text-sm text-gray-500">
-													Average Score: {question.average}/5
-													<span className="text-green-500">+{question.delta}</span>
-												</div>
-											</div>
-											<button className="p-1">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
-											</button>
-										</div>
-
-										{question.options.length && question.responses.length && (
-											<div className="mt-4 mb-4 space-y-3">
-												{question.options.map((option, rIndex) => (
-													<div key={rIndex}>
-														<div className="flex justify-between text-sm mb-1">
-															<span>{option.value}: {option.label}</span>
-															<span>{question.responses[rIndex].count} ({question.responses[rIndex].percentage}%)</span>
-														</div>
-														<div className="w-full bg-gray-200 rounded-full h-2">
-															<div className="bg-[#80C342] h-2 rounded-full" style={{ width: `${question.responses[rIndex].percentage}%` }}></div>
-														</div>
-													</div>
-												))}
-											</div>
-										)}
-									</div>
+							</div> */}
+							<div className="flex gap-4 flex-col">
+								{survey?.questions.map((question, index) => (
+									<QuestionAccordion
+										key={`${index}-${question.id}`}
+										question={question}
+									/>
 								))}
 							</div>
 						</div>
