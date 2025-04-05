@@ -184,7 +184,9 @@ export default function ActionPlan() {
     if (!actionId) return;
 
     // Find the plan to delete to display its title in the confirmation modal
-    const planToDelete = actionPlans.find((plan) => plan.action_id === actionId);
+    const planToDelete = actionPlans.find(
+      (plan) => plan.action_id === actionId
+    );
     if (planToDelete) {
       setPlanToDelete(planToDelete);
       setIsDeleteModalOpen(true);
@@ -230,7 +232,7 @@ export default function ActionPlan() {
 
       // Close the modal
       closeDeleteModal();
-	  window.location.reload()
+      window.location.reload();
 
       // Show success message (optional)
       // toast.success("Action plan deleted successfully");
