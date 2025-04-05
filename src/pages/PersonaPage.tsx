@@ -33,7 +33,7 @@ const ProfileSelectPage: React.FC = () => {
             className="flex flex-col items-center cursor-pointer group"
             onMouseEnter={() => setHoveredProfile(profile.id)}
             onMouseLeave={() => setHoveredProfile(null)}
-            onClick={() => handleProfileSelect(profile.id)} // Navigate to dashboard on click
+            onClick={() => handleProfileSelect()} // Navigate to dashboard on click
           >
             <div
               className={`relative mb-2 overflow-hidden rounded-md border-2 ${

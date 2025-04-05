@@ -56,7 +56,6 @@ const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
     dateAdded: formatDate(employee.date_added),
     email: employee.email,
     riskScore: employee.risk_score,
-    isVerified: employee.is_verified,
   };
 };
 
@@ -204,7 +203,7 @@ export default function EmployeesPage() {
         selectedEmployee.phone ||
         "+1 (555) 123-4567",
       dateAdded:
-        formatDate(selectedEmployeeDetails.created_at) ||
+        formatDate(selectedEmployeeDetails.created_at!) ||
         selectedEmployee.dateAdded,
       employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
       avatar: "/placeholder.svg?height=80&width=80",
@@ -313,21 +312,38 @@ export default function EmployeesPage() {
             employee={
               selectedEmployeeDetails
                 ? mapEmployeeDetailsToSheetFormat()
-                : {
-                    ...selectedEmployee,
-                    email:
-                      selectedEmployee.email ||
-                      `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
-                    phone: selectedEmployee.phone || "+1 (555) 123-4567",
-                    employeeId: selectedEmployee.id,
-                    avatar: "/placeholder.svg?height=80&width=80",
-                    recentAchievements: [],
-                    chatInteractionSummary: isLoadingDetails
-                      ? "Loading..."
-                      : "",
-                    focusGroups: [],
-                    actionPlans: [],
-                  }
+                : selectedEmployee
+                  ? {
+                      ...selectedEmployee,
+                      email:
+                        selectedEmployee.email ||
+                        `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
+                      phone: selectedEmployee.phone || "+1 (555) 123-4567",
+                      employeeId: selectedEmployee.id,
+                      avatar: "/placeholder.svg?height=80&width=80",
+                      recentAchievements: [],
+                      chatInteractionSummary: isLoadingDetails
+                        ? "Loading..."
+                        : "",
+                      focusGroups: [],
+                      actionPlans: [],
+                    }
+                  : {
+                      id: "unknown",
+                      name: "Unknown",
+                      jobTitle: "N/A",
+                      email: "unknown@deloitte.com",
+                      phone: "+1 (555) 123-4567",
+                      dateAdded: new Date().toISOString(),
+                      employeeId: "unknown",
+                      avatar: "/placeholder.svg?height=80&width=80",
+                      recentAchievements: [],
+                      chatInteractionSummary: isLoadingDetails
+                        ? "Loading..."
+                        : "",
+                      focusGroups: [],
+                      actionPlans: [],
+                    }
             }
             isLoading={isLoadingDetails}
             open={sheetOpen}

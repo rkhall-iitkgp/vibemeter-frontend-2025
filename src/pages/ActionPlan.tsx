@@ -8,42 +8,26 @@ import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
+import { ActionPlan } from "@/types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-interface ActionStep {
-  title: string;
-  description: string;
-}
-
-interface ActionPlan {
-  action_id: string;
-  title: string;
-  purpose: string;
-  metric: string[];
-  steps: ActionStep[];
-  is_completed: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  target_groups: any[];
-  created_at: string;
-}
-
-export default function ActionPlan() {
+export default function ActionPlanComponent() {
   const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
   const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState("Priority");
   const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // State for delete confirmation modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [planToDelete, setPlanToDelete] = useState(null);
+  const [planToDelete, setPlanToDelete] = useState<ActionPlan | null>(null);
 
   useEffect(() => {
     fetchActionPlans();
@@ -59,14 +43,15 @@ export default function ActionPlan() {
         filtered = filtered.filter(
           (plan) =>
             plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            plan.description.toLowerCase().includes(searchQuery.toLowerCase())
+            plan.purpose.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
 
       // Apply sorting
       if (sortBy === "Date") {
         filtered.sort(
-          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       } else if (sortBy === "Alphabetical") {
         filtered.sort((a, b) => a.title.localeCompare(b.title));
@@ -121,7 +106,7 @@ export default function ActionPlan() {
     }
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
@@ -134,7 +119,7 @@ export default function ActionPlan() {
   };
 
   // Opens the delete confirmation modal
-  const openDeleteModal = (actionId) => {
+  const openDeleteModal = (actionId: string) => {
     if (!actionId) return;
 
     // Find the plan to delete to display its title in the confirmation modal
@@ -178,10 +163,10 @@ export default function ActionPlan() {
 
       // Remove the deleted plan from state
       setActionPlans((prevPlans) =>
-        prevPlans.filter((plan) => plan.actionId !== actionId)
+        prevPlans.filter((plan) => plan.action_id !== actionId)
       );
       setDisplayPlans((prevPlans) =>
-        prevPlans.filter((plan) => plan.actionId !== actionId)
+        prevPlans.filter((plan) => plan.action_id !== actionId)
       );
 
       // Close the modal
@@ -333,10 +318,7 @@ export default function ActionPlan() {
 
         {/* Initiative Modal */}
         {isInitiativeModalOpen && (
-          <InitiativeModal
-            onClose={closeInitiativeModal}
-            onSuccess={fetchActionPlans}
-          />
+          <InitiativeModal onClose={closeInitiativeModal} />
         )}
 
         {/* Delete Confirmation Modal */}

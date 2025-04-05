@@ -34,6 +34,7 @@ export type Employee = {
   phone?: string;
   avatar?: string;
   employeeId?: string;
+  riskScore?: number;
   recentAchievements?: {
     title: string;
     date: string;

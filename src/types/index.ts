@@ -13,3 +13,19 @@ export interface Employee {
   job_title: string;
   joining_date: string;
 }
+
+export interface ActionStep {
+  title: string;
+  description: string;
+}
+
+export interface ActionPlan {
+  action_id: string;
+  title: string;
+  purpose: string;
+  metric: string[];
+  steps: ActionStep[];
+  is_completed: boolean;
+  target_groups: FocusGroup[];
+  created_at: string;
+}

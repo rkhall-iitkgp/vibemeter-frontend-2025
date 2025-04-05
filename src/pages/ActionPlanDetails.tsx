@@ -8,12 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ActionPlan, ActionStep, FocusGroup } from "@/types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Badge color mapping
-const getBadgeColor = (tag) => {
-  const colorMap = {
+const getBadgeColor = (tag: string) => {
+  const colorMap: Record<string, string> = {
     "Cultural Score": "bg-pink-100 text-pink-800",
     Morale: "bg-violet-100 text-violet-800",
     Engagement: "bg-sky-100 text-sky-800",
@@ -22,7 +23,7 @@ const getBadgeColor = (tag) => {
 };
 
 // Header Component
-const ActionPlanHeader = ({ plan }) => {
+const ActionPlanHeader = ({ plan }: { plan: ActionPlan }) => {
   return (
     <div>
       <div className="mb-6">
@@ -69,7 +70,7 @@ const ActionPlanHeader = ({ plan }) => {
 };
 
 // Target Metrics Component - Made to match the image with inline badges
-const TargetMetrics = ({ metrics }) => {
+const TargetMetrics = ({ metrics }: { metrics: string[] }) => {
   if (!metrics || metrics.length === 0) {
     return (
       <div className="my-4">
@@ -96,9 +97,9 @@ const TargetMetrics = ({ metrics }) => {
 };
 
 // Focus Groups Component with Sort
-const FocusGroups = ({ groups }) => {
+const FocusGroups = ({ groups }: { groups: FocusGroup[] }) => {
   const navigate = useNavigate();
-  const [sortedGroups, setSortedGroups] = useState([]);
+  const [sortedGroups, setSortedGroups] = useState<FocusGroup[]>([]);
   const [sortBy, setSortBy] = useState("priority");
 
   useEffect(() => {
@@ -173,7 +174,7 @@ const FocusGroups = ({ groups }) => {
                 <div className="text-right mt-2 md:mt-0">
                   <div className="text-xs text-gray-500">Participants:</div>
                   <div className="font-semibold text-[#7CC243]-600">
-                    {group.users?.length || 0} Members
+                    {group.members ?? 0} Members
                   </div>
                 </div>
               </div>
@@ -186,7 +187,7 @@ const FocusGroups = ({ groups }) => {
 };
 
 // Steps Component - Fixed to have the line pass through the center of the circles
-const ActionSteps = ({ steps }) => {
+const ActionSteps = ({ steps }: { steps: ActionStep[] }) => {
   if (!steps || steps.length === 0) {
     return (
       <div className="my-6">
@@ -219,9 +220,9 @@ const ActionSteps = ({ steps }) => {
               <div className="ml-4 flex-grow">
                 <div className="border rounded-md overflow-hidden bg-white shadow-sm border-l-4 border-l-[#80C342]">
                   <div className="p-3 border-b">
-                    <h3 className="text-base font-medium">{`Step ${index + 1}`}</h3>
+                    <h3 className="text-base font-medium">{step.title}</h3>
                   </div>
-                  <div className="p-3 text-sm">{step}</div>
+                  <div className="p-3 text-sm">{step.description}</div>
                 </div>
               </div>
             </div>
@@ -235,7 +236,7 @@ const ActionSteps = ({ steps }) => {
 // Main Component
 const ActionPlanDetails = () => {
   const { actionId } = useParams(); // Get id from URL params
-  const [plan, setPlan] = useState({}); // State to hold the action plan data
+  const [plan, setPlan] = useState<ActionPlan | null>(null); // State to hold the action plan data
 
   useEffect(() => {
     // Fetch the action plan data from the backend using the id from URL params
@@ -257,10 +258,10 @@ const ActionPlanDetails = () => {
   return (
     <div className="w-full mx-auto p-4 sm:p-6 bg-gray-50 overflow-auto">
       <div className="bg-white p-5 rounded-lg shadow-sm">
-        <ActionPlanHeader plan={plan} />
-        <TargetMetrics metrics={plan.metric} />
-        <FocusGroups groups={plan.target_groups} />
-        <ActionSteps steps={plan.steps} />
+        <ActionPlanHeader plan={plan!} />
+        <TargetMetrics metrics={plan!.metric} />
+        <FocusGroups groups={plan!.target_groups} />
+        <ActionSteps steps={plan!.steps} />
       </div>
     </div>
   );

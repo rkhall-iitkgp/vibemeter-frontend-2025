@@ -67,7 +67,7 @@ const SurveysPage: React.FC = () => {
       <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
-          <img src="/icons/Survey.svg" className="h-[40px] w-[40px]"/>
+            <img src="/icons/Survey.svg" className="h-[40px] w-[40px]" />
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Surveys</h1>
         </div>
