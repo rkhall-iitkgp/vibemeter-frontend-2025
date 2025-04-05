@@ -28,39 +28,6 @@ interface ActionPlan {
   created_at: string;
 }
 
-// // Sample data as fallback
-// const sampleActionPlans = [
-//   {
-// <<<<<<< HEAD
-//     actionId: "SAMPLE001",
-// =======
-//     id: "ap-1", // Add unique ID
-// >>>>>>> origin/ActionPlanPage
-//     title: "Recognition Program",
-//     createdDate: "March 17, 2025",
-//     description:
-//       "Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
-//     targetGroup: "Leadership Group",
-//     groupId: "#GRP2345",
-//     tags: ["Morality", "Engagement"],
-//   },
-//   {
-// <<<<<<< HEAD
-//     actionId: "SAMPLE002",
-//     title: "Communication Improvement",
-// =======
-//     id: "ap-2", // Add unique ID
-//     title: "Recognition Program",
-// >>>>>>> origin/ActionPlanPage
-//     createdDate: "March 12, 2025",
-//     description:
-//       "Establish regular team meetings and feedback sessions to improve internal communication and transparency across departments",
-//     targetGroup: "All Departments",
-//     groupId: "#GRP2346",
-//     tags: ["Communication", "Collaboration"],
-//   },
-// ];
-
 export default function ActionPlan() {
   const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
   const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
@@ -283,7 +250,7 @@ export default function ActionPlan() {
       </header>
       <main className="p-6 pt-2">
         {/* Carousel Section */}
-        <div className="mb-10">
+        <div className="mb-10 w-[95%] mx-auto">
           <ActionPlansCarousel />
         </div>
 

@@ -184,7 +184,7 @@ export default function FocusGroupDetails({
   };
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="w-full h-screen overflow-auto">
       {/* Header - consistent padding with main content */}
       <header className="bg-gray-100 z-10 p-6 pt-10 pb-4">
         <div className="flex items-center text-sm">
@@ -278,7 +278,7 @@ export default function FocusGroupDetails({
         </div>
 
         {/* Suggested Action Plans Section */}
-        <div className="mb-6">
+        <div className="mb-6 w-full">
           <ActionPlansCarousel />
         </div>
 

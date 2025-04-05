@@ -15,7 +15,7 @@ const FocusGroupList: FC<FocusGroupListProps> = ({
 }) => {
   return (
     <div className="mt-6">
-      {focusGroups.map((group) => (
+      {focusGroups?.map((group) => (
         <FocusGroupCard
           key={group.focus_group_id}
           focusGroup={group}
