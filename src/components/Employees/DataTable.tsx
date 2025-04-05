@@ -155,59 +155,67 @@ export function DataTable({
           {paginatedData.length > 0 ? (
             paginatedData.map((employee) => (
               <TableRow
-                key={employee.id}
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => handleViewDetails(employee)}
+          key={employee.id}
+          className="cursor-pointer hover:bg-gray-50"
+          onClick={() => handleViewDetails(employee)}
               >
-                <TableCell></TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.id}</TableCell>
-                <TableCell>{employee.jobTitle}</TableCell>
-                <TableCell>{employee.dateAdded}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-full  border-none"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      side="left"
-                      className="w-[180px]"
-                    >
-                      <DropdownMenuItem
-                        onClick={() => handleScheduleMeet(employee.id)}
-                        className="cursor-pointer"
-                      >
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule Meet
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent row click from triggering
-                          handleViewDetails(employee);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+          <TableCell></TableCell>
+          <TableCell>{employee.name}</TableCell>
+          <TableCell>{employee.id}</TableCell>
+          <TableCell>{employee.jobTitle}</TableCell>
+          <TableCell>{employee.dateAdded}</TableCell>
+          <TableCell>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-full border-none"
+                >
+            <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                side="left"
+                className="w-[180px]"
+              >
+                <DropdownMenuItem
+            onClick={() => handleScheduleMeet(employee.id)}
+            className="cursor-pointer"
+                >
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule Meet
+                </DropdownMenuItem>
+                <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent row click from triggering
+              handleViewDetails(employee);
+            }}
+            className="cursor-pointer"
+                >
+            <Eye className="h-4 w-4 mr-2" />
+            View Details
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </TableCell>
               </TableRow>
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={6} className="text-center py-4">
-                No results found
-              </TableCell>
-            </TableRow>
+            Array.from({ length: 3 }).map((_, index) => (
+              <TableRow key={index}>
+          <TableCell colSpan={6} className="text-center py-4">
+            <div className="flex justify-center items-center">
+                <div className="w-3/12 h-5 bg-gray-200 rounded mr-2"></div>
+                <div className="w-2/12 h-5 bg-gray-200 rounded mr-2"></div>
+                <div className="w-2/12 h-5 bg-gray-200 rounded mr-2"></div>
+                <div className="w-2/12 h-5 bg-gray-200 rounded mr-2"></div>
+                <div className="w-2/12 h-5 bg-gray-200 rounded"></div>
+            </div>
+          </TableCell>
+              </TableRow>
+            ))
           )}
         </TableBody>
       </Table>

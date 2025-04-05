@@ -3,7 +3,6 @@ import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import EmployeesSkeleton from "../components/Employees/EmployeesSkeleton";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -236,10 +235,6 @@ export default function EmployeesPage() {
     };
   };
 
-  // Show skeleton while loading
-  if (isLoading) {
-    return <EmployeesSkeleton />;
-  }
 
   return (
     <div className="flex-1 overflow-auto">
