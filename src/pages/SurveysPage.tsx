@@ -67,19 +67,7 @@ const SurveysPage: React.FC = () => {
       <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
-            <svg
-              className="text-[#80C342]"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-            >
-              <path
-                d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
-                fill="currentColor"
-              />
-            </svg>
+            <img src="/icons/Survey.svg" className="h-[40px] w-[40px]" />
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Surveys</h1>
         </div>
