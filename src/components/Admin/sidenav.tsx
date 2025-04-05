@@ -156,7 +156,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   >
                     {/* Solid green bar for active tab */}
                     {isActive && (
-                      <div className="absolute left-0 top-0 h-full w-1 bg-[#80C342] rounded-r-md"></div>
+                      <div className="select-none absolute left-0 top-0 h-full w-1 bg-[#80C342] rounded-r-md"></div>
                     )}
 
                     {/* Icon as image with proper size */}
