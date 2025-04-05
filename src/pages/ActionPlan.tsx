@@ -27,69 +27,22 @@ interface ActionPlan {
   created_at: string;
 }
 
-// Map the backend response to the format expected by the UI
-const mapResponseToActionPlan = (item) => {
-  return {
-    actionId: item.action_id,
-    title: item.title || "Untitled Action Plan",
-    createdDate: new Date(item.created_at).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    description: item.purpose || "No description available",
-    targetGroup:
-      item.target_groups && item.target_groups.length > 0
-        ? item.target_groups[0].name
-        : "All Groups",
-    groupId:
-      item.target_groups && item.target_groups.length > 0
-        ? `#${item.target_groups[0].focus_group_id}`
-        : "#N/A",
-    tags: item.metric || [],
-  };
-};
-
-// Sample data as fallback
-const sampleActionPlans = [
-  {
-    actionId: "SAMPLE001",
-    title: "Recognition Program",
-    createdDate: "March 17, 2025",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale. Something That can really motivate the employees to really understand their worth",
-    targetGroup: "Leadership Group",
-    groupId: "#GRP2345",
-    tags: ["Morality", "Engagement"],
-  },
-  {
-    actionId: "SAMPLE002",
-    title: "Communication Improvement",
-    createdDate: "March 12, 2025",
-    description:
-      "Establish regular team meetings and feedback sessions to improve internal communication and transparency across departments",
-    targetGroup: "All Departments",
-    groupId: "#GRP2346",
-    tags: ["Communication", "Collaboration"],
-  },
-];
-
 export default function ActionPlan() {
   const [actionPlans, setActionPlans] = useState<ActionPlan[]>([]);
   const [displayPlans, setDisplayPlans] = useState<ActionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState("Priority");
   const [isInitiativeModalOpen, setIsInitiativeModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
+  const [deleteError, setDeleteError] = useState<string>();
 
   // State for delete confirmation modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [planToDelete, setPlanToDelete] = useState(null);
+  const [planToDelete, setPlanToDelete] = useState<ActionPlan>();
 
   useEffect(() => {
     fetchActionPlans();
@@ -110,7 +63,7 @@ export default function ActionPlan() {
       filtered = filtered.filter(
         (plan) =>
           plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          plan.description.toLowerCase().includes(searchQuery.toLowerCase())
+          plan.purpose.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -145,7 +98,7 @@ export default function ActionPlan() {
         // const formattedActionPlans = responseData.map(mapResponseToActionPlan);
         setActionPlans(responseData.data);
         setDisplayPlans(responseData.data);
-        setError(null);
+        setError(undefined);
       } else if (
         responseData &&
         responseData.status === "success" &&
@@ -155,7 +108,7 @@ export default function ActionPlan() {
         // const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
         setActionPlans(responseData.data);
         setDisplayPlans(responseData.data);
-        setError(null);
+        setError(undefined);
       } else {
         throw new Error("Invalid response format");
       }
@@ -167,7 +120,7 @@ export default function ActionPlan() {
     }
   };
 
-  const handleSearch = (query) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
@@ -180,7 +133,7 @@ export default function ActionPlan() {
   };
 
   // Opens the delete confirmation modal
-  const openDeleteModal = (actionId) => {
+  const openDeleteModal = (actionId: string) => {
     if (!actionId) return;
 
     // Find the plan to delete to display its title in the confirmation modal
@@ -194,7 +147,7 @@ export default function ActionPlan() {
   // Closes the delete confirmation modal
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setPlanToDelete(null);
+    setPlanToDelete(undefined);
   };
 
   // Handles the actual deletion after confirmation
@@ -205,7 +158,7 @@ export default function ActionPlan() {
 
     try {
       setIsDeleting(true);
-      setDeleteError(null);
+      setDeleteError(undefined);
 
       const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`, {
         method: "DELETE",
@@ -222,10 +175,10 @@ export default function ActionPlan() {
 
       // Remove the deleted plan from state
       setActionPlans((prevPlans) =>
-        prevPlans.filter((plan) => plan.actionId !== actionId)
+        prevPlans.filter((plan) => plan.action_id !== actionId)
       );
       setDisplayPlans((prevPlans) =>
-        prevPlans.filter((plan) => plan.actionId !== actionId)
+        prevPlans.filter((plan) => plan.action_id !== actionId)
       );
 
       // Close the modal
