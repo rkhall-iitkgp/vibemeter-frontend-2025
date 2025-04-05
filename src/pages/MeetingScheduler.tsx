@@ -30,28 +30,57 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
   const [date, setDate] = useState<string>("2025-04-08");
   const [timeHour, setTimeHour] = useState<string>("10");
   const [timeMinute, setTimeMinute] = useState<string>("00");
+  const [duration, setDuration] = useState<number>(30);
   const [timeAmPm, setTimeAmPm] = useState<string>("AM");
   const [meetLocationType, setMeetLocationType] =
     useState<string>("Virtual Meeting");
   const [agenda, setAgenda] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Combine time components into a single time string
-    const formattedTime = `${timeHour}:${timeMinute} ${timeAmPm}`;
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/schedule`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: agenda,
+        date: date,
+        time: `${(parseInt(timeHour) + (timeAmPm === "PM" ? 12 : 0)) % 24}:${timeMinute}`,
+        duration: duration.toString(),
+        meeting_type: meetLocationType.split(" ")[0].toLowerCase(),
+        members: [participantId],
+        // TODO: Remove the hardcoded created_by_id
+        created_by_id: "100",
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setError("");
+        onClose?.();
+      })
+      .catch(() => setError("Some Error Occurred"));
 
-    if (onSchedule) {
-      onSchedule({
-        participantName,
-        participantId,
-        meetingType: meetLocationType,
-        date,
-        time: formattedTime,
-        meetLocationType,
-        agenda,
-      });
-    }
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/schedule`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: agenda,
+        date: date,
+        time: `${(parseInt(timeHour) + (timeAmPm === "PM" ? 12 : 0)) % 24}:${timeMinute}`,
+        duration: duration.toString(),
+        meeting_type: meetLocationType.split(" ")[0].toLowerCase(),
+        members: [participantId],
+        // TODO: Remove the hardcoded created_by_id
+        created_by_id: "100",
+      }),
+    })
+      .then((res) => res.json())
+      .then(console.log);
   };
 
   return (
@@ -204,6 +233,25 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
           </div>
         </div>
 
+        <div className="mb-4">
+          <label htmlFor="agenda" className="block font-bold mb-2">
+            Duration
+          </label>
+          <div className="flex items-center">
+            <input
+              type="number"
+              value={duration}
+              min="1"
+              className="w-24 p-2 border border-gray-300 rounded text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              onChange={(e) => setDuration(Number(e.target.value))}
+            />
+            <span className="ml-2 text-gray-500 ">minutes</span>
+          </div>
+        </div>
+
+        {error && (
+          <p className="text-red-500 text-center">Some Error Occurred!</p>
+        )}
         <div className="flex gap-4 mt-6">
           <button
             type="button"

@@ -40,7 +40,7 @@ type MeetingDetails = {
 // Default employee data
 const defaultEmployees: Employee[] = [
   {
-    id: "EM1234543",
+    id: "EMP0014",
     name: "Ankan",
     avatar: "/avatars/ankan.png",
     group: "Leadership Training",
