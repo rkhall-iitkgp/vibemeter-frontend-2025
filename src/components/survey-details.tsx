@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { useEffect } from "react"
 import { useNavigate } from "react-router"
+import CreateSurveyModal from "./create-survey-modal"
 
 interface SurveyDetailsProps {
 	survey_id: string
@@ -33,6 +34,7 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 
 		fetchSurveys();
 	}, [])
+
 
 	if (!loaded) {
 		return (
@@ -128,92 +130,92 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 							</div>
 						</div>
 
-                <div className="border-b py-4">
-                    <h2 className="text-lg font-semibold mb-3">Target Focus Groups:</h2>
-                    <div className="space-y-4">
-                      {survey.target_groups.map(group => (
-                        <div key={group.focus_group_id} className="border rounded-lg p-4">
-                          <div className="flex justify-between">
-                            <div>
-                              <h3 className="font-medium">{group.name}</h3>
-                              <div className="text-sm text-gray-500">Created on {group.created_at}</div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-[#80C342]">Participants</div>
-                              <div className="text-sm">3 Members</div>
-                            </div>
-                          </div>
-                          <div className="flex gap-2 mt-2">
-                            {group.metrics.map((tag, index) => (
-                              <span 
-                                key={index} 
-                                className={`px-2 py-1 bg-gray-300 text-black text-xs rounded`}
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                          <p className="mt-2 text-gray-700">{group.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                </div>
+						<div className="border-b py-4">
+							<h2 className="text-lg font-semibold mb-3">Target Focus Groups:</h2>
+							<div className="space-y-4">
+								{survey.target_groups.map(group => (
+									<div key={group.focus_group_id} className="border rounded-lg p-4">
+										<div className="flex justify-between">
+											<div>
+												<h3 className="font-medium">{group.name}</h3>
+												<div className="text-sm text-gray-500">Created on {group.created_at}</div>
+											</div>
+											<div className="text-right">
+												<div className="text-[#80C342]">Participants</div>
+												<div className="text-sm">3 Members</div>
+											</div>
+										</div>
+										<div className="flex gap-2 mt-2">
+											{group.metrics.map((tag, index) => (
+												<span
+													key={index}
+													className={`px-2 py-1 bg-gray-300 text-black text-xs rounded`}
+												>
+													{tag}
+												</span>
+											))}
+										</div>
+										<p className="mt-2 text-gray-700">{group.description}</p>
+									</div>
+								))}
+							</div>
+						</div>
 
-                <div className="py-4">
-                    <h2 className="text-lg font-semibold mb-3">Survey Questions</h2>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            placeholder="Search questions..."
-                            className="w-full p-2 border rounded-lg"
-                            onChange={(e) => {
-                                const searchTerm = e.target.value.toLowerCase();
-                                survey.questions.forEach((question) => {
-                                    question.expanded = question.text.toLowerCase().includes(searchTerm);
-                                });
-                            }}
-                        />
-                    </div>
-                    <div className="border rounded-lg p-4">
-                      {survey.questions.map((question, index) => (
-                        <div key={question.id} className={index < survey.questions.length - 1 ? "border-b pb-4" : ""}>
-                          <div className="flex items-center justify-between py-4">
-                            <div>
-                              <div className="font-medium">{question.text}</div>
-                              <div className="text-sm text-gray-500">
-                                Average Score: {question.average}/5 
-                                <span className="text-green-500">+{question.delta}</span>
-                              </div>
-                            </div>
-                            <button className="p-1">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            </button>
-                          </div>
-                          
-                          {question.options.length && question.responses.length && (
-                            <div className="mt-4 mb-4 space-y-3">
-                              {question.options.map((option, rIndex) => (
-                                <div key={rIndex}>
-                                  <div className="flex justify-between text-sm mb-1">
-                                    <span>{option.value}: {option.label}</span>
-                                    <span>{question.responses[rIndex].count} ({question.responses[rIndex].percentage}%)</span>
-                                  </div>
-                                  <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div className="bg-[#80C342] h-2 rounded-full" style={{ width: `${question.responses[rIndex].percentage}%` }}></div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                </div>
-                </div>
-            </div>
-            </main>
-        </div>
-    )
+						<div className="py-4">
+							<h2 className="text-lg font-semibold mb-3">Survey Questions</h2>
+							<div className="mb-4">
+								<input
+									type="text"
+									placeholder="Search questions..."
+									className="w-full p-2 border rounded-lg"
+									onChange={(e) => {
+										const searchTerm = e.target.value.toLowerCase();
+										survey.questions.forEach((question) => {
+											question.expanded = question.text.toLowerCase().includes(searchTerm);
+										});
+									}}
+								/>
+							</div>
+							<div className="border rounded-lg p-4">
+								{survey.questions.map((question, index) => (
+									<div key={question.id} className={index < survey.questions.length - 1 ? "border-b pb-4" : ""}>
+										<div className="flex items-center justify-between py-4">
+											<div>
+												<div className="font-medium">{question.text}</div>
+												<div className="text-sm text-gray-500">
+													Average Score: {question.average}/5
+													<span className="text-green-500">+{question.delta}</span>
+												</div>
+											</div>
+											<button className="p-1">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+											</button>
+										</div>
+
+										{question.options.length && question.responses.length && (
+											<div className="mt-4 mb-4 space-y-3">
+												{question.options.map((option, rIndex) => (
+													<div key={rIndex}>
+														<div className="flex justify-between text-sm mb-1">
+															<span>{option.value}: {option.label}</span>
+															<span>{question.responses[rIndex].count} ({question.responses[rIndex].percentage}%)</span>
+														</div>
+														<div className="w-full bg-gray-200 rounded-full h-2">
+															<div className="bg-[#80C342] h-2 rounded-full" style={{ width: `${question.responses[rIndex].percentage}%` }}></div>
+														</div>
+													</div>
+												))}
+											</div>
+										)}
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	)
 }
 
 export default SurveyDetails

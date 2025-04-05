@@ -1,3 +1,4 @@
+import CreateSurveyModal from "@/components/create-survey-modal";
 import SurveyDetails from "@/components/survey-details";
 import { Search, ChevronRight, ChevronDown, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ const SurveysPage: React.FC = () => {
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
 	const [surveys, setSurveys] = useState<Survey[]>([]);
 	const { survey_id } = useParams<{ survey_id: string | undefined }>();
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const navigate = useNavigate();
 
 	// Sample data
@@ -55,17 +57,22 @@ const SurveysPage: React.FC = () => {
 	// 	},
 	// ];
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
+	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchTerm(e.target.value);
+	};
 
 	const handleClearSearch = () => {
 		setSearchTerm("");
 	};
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
+	const toggleDropdown = () => {
+		setShowDropdown(!showDropdown);
+	};
+
+	const onSuccess = (surveyData: Survey) => {
+		// Create a new survey with the form data
+		setSurveys([surveyData, ...surveys])
+	}
 
 	// Filter surveys based on search term
 	const filteredSurveys = surveys.filter(
@@ -203,11 +210,11 @@ const SurveysPage: React.FC = () => {
 						</div>
 					</div>
 
-          <button className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md">
-            <Plus className="w-5 h-5 mr-2" />
-            Create Survey
-          </button>
-        </div>
+					<button className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md" onClick={() => setIsModalOpen(true)} >
+						<Plus className="w-5 h-5 mr-2" />
+						Create Survey
+					</button>
+				</div>
 
 				<div className="space-y-4">
 					{filteredSurveys.map((survey) => (
@@ -291,9 +298,13 @@ const SurveysPage: React.FC = () => {
 					)}
 				</div>
 			</main>
+			<CreateSurveyModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				onSuccess={onSuccess}
+			/>
 		</div>
 	);
 };
 
-export default SurveysPage
-
+export default SurveysPage;
