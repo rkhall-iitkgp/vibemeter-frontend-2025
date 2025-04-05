@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 // Define types for our data structures
 interface Question {
-  id: string;
+  question_id: string;
   text: string;
   tags: string[];
   severity: "critical" | "moderate" | "mild" | "low";
@@ -18,7 +18,7 @@ interface NewQuestion {
 
 const mapResponseToQuestion = (item: Question): Question => {
   return {
-    id: item.id,
+    question_id: item.question_id,
     text: item.text,
     tags: item.tags || [],
     // Map "high" to "critical" if that's coming from your API
@@ -243,14 +243,14 @@ const Questions = () => {
       } else if (modalType === "edit" && currentQuestion) {
         // For edit, we'll ensure we're using the format expected by your API
         response = await fetch(
-          `${BACKEND_URL}/api/question/${currentQuestion.id}`,
+          `${BACKEND_URL}/api/question/${currentQuestion.question_id}`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              question_id: currentQuestion.id,
+              question_id: currentQuestion.question_id,
               text: newQuestion.text,
               tags:
                 newQuestion.tags.length > 0
@@ -279,7 +279,7 @@ const Questions = () => {
         } else if (responseData.question_id) {
           // If response just contains the question_id directly
           createdQuestion = {
-            id: responseData.question_id,
+            question_id: responseData.question_id,
             text: newQuestion.text,
             tags:
               newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
@@ -288,7 +288,7 @@ const Questions = () => {
         } else {
           // Fallback if different format
           createdQuestion = {
-            id: `temp-${Date.now()}`,
+            question_id: `temp-${Date.now()}`,
             text: newQuestion.text,
             tags:
               newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
@@ -301,7 +301,7 @@ const Questions = () => {
       } else if (modalType === "edit" && currentQuestion) {
         // Update the questions state with the edited question
         const updatedQuestion = {
-          id: currentQuestion.id,
+          question_id: currentQuestion.question_id,
           text: newQuestion.text,
           tags:
             newQuestion.tags.length > 0 ? newQuestion.tags : ["burnoutRisk"],
@@ -311,7 +311,7 @@ const Questions = () => {
         // Preserve the original order by mapping through existing questions
         setQuestions(
           questions.map((q) =>
-            q.id === currentQuestion.id ? updatedQuestion : q
+            q.question_id === currentQuestion.question_id ? updatedQuestion : q
           )
         );
       }
@@ -339,7 +339,7 @@ const Questions = () => {
 
     try {
       const response = await fetch(
-        `${BACKEND_URL}/api/question/${currentQuestion.id}`,
+        `${BACKEND_URL}/api/question/${currentQuestion.question_id}`,
         {
           method: "DELETE",
         }
@@ -350,7 +350,7 @@ const Questions = () => {
       }
 
       // Remove the question from the state
-      setQuestions(questions.filter((q) => q.id !== currentQuestion.id));
+      setQuestions(questions.filter((q) => q.question_id !== currentQuestion.question_id));
       closeModal();
     } catch (err) {
       console.error("Failed to delete question:", err);
@@ -483,7 +483,7 @@ const Questions = () => {
           {!isLoading &&
             filteredQuestions.map((question) => (
               <div
-                key={question.id}
+                key={question.question_id}
                 className="bg-white p-3 sm:p-4 rounded-md shadow-sm border"
               >
                 <div className="flex justify-between">

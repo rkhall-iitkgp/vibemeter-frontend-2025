@@ -184,7 +184,7 @@ export default function ActionPlan() {
     if (!actionId) return;
 
     // Find the plan to delete to display its title in the confirmation modal
-    const planToDelete = actionPlans.find((plan) => plan.actionId === actionId);
+    const planToDelete = actionPlans.find((plan) => plan.action_id === actionId);
     if (planToDelete) {
       setPlanToDelete(planToDelete);
       setIsDeleteModalOpen(true);
@@ -201,7 +201,7 @@ export default function ActionPlan() {
   const confirmDelete = async () => {
     if (!planToDelete || isDeleting) return;
 
-    const actionId = planToDelete.actionId;
+    const actionId = planToDelete.action_id;
 
     try {
       setIsDeleting(true);

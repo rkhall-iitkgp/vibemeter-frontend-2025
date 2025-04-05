@@ -15,7 +15,7 @@ const FocusGroupPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const [focusGroups, setFocusGroups] = useState<FocusGroup[]>([]);
   const [filteredGroups, setFilteredGroups] =
-    useState<FocusGroup[]>(focusGroups);
+    useState<FocusGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<FocusGroup | null>(null);
   // State to control modal visibility
   const [showCreateModal, setShowCreateModal] = useState(false);
