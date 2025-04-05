@@ -1,65 +1,80 @@
-"use client";
-import { AttendanceCard } from "@/components/attendence-card";
-import { ParkingSection } from "@/components/parking-section";
-import { DocumentsCard } from "@/components/documents-card";
-import { ChecklistCard } from "@/components/checklist-card";
-import { useEffect, useState } from "react";
-import { Clock } from "lucide-react";
+import UpcomingMeetings from "./dashboard/upcoming-meet";
+import NoticeBoard from "./dashboard/notice-board";
+import ProfileCard from "./dashboard/profile-card";
+import AwardsCard from "./dashboard/award-card";
+import ClockInOut from "./dashboard/clock-in";
+import ContactCard from "./dashboard/contact";
 import Navbar from "./Navbar";
+
 export function DashboardContent() {
-  const [time, setTime] = useState("");
-  const name = "Ankan";
+  // const [name, setName] = useState("Tridibesh");
+  const name = "Tridibesh";
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = now.getHours() % 12 || 12;
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const ampm = now.getHours() >= 12 ? "PM" : "AM";
-      setTime(`${hours}:${minutes} ${ampm}`);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-gray-50">
       <Navbar name={name} />
 
-      <main className="flex-1 p-6 overflow-auto">
-        {/* Greeting Section */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
-              Good afternoon, {name}!
-            </h1>
-            <p className="text-gray-600">You have 12 tasks pending.</p>
-          </div>
-          <div className="bg-white rounded-lg p-3 flex items-center gap-3 shadow-sm">
-            <div>
-              <p className="text-xs text-gray-500">Current time</p>
-              <p className="text-2xl font-bold">{time}</p>
+      <main className="flex-1 p-4 md:p-4 overflow-auto">
+        {/* Main Grid - Fixed width columns on larger screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4">
+          {/* COLUMN 1: ProfileCard, ContactCard, AwardsCard */}
+          <div className="w-full space-y-4 md:space-y-2 order-1 md:order-1">
+            {/* Profile Card - Full width, content-based height */}
+            <div className="flex flex-row space-y-4 md:space-x-1">
+              <div className="w-full">
+                <ProfileCard />
+              </div>
+
+              {/* Contact Card - Full width, content-based height */}
+              <div className="w-full">
+                <ContactCard />
+              </div>
             </div>
-            <Clock className="h-6 w-6 text-gray-400" />
+
+            {/* Awards Card - Full width, content-based height */}
+            <div className="w-full">
+              <UpcomingMeetings />
+            </div>
+          </div>
+
+          {/* COLUMN 2: ClockInOut, UpcomingMeetings */}
+          <div className="w-full space-y-4 md:space-y-4 order-2 md:order-2">
+            {/* Clock In/Out Component - Full width, content-based height */}
+            <div className="w-full">
+              <ClockInOut className="w-full" />
+            </div>
+
+            {/* Upcoming Meetings - Full width, fills remaining space */}
+            <div className="w-full flex-grow">
+              <AwardsCard className="w-full" />
+            </div>
+          </div>
+
+          {/* COLUMN 3: NoticeBoard - Full width and height */}
+          <div className="w-full order-3 md:order-3 h-full">
+            {/* Notice Board Component - Full height */}
+            <NoticeBoard />
           </div>
         </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Left Column (spans 2 columns) */}
-          <div className="col-span-2 flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-6">
-              <AttendanceCard />
-              <DocumentsCard />
-            </div>
-            <ParkingSection />
-          </div>
-
-          {/* Right Column */}
-          <div className="flex flex-col gap-6">
-            <ChecklistCard />
-          </div>
+        {/* Mobile-only quick actions */}
+        <div className="fixed bottom-4 right-4 sm:hidden">
+          <button className="bg-[#80C342] hover:bg-[#6ca438] text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+          </button>
         </div>
       </main>
     </div>

@@ -1,30 +1,20 @@
-import { DashboardPage, LoginPage, Graph, AdminDashboard } from "./pages";
+import { DashboardPage, Graph, AdminDashboard } from "./pages";
 import UnderConstruction from "./pages/UnderConstruction";
-import { Navigate, Route, Routes } from "react-router";
+import ActionPlanDetails from "./pages/ActionPlanDetails";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
+import EmployeesPage from "./pages/EmployeesPages";
+import SurveysPage from "./pages/SurveysPage";
+import PersonaPage from "./pages/PersonaPage";
+import { Route, Routes } from "react-router";
 import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
-import { useSelector } from "react-redux";
-import { RootState } from "./store";
-import SurveysPage from "./pages/SurveysPage";
+
 function App() {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
   return (
     <>
       <Routes>
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
-        />
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />
-          }
-        />
+        <Route path="/" element={<PersonaPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/graph" element={<Graph />} />
         <Route
@@ -63,7 +53,7 @@ function App() {
           path="/employees"
           element={
             <AdminLayout>
-              <UnderConstruction />
+              <EmployeesPage />
             </AdminLayout>
           }
         />
@@ -72,6 +62,14 @@ function App() {
           element={
             <AdminLayout>
               <ActionPlan />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/action-plan/:actionId"
+          element={
+            <AdminLayout>
+              <ActionPlanDetails />
             </AdminLayout>
           }
         />

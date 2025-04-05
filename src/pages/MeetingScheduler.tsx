@@ -27,11 +27,10 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
   onCancel,
   onClose,
 }) => {
-  const [meetingType, setMeetingType] = useState<string>(
-    "One-on-One Intervention"
-  );
   const [date, setDate] = useState<string>("2025-04-08");
-  const [time, setTime] = useState<string>("10:00 AM - 10:30 AM");
+  const [timeHour, setTimeHour] = useState<string>("10");
+  const [timeMinute, setTimeMinute] = useState<string>("00");
+  const [timeAmPm, setTimeAmPm] = useState<string>("AM");
   const [meetLocationType, setMeetLocationType] =
     useState<string>("Virtual Meeting");
   const [agenda, setAgenda] = useState<string>("");
@@ -39,13 +38,16 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Combine time components into a single time string
+    const formattedTime = `${timeHour}:${timeMinute} ${timeAmPm}`;
+
     if (onSchedule) {
       onSchedule({
         participantName,
         participantId,
-        meetingType,
+        meetingType: meetLocationType,
         date,
-        time,
+        time: formattedTime,
         meetLocationType,
         agenda,
       });
@@ -99,6 +101,19 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
+          <label htmlFor="agenda" className="block font-bold mb-2">
+            Agenda
+          </label>
+          <input
+            type="text"
+            id="agenda"
+            className="w-full p-2 border border-gray-300 rounded"
+            value={agenda}
+            onChange={(e) => setAgenda(e.target.value)}
+            placeholder="Brief meeting title"
+          />
+        </div>
+        <div className="mb-4">
           <label htmlFor="meetLocationType" className="block font-bold mb-2">
             Meet Type
           </label>
@@ -128,34 +143,64 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
             />
           </div>
           <div className="flex-1">
-            <label htmlFor="time" className="block font-bold mb-2">
-              Time
-            </label>
-            <input
-              type="time"
-              id="time"
-              className="w-full p-2 border border-gray-300 rounded"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              min="09:00"
-              max="17:00"
-              step="1800"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="agenda" className="block font-bold mb-2">
-            Duration
-          </label>
-          <div className="flex items-center">
-            <input
-              type="number"
-              min="1"
-              className="w-24 p-2 border border-gray-300 rounded text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-            <span className="ml-2 text-gray-500 ">minutes</span>
+            <label className="block font-bold mb-2">Time</label>
+            <div className="flex items-center">
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={2}
+                placeholder="10"
+                className="w-12 p-2 border border-gray-300 rounded text-center"
+                value={timeHour}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "");
+                  if (
+                    val === "" ||
+                    (parseInt(val) >= 1 && parseInt(val) <= 12)
+                  ) {
+                    setTimeHour(val);
+                  }
+                }}
+                required
+              />
+              <span className="mx-1">:</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={2}
+                placeholder="00"
+                className="w-12 p-2 border border-gray-300 rounded text-center"
+                value={timeMinute}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "");
+                  if (
+                    val === "" ||
+                    (parseInt(val) >= 0 && parseInt(val) <= 59)
+                  ) {
+                    setTimeMinute(val.padStart(2, "0"));
+                  }
+                }}
+                required
+              />
+              <div className="ml-2 flex">
+                <button
+                  type="button"
+                  className={`px-3 py-2 ${timeAmPm === "AM" ? "bg-gray-200 font-medium" : "bg-white"} border border-gray-300 rounded-l`}
+                  onClick={() => setTimeAmPm("AM")}
+                >
+                  AM
+                </button>
+                <button
+                  type="button"
+                  className={`px-3 py-2 ${timeAmPm === "PM" ? "bg-gray-200 font-medium" : "bg-white"} border border-l-0 border-gray-300 rounded-r`}
+                  onClick={() => setTimeAmPm("PM")}
+                >
+                  PM
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -180,13 +225,3 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
 };
 
 export default MeetingScheduler;
-
-// Example usage:
-// <MeetingScheduler
-//   participantName="Ankan"
-//   participantId="EM1234564"
-//   participantGroup="Leadership Training #GRP12345"
-//   onSchedule={(details) => console.log(details)}
-//   onCancel={() => console.log('Cancelled')}
-//   onClose={() => console.log('Closed')}
-// />

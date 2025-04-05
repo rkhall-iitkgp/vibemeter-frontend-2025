@@ -7,7 +7,7 @@ interface SearchBarProps {
 
 const SearchBar: FC<SearchBarProps> = ({
   onSearch,
-  placeholder = "Search Focus Group",
+  placeholder
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 

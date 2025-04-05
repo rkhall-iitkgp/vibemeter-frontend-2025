@@ -1,4 +1,5 @@
 import { X, Plus, Edit, Trash2 } from "lucide-react";
+import SearchBar from "@/components/SearchBar";
 import { useEffect, useState } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -102,6 +103,11 @@ const Questions = () => {
     }
   };
 
+  // Fixed handleSearch function
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   // Get all unique tags from questions
   const allTags = Array.from(
     new Set(questions.flatMap((question) => question.tags))
@@ -132,11 +138,6 @@ const Questions = () => {
     } else {
       setActiveFilters([...activeFilters, filter]);
     }
-  };
-
-  // Clear search
-  const clearSearch = () => {
-    setSearchQuery("");
   };
 
   // Toggle tag selection for question form
@@ -350,7 +351,9 @@ const Questions = () => {
       }
 
       // Remove the question from the state
-      setQuestions(questions.filter((q) => q.question_id !== currentQuestion.question_id));
+      setQuestions(
+        questions.filter((q) => q.question_id !== currentQuestion.question_id)
+      );
       closeModal();
     } catch (err) {
       console.error("Failed to delete question:", err);
@@ -380,63 +383,49 @@ const Questions = () => {
   return (
     <div className="flex-1 overflow-auto">
       {/* Header - now in gray area */}
-      <header className=" bg-gray-100 z-10 p-6 pt-8 flex w-full justify-between items-center">
+      <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
             <img
               src="/icons/Questions.svg"
-              alt="Question Icon"
-              width={40}
-              height={40}
-            />
+              className="w-[40px] h-[40px] "
+            ></img>
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Questions</h1>
         </div>
-        <button
-          type="button"
-          className="bg-[#80C342] text-white px-5 py-2 rounded-md flex items-center text-sm sm:text-base w-full sm:w-48 justify-center sm:justify-start hover:cursor-pointer"
-          onClick={openCreateModal}
-        >
-          <Plus size={18} className="mr-2" />
-          Create Question
-        </button>
       </header>
 
       {/* Dashboard content */}
-      <main className="p-6">
-        {/* Search */}
-        <div className="relative mb-4 sm:mb-6 max-w-3xl mx-auto">
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full p-2 pl-8 pr-10 rounded text-sm sm:text-base"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
+      <main className="p-6 pt-2">
+        {/* Search and Create button in same line */}
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <div className="relative w-128 mr-4">
+            <SearchBar onSearch={handleSearch} placeholder="Search questions"/>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </div>
           </div>
-          {searchQuery && (
-            <button
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-              onClick={clearSearch}
-            >
-              <X size={16} />
-            </button>
-          )}
+          <button
+            type="button"
+            className="bg-[#80C342] text-white px-4 py-2 rounded-md flex items-center text-sm whitespace-nowrap hover:cursor-pointer"
+            onClick={openCreateModal}
+          >
+            <Plus size={18} className="mr-2" />
+            Create Question
+          </button>
         </div>
 
         {/* Filter tags */}

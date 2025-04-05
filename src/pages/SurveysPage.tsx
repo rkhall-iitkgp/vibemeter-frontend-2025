@@ -55,17 +55,17 @@ const SurveysPage: React.FC = () => {
 	// 	},
 	// ];
 
-	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSearchTerm(e.target.value);
-	};
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
 	const handleClearSearch = () => {
 		setSearchTerm("");
 	};
 
-	const toggleDropdown = () => {
-		setShowDropdown(!showDropdown);
-	};
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
 
 	// Filter surveys based on search term
 	const filteredSurveys = surveys.filter(
@@ -203,11 +203,11 @@ const SurveysPage: React.FC = () => {
 						</div>
 					</div>
 
-					<button className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md">
-						<Plus className="w-5 h-5 mr-2" />
-						Create Survey
-					</button>
-				</div>
+          <button className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md">
+            <Plus className="w-5 h-5 mr-2" />
+            Create Survey
+          </button>
+        </div>
 
 				<div className="space-y-4">
 					{filteredSurveys.map((survey) => (

@@ -23,6 +23,7 @@ interface ActionPlan {
   metric: string[];
   steps: ActionStep[];
   is_completed: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   target_groups: any[];
   created_at: string;
 }
@@ -50,13 +51,8 @@ export default function ActionPlan() {
 
   // Update displayed plans when search query changes
   useEffect(() => {
-    if (actionPlans.length > 0) {
-      filterAndSortPlans();
-    }
-  }, [searchQuery, sortBy, actionPlans]);
-
-  const filterAndSortPlans = () => {
-    let filtered = [...actionPlans];
+    const filterAndSortPlans = () => {
+      let filtered = [...actionPlans];
 
     // Apply search filter
     if (searchQuery) {
@@ -67,18 +63,23 @@ export default function ActionPlan() {
       );
     }
 
-    // Apply sorting
-    if (sortBy === "Date") {
-      filtered.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
-    } else if (sortBy === "Alphabetical") {
-      filtered.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    // Priority sorting would need implementation based on your priority system
+      // Apply sorting
+      if (sortBy === "Date") {
+        filtered.sort(
+          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        );
+      } else if (sortBy === "Alphabetical") {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      }
+      // Priority sorting would need implementation based on your priority system
 
-    setDisplayPlans(filtered);
-  };
+      setDisplayPlans(filtered);
+    };
+
+    if (actionPlans.length > 0) {
+      filterAndSortPlans();
+    }
+  }, [searchQuery, sortBy, actionPlans]);
 
   const fetchActionPlans = async () => {
     try {
@@ -137,7 +138,9 @@ export default function ActionPlan() {
     if (!actionId) return;
 
     // Find the plan to delete to display its title in the confirmation modal
-    const planToDelete = actionPlans.find((plan) => plan.action_id === actionId);
+    const planToDelete = actionPlans.find(
+      (plan) => plan.action_id === actionId
+    );
     if (planToDelete) {
       setPlanToDelete(planToDelete);
       setIsDeleteModalOpen(true);
@@ -183,7 +186,7 @@ export default function ActionPlan() {
 
       // Close the modal
       closeDeleteModal();
-	  window.location.reload()
+      window.location.reload();
 
       // Show success message (optional)
       // toast.success("Action plan deleted successfully");
