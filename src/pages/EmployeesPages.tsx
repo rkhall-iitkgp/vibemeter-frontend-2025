@@ -229,7 +229,7 @@ export default function EmployeesPage() {
       {/* Dashboard content */}
       <main className="p-6">
         <div className="mb-4">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={handleSearch} placeholder="Search Employees"/>
         </div>
         
         {isLoading ? (

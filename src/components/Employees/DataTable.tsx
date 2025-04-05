@@ -107,7 +107,7 @@ export function DataTable({
   };
 
   return (
-    <div className="w-full border rounded-lg mb-8">
+    <div className="w-full border rounded-lg mb-8 bg-white">
       <div className="p-4 flex items-center justify-between border-b">
         <div className="flex items-center gap-2">
           <div
