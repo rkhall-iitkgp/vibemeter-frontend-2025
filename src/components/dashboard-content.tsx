@@ -5,6 +5,7 @@ import AwardsCard from "./dashboard/award-card";
 import ClockInOut from "./dashboard/clock-in";
 import ContactCard from "./dashboard/contact";
 import Navbar from "./Navbar";
+import { FloatingChat } from "./floating-chat";
 
 export function DashboardContent() {
   // const [name, setName] = useState("Tridibesh");
@@ -77,6 +78,9 @@ export function DashboardContent() {
           </button>
         </div>
       </main>
+        
+        {/* Floating chat button */}
+        <FloatingChat />
     </div>
   );
 }
