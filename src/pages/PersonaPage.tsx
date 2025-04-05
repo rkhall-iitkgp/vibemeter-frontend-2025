@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 interface Profile {
   id: number;
@@ -8,13 +9,18 @@ interface Profile {
 
 const ProfileSelectPage: React.FC = () => {
   const [hoveredProfile, setHoveredProfile] = useState<number | null>(null);
-
+  const navigate = useNavigate();
   const profiles: Profile[] = [
     { id: 1, name: "Adarsh", avatar: "/placeholder.svg?height=150&width=150" },
     { id: 2, name: "Ankan", avatar: "/placeholder.svg?height=150&width=150" },
     { id: 3, name: "Harsh", avatar: "/placeholder.svg?height=150&width=150" },
     { id: 4, name: "Bansal", avatar: "/placeholder.svg?height=150&width=150" },
   ];
+
+  const handleProfileSelect = (profileId: number) => {
+    // Navigate to the dashboard with the selected profile ID
+    navigate(`/dashboard/`);
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
@@ -27,6 +33,7 @@ const ProfileSelectPage: React.FC = () => {
             className="flex flex-col items-center cursor-pointer group"
             onMouseEnter={() => setHoveredProfile(profile.id)}
             onMouseLeave={() => setHoveredProfile(null)}
+            onClick={() => handleProfileSelect(profile.id)} // Navigate to dashboard on click
           >
             <div
               className={`relative mb-2 overflow-hidden rounded-md border-2 ${
