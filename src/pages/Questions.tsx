@@ -21,7 +21,10 @@ const mapResponseToQuestion = (item: Question): Question => {
     question_id: item.question_id,
     text: item.text,
     tags: item.tags || [],
+<<<<<<< HEAD
     // Map "high" to "critical" if that's coming from your API
+=======
+>>>>>>> origin/ActionPlanPage
     severity: item.severity || "moderate",
   };
 };
@@ -73,7 +76,11 @@ const Questions = () => {
   const fetchQuestions = async () => {
     try {
       setIsLoading(true);
+<<<<<<< HEAD
       const response = await fetch(`${BACKEND_URL}/api/question`);
+=======
+      const response = await fetch(`${BACKEND_URL}:8000/api/question`);
+>>>>>>> origin/ActionPlanPage
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -233,7 +240,11 @@ const Questions = () => {
 
       if (modalType === "create") {
         // Create a new question
+<<<<<<< HEAD
         response = await fetch(`${BACKEND_URL}/api/question`, {
+=======
+        response = await fetch(`${BACKEND_URL}:8000/api/question`, {
+>>>>>>> origin/ActionPlanPage
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -243,14 +254,22 @@ const Questions = () => {
       } else if (modalType === "edit" && currentQuestion) {
         // For edit, we'll ensure we're using the format expected by your API
         response = await fetch(
+<<<<<<< HEAD
           `${BACKEND_URL}/api/question/${currentQuestion.question_id}`,
+=======
+          `${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+>>>>>>> origin/ActionPlanPage
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+<<<<<<< HEAD
               question_id: currentQuestion.question_id,
+=======
+              question_id: currentQuestion.id,
+>>>>>>> origin/ActionPlanPage
               text: newQuestion.text,
               tags:
                 newQuestion.tags.length > 0
@@ -311,7 +330,11 @@ const Questions = () => {
         // Preserve the original order by mapping through existing questions
         setQuestions(
           questions.map((q) =>
+<<<<<<< HEAD
             q.question_id === currentQuestion.question_id ? updatedQuestion : q
+=======
+            q.id === currentQuestion.id ? updatedQuestion : q
+>>>>>>> origin/ActionPlanPage
           )
         );
       }
@@ -339,7 +362,11 @@ const Questions = () => {
 
     try {
       const response = await fetch(
+<<<<<<< HEAD
         `${BACKEND_URL}/api/question/${currentQuestion.question_id}`,
+=======
+        `${BACKEND_URL}:8000/api/question/${currentQuestion.id}`,
+>>>>>>> origin/ActionPlanPage
         {
           method: "DELETE",
         }
@@ -350,7 +377,11 @@ const Questions = () => {
       }
 
       // Remove the question from the state
+<<<<<<< HEAD
       setQuestions(questions.filter((q) => q.question_id !== currentQuestion.question_id));
+=======
+      setQuestions(questions.filter((q) => q.id !== currentQuestion.id));
+>>>>>>> origin/ActionPlanPage
       closeModal();
     } catch (err) {
       console.error("Failed to delete question:", err);
@@ -378,6 +409,7 @@ const Questions = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="flex-1 overflow-auto">
       {/* Header - now in gray area */}
       <header className=" bg-gray-100 z-10 p-6 pt-8 flex w-full justify-between items-center">
@@ -391,6 +423,26 @@ const Questions = () => {
             />
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Questions</h1>
+=======
+    <div className="bg-gray-50 min-h-screen p-3 sm:p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-medium">Questions</h1>
+            <p className="text-gray-500">
+              Manage check-in questions for your team
+            </p>
+          </div>
+          <button
+            type="button"
+            className="bg-[#80C342] text-white px-5 py-2 rounded-md flex items-center text-sm sm:text-base w-full sm:w-48 justify-center sm:justify-start hover:cursor-pointer"
+            onClick={openCreateModal}
+          >
+            <Plus size={18} className="mr-2" />
+            Create Question
+          </button>
+>>>>>>> origin/ActionPlanPage
         </div>
         <button
           type="button"
@@ -483,7 +535,11 @@ const Questions = () => {
           {!isLoading &&
             filteredQuestions.map((question) => (
               <div
+<<<<<<< HEAD
                 key={question.question_id}
+=======
+                key={question.id}
+>>>>>>> origin/ActionPlanPage
                 className="bg-white p-3 sm:p-4 rounded-md shadow-sm border"
               >
                 <div className="flex justify-between">
@@ -542,6 +598,7 @@ const Questions = () => {
           )}
         </div>
 
+<<<<<<< HEAD
         {/* Modal: Create or Edit Question */}
         {(modalType === "create" || modalType === "edit") && (
           <div
@@ -606,6 +663,83 @@ const Questions = () => {
                       <div
                         key={tag}
                         className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+=======
+      {/* Modal: Create or Edit Question */}
+      {(modalType === "create" || modalType === "edit") && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-xl font-semibold">
+                {modalType === "create" ? "Create Question" : "Edit Question"}
+              </h2>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700"
+                title="Close Modal"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Question Text:
+                </label>
+                <textarea
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#80C342] focus:border-transparent"
+                  rows={4}
+                  placeholder="Type your question here..."
+                  value={newQuestion.text}
+                  onChange={handleQuestionTextChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Categories:
+                </label>
+                {/* Input for adding new tags */}
+                <div className="mb-2">
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#80C342]"
+                    placeholder="Add a new tag (press Enter)"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const newTag = e.currentTarget.value.trim();
+                        addNewTag(newTag);
+                        e.currentTarget.value = "";
+                      }
+                    }}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {newQuestion.tags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+                    >
+                      {formatTagName(tag)}
+                      <button
+                        type="button"
+                        className="ml-1 text-blue-800 hover:text-blue-600"
+                        onClick={() => {
+                          setNewQuestion({
+                            ...newQuestion,
+                            tags: newQuestion.tags.filter((t) => t !== tag),
+                          });
+                        }}
+>>>>>>> origin/ActionPlanPage
                       >
                         {formatTagName(tag)}
                         <button
@@ -645,6 +779,31 @@ const Questions = () => {
                     )}
                   </div>
                 </div>
+<<<<<<< HEAD
+=======
+                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                  {allFilters.length > 0 ? (
+                    allFilters.map((tag) => (
+                      <label key={tag} className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="form-checkbox text-[#80C342] rounded"
+                          checked={newQuestion.tags.includes(tag)}
+                          onChange={() => toggleTagSelection(tag)}
+                        />
+                        <span className="text-sm text-gray-700">
+                          {formatTagName(tag)}
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 col-span-2">
+                      No categories available yet. Create your own tags above.
+                    </p>
+                  )}
+                </div>
+              </div>
+>>>>>>> origin/ActionPlanPage
 
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -684,6 +843,7 @@ const Questions = () => {
                   </div>
                 </div>
 
+<<<<<<< HEAD
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
@@ -712,9 +872,39 @@ const Questions = () => {
                 </div>
               </form>
             </div>
+=======
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  onClick={closeModal}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className={`px-4 py-2 bg-[#80C342] text-white rounded-md hover:bg-[#6ca438] ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                      {modalType === "create" ? "Creating..." : "Saving..."}
+                    </span>
+                  ) : modalType === "create" ? (
+                    "Create"
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
+              </div>
+            </form>
+>>>>>>> origin/ActionPlanPage
           </div>
         )}
 
+<<<<<<< HEAD
         {/* Modal: Delete Confirmation */}
         {modalType === "delete" && currentQuestion && (
           <div
@@ -756,6 +946,48 @@ const Questions = () => {
                     )}
                   </button>
                 </div>
+=======
+      {/* Modal: Delete Confirmation */}
+      {modalType === "delete" && currentQuestion && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={handleModalBackdropClick}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-4">Delete Question</h3>
+              <p className="mb-6">
+                Are you sure you want to delete this question? This action
+                cannot be undone.
+              </p>
+              <div className="border-t pt-4 flex justify-end gap-3">
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  onClick={closeModal}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
+                  onClick={handleDeleteQuestion}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                      Deleting...
+                    </span>
+                  ) : (
+                    "Delete"
+                  )}
+                </button>
+>>>>>>> origin/ActionPlanPage
               </div>
             </div>
           </div>

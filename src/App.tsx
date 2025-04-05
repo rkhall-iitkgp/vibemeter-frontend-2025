@@ -1,5 +1,4 @@
 import { DashboardPage, LoginPage, Graph, AdminDashboard } from "./pages";
-import UnderConstruction from "./pages/UnderConstruction";
 import { Navigate, Route, Routes } from "react-router";
 import FocusGroupPage from "./pages/FocusGroupPage";
 import AdminLayout from "./components/AdminLayout";
@@ -71,38 +70,6 @@ function App() {
           element={
             <AdminLayout>
               <ActionPlan />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/initiatives"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/surveys"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/help-center"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/hr-policies"
-          element={
-            <AdminLayout>
-              <UnderConstruction />
             </AdminLayout>
           }
         />

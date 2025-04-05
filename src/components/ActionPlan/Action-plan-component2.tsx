@@ -4,6 +4,8 @@ interface FocusGroups {
   name: string;
   focus_group_id: string;
 }
+import { useNavigate } from "react-router";
+
 interface HorizontalRecognitionCardProps {
   title: string;
   created_at: string;
@@ -41,8 +43,14 @@ export function HorizontalRecognitionCard(
     }
   };
 
+  const navigate = useNavigate();
+  const handleClick = () => { 
+    // Redirect to the action plan details page with action_id as a parameter
+    navigate(`/action-plan/${props.action_id}`);
+  }
+
   return (
-    <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4">
+    <div className="bg-white rounded-md border border-gray-200 p-6 shadow-sm w-full mb-4" onClick={handleClick}>
       <h3 className="font-semibold text-gray-900 text-lg mb-1">
         {props.title}
       </h3>
