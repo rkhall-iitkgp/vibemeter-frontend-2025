@@ -1,4 +1,5 @@
 import { useNavigate, useParams, Link } from "react-router";
+import { useState, useEffect } from "react";
 
 import {
   Select,
@@ -233,7 +234,6 @@ const ActionSteps = ({ steps }) => {
 
 // Main Component
 const ActionPlanDetails = () => {
-  const navigate = useNavigate();
   const { actionId } = useParams(); // Get id from URL params
   const [plan, setPlan] = useState({}); // State to hold the action plan data
 

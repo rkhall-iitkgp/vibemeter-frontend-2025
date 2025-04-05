@@ -1,133 +1,208 @@
 import { EmployeeDetailsSheet } from "@/components/Employees/employee-details-sheet";
 import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useState } from "react";
 
-// Mock data for High Concern Employees - using exact data from image
-const highConcernEmployees: Employee[] = [
-  {
-    id: "EMP34522",
-    name: "Arhan",
-    jobTitle: "Support Agent",
-    dateAdded: "02/15/2023",
-  },
-  {
-    id: "EMP34932",
-    name: "Meera",
-    jobTitle: "Sales Associate",
-    dateAdded: "03/10/2023",
-  },
-  {
-    id: "EMP34562",
-    name: "Rohan",
-    jobTitle: "Tech Support",
-    dateAdded: "04/05/2023",
-  },
-  {
-    id: "EMP34512",
-    name: "Sanya",
-    jobTitle: "HR Specialist",
-    dateAdded: "05/20/2023",
-  },
-  {
-    id: "EMP34582",
-    name: "Dev",
-    jobTitle: "Marketing Executive",
-    dateAdded: "06/18/2023",
-  },
-];
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-// Mock data for Mid Concern Employees
-const midConcernEmployees: Employee[] = [
-  {
-    id: "EMP34522",
-    name: "Arhan",
-    jobTitle: "Support Agent",
-    dateAdded: "02/15/2023",
-  },
-  {
-    id: "EMP34532",
-    name: "Meera",
-    jobTitle: "Operations Manager",
-    dateAdded: "07/12/2023",
-  },
-  {
-    id: "EMP34542",
-    name: "Kunal",
-    jobTitle: "Software Engineer",
-    dateAdded: "08/30/2023",
-  },
-  {
-    id: "EMP34552",
-    name: "Tina",
-    jobTitle: "Recruiter",
-    dateAdded: "09/25/2023",
-  },
-  {
-    id: "EMP34562",
-    name: "Rohan",
-    jobTitle: "Tech Support",
-    dateAdded: "04/05/2023",
-  },
-];
+// Updated Employee type to match backend format
+type BackendEmployee = {
+  employee_id: string;
+  email: string;
+  is_verified: boolean;
+  risk_score: number;
+  job_title: string;
+  date_added: string;
+};
 
-// Mock data for All Employees
-const allEmployees: Employee[] = [
-  {
-    id: "EMP34512",
-    name: "Sanya",
-    jobTitle: "HR Specialist",
-    dateAdded: "05/20/2023",
-  },
-  {
-    id: "EMP34522",
-    name: "Arhan",
-    jobTitle: "Support Agent",
-    dateAdded: "02/15/2023",
-  },
-  {
-    id: "EMP34532",
-    name: "Meera",
-    jobTitle: "Operations Manager",
-    dateAdded: "07/12/2023",
-  },
-  {
-    id: "EMP34542",
-    name: "Kunal",
-    jobTitle: "Software Engineer",
-    dateAdded: "08/30/2023",
-  },
-  {
-    id: "EMP34552",
-    name: "Tina",
-    jobTitle: "Recruiter",
-    dateAdded: "09/25/2023",
-  },
-];
+// New type for the detailed employee data from API
+type EmployeeDetail = {
+  name: string;
+  job_title: string;
+  email: string;
+  phone_number: string;
+  created_at: string | null;
+  employee_id: string;
+  awards: {
+    award_type: string;
+    award_date: string;
+    reward_points: number;
+  }[];
+  vibemeter: {
+    average_vibe_score: number;
+    score_change: {
+      percentage: number;
+      direction: string;
+    };
+    monthly_scores: {
+      month: string;
+      score: number;
+    }[];
+  };
+  chat_summary: string;
+  focus_groups: any[];
+  action_plans: any[];
+};
+
+// Function to convert backend employee format to frontend Employee format
+const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
+  return {
+    id: employee.employee_id,
+    name: employee.email.split('@')[0].replace('_', ' '), // Extracting name from email
+    jobTitle: employee.job_title,
+    dateAdded: formatDate(employee.date_added),
+    email: employee.email,
+    riskScore: employee.risk_score,
+    isVerified: employee.is_verified
+  };
+};
+
+// Function to format date from YYYY-MM-DD to MM/DD/YYYY
+const formatDate = (dateString: string): string => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+};
 
 export default function EmployeesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const { employee_id } = useParams<{ employee_id: string }>();
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null
-  );
+  const [highRiskEmployees, setHighRiskEmployees] = useState<Employee[]>([]);
+  const [mediumRiskEmployees, setMediumRiskEmployees] = useState<Employee[]>([]);
+  const [lowRiskEmployees, setLowRiskEmployees] = useState<Employee[]>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [selectedEmployeeDetails, setSelectedEmployeeDetails] = useState<EmployeeDetail | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
-  const handleViewDetails = (employee: Employee) => {
+  const handleViewDetails = async (employee: Employee) => {
     console.log(`View details for employee ${employee.id}`);
     setSelectedEmployee(employee);
     setSheetOpen(true);
+    
+    // Fetch detailed employee information
+    await fetchEmployeeDetails(employee.id);
+  };
+
+  const fetchEmployeeDetails = async (employeeId: string) => {
+    setIsLoadingDetails(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/employee/${employeeId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch employee details");
+      }
+      const data = await response.json();
+      setSelectedEmployeeDetails(data);
+    } catch (error) {
+      console.error("Error fetching employee details:", error);
+    } finally {
+      setIsLoadingDetails(false);
+    }
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/employee`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        
+        // Convert backend data to frontend format
+        setHighRiskEmployees(data.high_risk_employees.map(convertToFrontendFormat));
+        setMediumRiskEmployees(data.medium_risk_employees.map(convertToFrontendFormat));
+        setLowRiskEmployees(data.low_risk_employees.map(convertToFrontendFormat));
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchEmployeeData();
+  }, []);
+  
+  // If employee_id is provided in URL params, fetch details for that employee
+  useEffect(() => {
+    if (employee_id) {
+      // Find the employee in our lists
+      const employee = [...highRiskEmployees, ...mediumRiskEmployees, ...lowRiskEmployees]
+        .find(emp => emp.id === employee_id);
+      
+      if (employee) {
+        setSelectedEmployee(employee);
+        setSheetOpen(true);
+        fetchEmployeeDetails(employee_id);
+      }
+    }
+  }, [employee_id, highRiskEmployees, mediumRiskEmployees, lowRiskEmployees]);
+  
+  // Map detailed employee data to the format expected by EmployeeDetailsSheet
+  const mapEmployeeDetailsToSheetFormat = () => {
+    if (!selectedEmployee || !selectedEmployeeDetails) return null;
+    
+    // Ensure we're handling all focus groups and action plans correctly
+    const mappedFocusGroups = Array.isArray(selectedEmployeeDetails.focus_groups) 
+      ? selectedEmployeeDetails.focus_groups.map(fg => ({
+          title: fg.title || fg.name || "Unnamed Group",
+          date: fg.date || fg.created_at || formatDate(new Date().toISOString()),
+          description: fg.description || fg.summary || "No description available",
+          memberCount: fg.memberCount || fg.member_count || fg.members?.length || 0,
+        }))
+      : [];
+    
+    const mappedActionPlans = Array.isArray(selectedEmployeeDetails.action_plans)
+      ? selectedEmployeeDetails.action_plans.map(ap => ({
+          title: ap.title || ap.name || "Unnamed Plan",
+          date: ap.date || ap.created_at || formatDate(new Date().toISOString()),
+          description: ap.description || ap.summary || "No description available",
+          memberCount: ap.memberCount || ap.member_count || ap.members?.length || 0,
+        }))
+      : [];
+      
+    return {
+      ...selectedEmployee,
+      name: selectedEmployeeDetails.name || selectedEmployee.name,
+      jobTitle: selectedEmployeeDetails.job_title || selectedEmployee.jobTitle,
+      email: selectedEmployeeDetails.email || selectedEmployee.email,
+      phone: selectedEmployeeDetails.phone_number || selectedEmployee.phone || "+1 (555) 123-4567",
+      dateAdded: formatDate(selectedEmployeeDetails.created_at) || selectedEmployee.dateAdded,
+      employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
+      avatar: "/placeholder.svg?height=80&width=80",
+      recentAchievements: Array.isArray(selectedEmployeeDetails.awards) 
+        ? selectedEmployeeDetails.awards.map(award => ({
+            title: award.award_type,
+            date: formatDate(award.award_date),
+            points: award.reward_points
+          }))
+        : [],
+      chatInteractionSummary: selectedEmployeeDetails.chat_summary || "No chat interactions recorded.",
+      focusGroups: mappedFocusGroups,
+      actionPlans: mappedActionPlans,
+      vibeScore: selectedEmployeeDetails.vibemeter ? {
+        average: selectedEmployeeDetails.vibemeter.average_vibe_score,
+        change: {
+          percentage: selectedEmployeeDetails.vibemeter.score_change.percentage,
+          direction: selectedEmployeeDetails.vibemeter.score_change.direction
+        },
+        monthlyScores: selectedEmployeeDetails.vibemeter.monthly_scores
+      } : undefined
+    };
+  };
+  
   return (
     <div className="flex-1 overflow-auto">
       {/* Header - now in gray area */}
-      <header className=" bg-gray-100 z-10 p-6 pt-8">
+      <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
             <svg
@@ -156,66 +231,57 @@ export default function EmployeesPage() {
         <div className="mb-4">
           <SearchBar onSearch={handleSearch} />
         </div>
-        <div className="space-y-0">
-          <DataTable
-            title="High Concern Employees"
-            data={highConcernEmployees}
-            iconColor="#ff0000"
-            searchQuery={searchQuery}
-            handleViewDetails={handleViewDetails}
-          />
+        
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-gray-500">Loading employee data...</p>
+          </div>
+        ) : (
+          <div className="space-y-0">
+            <DataTable
+              title="High Risk Employees"
+              data={highRiskEmployees}
+              iconColor="#ff0000"
+              searchQuery={searchQuery}
+              handleViewDetails={handleViewDetails}
+            />
 
-          <DataTable
-            title="Mid Concern Employees"
-            data={midConcernEmployees}
-            iconColor="#ffa500"
-            searchQuery={searchQuery}
-            handleViewDetails={handleViewDetails}
-          />
+            <DataTable
+              title="Medium Risk Employees"
+              data={mediumRiskEmployees}
+              iconColor="#ffa500"
+              searchQuery={searchQuery}
+              handleViewDetails={handleViewDetails}
+            />
 
-          <DataTable
-            title="All Employees"
-            data={allEmployees}
-            iconColor="#00ff00"
-            searchQuery={searchQuery}
-            handleViewDetails={handleViewDetails}
-          />
-        </div>
+            <DataTable
+              title="Low Risk Employees"
+              data={lowRiskEmployees}
+              iconColor="#00ff00"
+              searchQuery={searchQuery}
+              handleViewDetails={handleViewDetails}
+            />
+          </div>
+        )}
+        
         {selectedEmployee && (
           <EmployeeDetailsSheet
-            employee={{
-              ...selectedEmployee,
-              email:
-                selectedEmployee.email ||
-                `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
-              phone: selectedEmployee.phone || "+1 (555) 123-4567",
-              employeeId: selectedEmployee.id,
-              avatar: "/placeholder.svg?height=80&width=80",
-              recentAchievements: [
-                { title: "Top Contributor", date: "March 2025" },
-                { title: "Innovation Award", date: "February 2025" },
-              ],
-              chatInteractionSummary:
-                "The employee inquires about requesting vacation time and provides preferred dates. The HR chatbot checks availability and confirms that the requested dates are available.",
-              focusGroups: [
-                {
-                  title: "Employee Engagement Task Force",
-                  date: "March 17, 2025",
-                  description:
-                    "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-                  memberCount: 12,
-                },
-              ],
-              actionPlans: [
-                {
-                  title: "Employee Engagement Task Force",
-                  date: "March 17, 2025",
-                  description:
-                    "A group dedicated to developing leadership skills and strategic decision-making among employees.",
-                  memberCount: 12,
-                },
-              ],
-            }}
+            employee={
+              selectedEmployeeDetails 
+                ? mapEmployeeDetailsToSheetFormat() 
+                : {
+                    ...selectedEmployee,
+                    email: selectedEmployee.email || `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
+                    phone: selectedEmployee.phone || "+1 (555) 123-4567",
+                    employeeId: selectedEmployee.id,
+                    avatar: "/placeholder.svg?height=80&width=80",
+                    recentAchievements: [],
+                    chatInteractionSummary: isLoadingDetails ? "Loading..." : "",
+                    focusGroups: [],
+                    actionPlans: []
+                  }
+            }
+            isLoading={isLoadingDetails}
             open={sheetOpen}
             onOpenChange={setSheetOpen}
           />
@@ -224,3 +290,5 @@ export default function EmployeesPage() {
     </div>
   );
 }
+
+

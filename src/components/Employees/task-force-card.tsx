@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"; // Using shadcn Button component
-import { Badge } from "@/components/ui/badge";
+import Badge from "@/components/ui/badge";
 import { Users } from "lucide-react";
 
 interface TaskForceCardProps {

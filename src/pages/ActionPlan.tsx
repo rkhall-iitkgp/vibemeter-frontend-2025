@@ -23,32 +23,10 @@ interface ActionPlan {
   metric: string[];
   steps: ActionStep[];
   is_completed: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   target_groups: any[];
   created_at: string;
 }
-
-// Map the backend response to the format expected by the UI
-const mapResponseToActionPlan = (item) => {
-  return {
-    actionId: item.action_id,
-    title: item.title || "Untitled Action Plan",
-    createdDate: new Date(item.created_at).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    description: item.purpose || "No description available",
-    targetGroup:
-      item.target_groups && item.target_groups.length > 0
-        ? item.target_groups[0].name
-        : "All Groups",
-    groupId:
-      item.target_groups && item.target_groups.length > 0
-        ? `#${item.target_groups[0].focus_group_id}`
-        : "#N/A",
-    tags: item.metric || [],
-  };
-};
 
 // // Sample data as fallback
 // const sampleActionPlans = [
@@ -106,35 +84,35 @@ export default function ActionPlan() {
 
   // Update displayed plans when search query changes
   useEffect(() => {
+    const filterAndSortPlans = () => {
+      let filtered = [...actionPlans];
+
+      // Apply search filter
+      if (searchQuery) {
+        filtered = filtered.filter(
+          (plan) =>
+            plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            plan.description.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+
+      // Apply sorting
+      if (sortBy === "Date") {
+        filtered.sort(
+          (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
+        );
+      } else if (sortBy === "Alphabetical") {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      }
+      // Priority sorting would need implementation based on your priority system
+
+      setDisplayPlans(filtered);
+    };
+
     if (actionPlans.length > 0) {
       filterAndSortPlans();
     }
   }, [searchQuery, sortBy, actionPlans]);
-
-  const filterAndSortPlans = () => {
-    let filtered = [...actionPlans];
-
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (plan) =>
-          plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          plan.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Apply sorting
-    if (sortBy === "Date") {
-      filtered.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
-    } else if (sortBy === "Alphabetical") {
-      filtered.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    // Priority sorting would need implementation based on your priority system
-
-    setDisplayPlans(filtered);
-  };
 
   const fetchActionPlans = async () => {
     try {
