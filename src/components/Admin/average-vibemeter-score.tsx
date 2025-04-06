@@ -8,9 +8,8 @@ import {
 	CartesianGrid,
 	TooltipProps,
 } from "recharts";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-// Define types for our data
 interface ScoreData {
 	month: string;
 	score: number;
@@ -22,18 +21,12 @@ export interface ChartData {
 	percentageChange: number;
 }
 
-// Define props for VibemeterChart
 interface VibemeterChartProps {
-	data: ChartData; // Optional data prop to fetch data from parent component
+	data?: ChartData; // Making data optional to handle loading state
 	className?: string;
 }
 
-// Custom tooltip component for better styling with proper typing
-const CustomTooltip = ({
-	active,
-	payload,
-	label,
-}: TooltipProps<number, string>) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
 	if (active && payload && payload.length) {
 		return (
 			<div className="bg-white p-2 border border-gray-200 shadow-sm rounded-md text-sm">
@@ -45,21 +38,42 @@ const CustomTooltip = ({
 	return null;
 };
 
-const VibemeterChart: React.FC<VibemeterChartProps> = ({
-	data,
-	className = "",
-}) => {
+const VibemeterChart: React.FC<VibemeterChartProps> = ({ data, className = "" }) => {
+	const [loading, setLoading] = useState(true);
 
-	// Calculate responsive bar width based on number of data points
+	useEffect(() => {
+	if (data) setLoading(false);
+	}, [data]);
+
 	const calculateBarSize = () => {
-		const dataLength = data.scores.length;
+		const dataLength = data?.scores.length || 0;
 		if (dataLength <= 0) return 40;
-		return Math.min(50, 280 / dataLength); // Ensure bars aren't too wide with few data points
+		return Math.min(50, 280 / dataLength);
 	};
 
-	return (
+	// Skeleton Component
+	const renderSkeleton = () => (
+		<div className={`px-4 pt-4 pb-9 w-full animate-pulse ${className}`}>
+			<div className="mb-2">
+				<div className="h-6 bg-gray-200 rounded w-3/5 mb-2"></div>
+				<div className="h-4 bg-gray-200 rounded w-1/3"></div>
+			</div>
+			<div className="flex items-baseline mb-6">
+				<div className="h-8 bg-gray-200 rounded w-20"></div>
+				<div className="ml-3 h-6 bg-gray-200 rounded w-24"></div>
+			</div>
+			<div className="mt-2 h-[180px] w-full flex justify-between items-end">
+				{[...Array(6)].map((_, i) => (
+					<div key={i} className="bg-gray-200 w-[12%] rounded-t h-[50%]"></div>
+				))}
+			</div>
+		</div>
+	);
+
+	return loading || !data ? (
+		renderSkeleton()
+	) : (
 		<div className={`px-4 pt-4 pb-9 w-full ${className}`}>
-			{/* Header section */}
 			<div className="mb-2">
 				<h2 className="text-lg sm:text-xl font-semibold text-gray-900">
 					Average Vibemeter Scores
@@ -67,7 +81,6 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
 				<p className="text-xs text-gray-500">Average Vibe Scores per month</p>
 			</div>
 
-			{/* Stats section */}
 			<div className="flex items-baseline mb-6">
 				<div className="text-3xl font-bold text-gray-800">{data.average}</div>
 				<div className="ml-3 flex items-center">
@@ -81,7 +94,6 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
 				</div>
 			</div>
 
-			{/* Chart section - removed border and adjusted container */}
 			<div className="mt-2 h-[180px] w-full flex justify-center">
 				<ResponsiveContainer width="100%" height="100%">
 					<BarChart
@@ -89,21 +101,14 @@ const VibemeterChart: React.FC<VibemeterChartProps> = ({
 						barSize={calculateBarSize()}
 						margin={{ top: 10, right: 30, left: 30, bottom: 5 }}
 					>
-						<CartesianGrid
-							strokeDasharray="3 3"
-							vertical={false}
-							stroke="#f0f0f0"
-						/>
+						<CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
 						<XAxis
 							dataKey="month"
 							tick={{ fontSize: 11, fill: "#6b7280" }}
 							axisLine={{ stroke: "#e5e7eb" }}
 							tickLine={false}
 						/>
-						<YAxis
-							hide={true}
-							domain={[0, (dataMax: number) => dataMax + 10]} // Add some padding to top with proper typing
-						/>
+						<YAxis hide domain={[0, (dataMax: number) => dataMax + 10]} />
 						<Tooltip
 							content={<CustomTooltip />}
 							cursor={{ fill: "rgba(243, 244, 246, 0.5)" }}
