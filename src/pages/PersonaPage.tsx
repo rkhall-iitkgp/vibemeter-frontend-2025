@@ -11,10 +11,10 @@ const ProfileSelectPage: React.FC = () => {
   const [hoveredProfile, setHoveredProfile] = useState<number | null>(null);
   const navigate = useNavigate();
   const profiles: Profile[] = [
-    { id: 1, name: "Adarsh", avatar: "/placeholder.svg?height=150&width=150" },
-    { id: 2, name: "Ankan", avatar: "/placeholder.svg?height=150&width=150" },
-    { id: 3, name: "Harsh", avatar: "/placeholder.svg?height=150&width=150" },
-    { id: 4, name: "Bansal", avatar: "/placeholder.svg?height=150&width=150" },
+    { id: 1, name: "Adarsh", avatar: "/icons/Employees.svg" },
+    { id: 2, name: "Ankan", avatar: "/icons/Employees.svg" },
+    { id: 3, name: "Harsh", avatar: "/icons/Employees.svg" },
+    { id: 4, name: "Bansal", avatar: "/icons/Employees.svg" },
   ];
 
   const handleProfileSelect = () => {
@@ -24,7 +24,7 @@ const ProfileSelectPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-gray-800 text-4xl font-bold mb-10">Select Profile</h1>
+      <h1 className="text-gray-800 text-4xl font-bold mb-10">Select Persona</h1>
 
       <div className="flex flex-wrap justify-center gap-6 md:gap-8">
         {profiles.map((profile) => (
@@ -47,7 +47,7 @@ const ProfileSelectPage: React.FC = () => {
                 alt={profile.name}
                 width={150}
                 height={150}
-                className="object-cover"
+                className="object-cover p-8"
               />
             </div>
             <span
