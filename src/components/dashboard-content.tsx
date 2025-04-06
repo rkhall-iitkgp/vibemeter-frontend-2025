@@ -23,25 +23,28 @@ export function DashboardContent() {
     <div className="h-full flex flex-col bg-gray-50">
       <Navbar name={name} />
 
-      <main className="flex-1 p-4 md:p-4 overflow-auto">
+      <main className="flex-1 p-4 md:p-4 overflow-hidden">
         {/* Main Grid - Fixed width columns on larger screens */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-4 h-full">
           {/* COLUMN 1: ProfileCard, ContactCard, AwardsCard */}
-          <div className="w-full space-y-4 md:space-y-2 order-1 md:order-1">
+          <div className="w-full flex flex-col space-y-4 md:space-y-4 order-1 md:order-1 h-full overflow-hidden">
             {/* Profile Card - Full width, content-based height */}
-            <div className="flex flex-row space-y-4 md:space-x-1">
+            <div className="flex flex-row md:space-x-1">
               <div className="w-full">
                 <ProfileCard userData={userProfileData} />
               </div>
 
               {/* Contact Card - Full width, content-based height */}
               {/* <div className="w-full">
-                <ContactCard />
-              </div> */}
+				<ContactCard />
+			  </div> */}
             </div>
 
-            {/* Awards Card - Full width, content-based height */}
-            <div className="w-full">
+            {/* Awards Card - Takes remaining height */}
+            <div
+              className="w-full rounded-xl shadow-md border"
+              style={{ height: "calc(100vh - 332px)" }}
+            >
               <UpcomingMeetings />
             </div>
           </div>

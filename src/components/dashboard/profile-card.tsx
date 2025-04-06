@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function ProfileCard({ userData }) {
   return (
-    <Card className="rounded-2xl shadow-sm w-full max-w-xl">
+    <Card className="rounded-2xl shadow-sm w-full">
       <CardContent className="py-4 px-6">
         <div className="flex flex-row items-start gap-8">
           {/* Left side - Profile info */}
