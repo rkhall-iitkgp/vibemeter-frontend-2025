@@ -16,7 +16,7 @@ const Navbar = ({ name }: NavbarProps) => {
           <TabsList className="bg-transparent p-0 h-auto">
             <TabsTrigger
               value="dashboard"
-              className="text-sm font-medium px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:text-[#80C342] data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-[#80C342] rounded-none"
+              className="text-sm font-medium px-4 py-2 data-[state=active]:bg-transparent data-[state=active]:text-[#80C342] data-[state=active]:shadow-none border-transparent data-[state=active]:border-[#80C342] rounded-none"
             >
               Dashboard
             </TabsTrigger>

@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useChat } from "@/hooks/useChat";
+import Vibemeter from "@/components/Vibemeter";
 
 /**
  * Defines the structure of a chat message
@@ -61,6 +62,13 @@ export default function ChatPage() {
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
   const [showSuggestions, setShowSuggestions] = useState(false); // Suggested replies visibility
+  const [showVibemeter, setShowVibemeter] = useState(true);
+  const handleMoodSelect = (mood) => {
+    // Send the selected mood as a user message
+    sendUserMessage(`I'm feeling ${mood} today`);
+    // Hide the vibemeter after selection
+    setShowVibemeter(false);
+  };
 
   // Common emoji options for the emoji picker
   const emojis = useMemo(() => ["😊", "👍", "🎉", "❤️", "🙏", "👋"], []);
@@ -85,7 +93,7 @@ export default function ChatPage() {
   }, [messages, isTyping]);
 
 
-  
+
   /**
    * Form submission handler for sending messages
    * @param {React.FormEvent} e - Form event
@@ -175,8 +183,7 @@ export default function ChatPage() {
 
       <div
         className="flex-1 space-y-3 overflow-y-auto p-3 will-change-scroll"
-        style={{ scrollBehavior: "smooth", overscrollBehavior: "contain" }}
-      >
+        style={{ scrollBehavior: "smooth", overscrollBehavior: "contain" }}>
         {messages.map((message: any) => {
           // Apply animation to all messages
           return (
@@ -250,6 +257,13 @@ export default function ChatPage() {
         {/* Anchor element for auto-scrolling */}
         <div ref={messagesEndRef} />
       </div>
+
+      {showVibemeter && (
+        <div className="w-full p-2 flex justify-center items-center">
+          <Vibemeter onMoodSelect={handleMoodSelect} />
+        </div>
+
+      )}
 
       {/* Suggested Replies - Quick response options */}
       {/* Suggested Replies - Quick response options */}

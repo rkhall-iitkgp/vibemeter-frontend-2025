@@ -10,6 +10,15 @@ import { FloatingChat } from "./floating-chat";
 export function DashboardContent() {
   // const [name, setName] = useState("Tridibesh");
   const name = "Tridibesh";
+  const userProfileData = {
+    name: "Ankan",
+    jobTitle: "Job Title",
+    avatarUrl: "", // Optional: URL for profile image
+    email: "dummy@example.com",
+    phone: "+1 (123) 456-7890",
+    addedDate: "01-03-2025",
+    id: "EM000000"
+  };
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
@@ -23,13 +32,13 @@ export function DashboardContent() {
             {/* Profile Card - Full width, content-based height */}
             <div className="flex flex-row space-y-4 md:space-x-1">
               <div className="w-full">
-                <ProfileCard />
+                <ProfileCard userData={userProfileData}/>
               </div>
 
               {/* Contact Card - Full width, content-based height */}
-              <div className="w-full">
+              {/* <div className="w-full">
                 <ContactCard />
-              </div>
+              </div> */}
             </div>
 
             {/* Awards Card - Full width, content-based height */}
