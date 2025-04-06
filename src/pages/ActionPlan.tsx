@@ -84,7 +84,7 @@ export default function ActionPlanComponent() {
         // const formattedActionPlans = responseData.map(mapResponseToActionPlan);
         setActionPlans(responseData.data);
         setDisplayPlans(responseData.data);
-        setError(null);
+        setError(undefined);
       } else if (
         responseData &&
         responseData.status === "success" &&
@@ -94,7 +94,7 @@ export default function ActionPlanComponent() {
         // const formattedActionPlans = responseData.data.map(mapResponseToActionPlan);
         setActionPlans(responseData.data);
         setDisplayPlans(responseData.data);
-        setError(null);
+        setError(undefined);
       } else {
         throw new Error("Invalid response format");
       }
@@ -135,7 +135,7 @@ export default function ActionPlanComponent() {
   // Closes the delete confirmation modal
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setPlanToDelete(null);
+    setPlanToDelete(undefined);
   };
 
   // Handles the actual deletion after confirmation
@@ -146,7 +146,7 @@ export default function ActionPlanComponent() {
 
     try {
       setIsDeleting(true);
-      setDeleteError(null);
+      setDeleteError(undefined);
 
       const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`, {
         method: "DELETE",

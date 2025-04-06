@@ -39,8 +39,8 @@ const FocusGroupPage: FC = () => {
     fetch(`${BACKEND_URL}/api/groups`)
       .then((res) => res.json())
       .then((data) => {
-        setFocusGroups(data.data);
-        setFilteredGroups(data.data);
+        setFocusGroups(data.data || []);
+        setFilteredGroups(data.data || []);
       });
   }, []);
 

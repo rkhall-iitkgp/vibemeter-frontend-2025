@@ -81,6 +81,14 @@ function App() {
             </AdminLayout>
           }
         />
+		<Route
+          path="/surveys/:survey_id"
+          element={
+            <AdminLayout>
+              <SurveysPage />
+            </AdminLayout>
+          }
+        />
       </Routes>
     </>
   );
