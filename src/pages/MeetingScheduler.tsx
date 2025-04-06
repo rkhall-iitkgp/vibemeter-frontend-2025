@@ -41,7 +41,7 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
         meeting_type: meetLocationType.split(" ")[0].toLowerCase(),
         members: [participantId],
         // TODO: Remove the hardcoded created_by_id
-        created_by_id: "100",
+        created_by_id: "EMP0015",
       }),
     })
       .then((res) => res.json())
@@ -50,25 +50,6 @@ const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({
         onClose?.();
       })
       .catch(() => setError("Some Error Occurred"));
-
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/schedule`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: agenda,
-        date: date,
-        time: `${(parseInt(timeHour) + (timeAmPm === "PM" ? 12 : 0)) % 24}:${timeMinute}`,
-        duration: duration.toString(),
-        meeting_type: meetLocationType.split(" ")[0].toLowerCase(),
-        members: [participantId],
-        // TODO: Remove the hardcoded created_by_id
-        created_by_id: "100",
-      }),
-    })
-      .then((res) => res.json())
-      .then(console.log);
   };
 
   return (

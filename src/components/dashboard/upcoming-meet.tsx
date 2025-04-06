@@ -36,7 +36,7 @@ export default function UpcomingMeetings() {
   useEffect(() => {
     fetchMeetings();
 
-    const socket = new WebSocket(`ws://localhost:8000/api/ws/EMP0014`);
+    const socket = new WebSocket(``);
     socket.onopen = () => {
       console.log("WebSocket connection established");
     };
