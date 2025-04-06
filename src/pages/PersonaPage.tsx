@@ -1,25 +1,27 @@
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setPersona } from "@/store";
 import { useNavigate } from "react-router";
 import React, { useState } from "react";
 
 interface Profile {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
 }
 
 const ProfileSelectPage: React.FC = () => {
-  const [hoveredProfile, setHoveredProfile] = useState<number | null>(null);
+  const [hoveredProfile, setHoveredProfile] = useState<string | null>(null);
   const navigate = useNavigate();
-  const profiles: Profile[] = [
-    { id: 1, name: "Adarsh", avatar: "/icons/Employees.svg" },
-    { id: 2, name: "Ankan", avatar: "/icons/Employees.svg" },
-    { id: 3, name: "Harsh", avatar: "/icons/Employees.svg" },
-    { id: 4, name: "Bansal", avatar: "/icons/Employees.svg" },
-  ];
+  const dispatch = useDispatch();
+  const profiles = useSelector(
+    (state: RootState) => state.persona.available_personas
+  ) as Profile[];
 
-  const handleProfileSelect = () => {
+  const handleProfileSelect = (id: string) => {
     // Navigate to the dashboard with the selected profile ID
-    navigate(`/dashboard/`);
+    console.log("Selected Profile ID:", id);
+    dispatch(setPersona(id));
+    navigate(`/dashboard`);
   };
 
   return (
@@ -33,7 +35,7 @@ const ProfileSelectPage: React.FC = () => {
             className="flex flex-col items-center cursor-pointer group"
             onMouseEnter={() => setHoveredProfile(profile.id)}
             onMouseLeave={() => setHoveredProfile(null)}
-            onClick={() => handleProfileSelect()} // Navigate to dashboard on click
+            onClick={() => handleProfileSelect(profile.id)} // Navigate to dashboard on click
           >
             <div
               className={`relative mb-2 overflow-hidden rounded-md border-2 ${
