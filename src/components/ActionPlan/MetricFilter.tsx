@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { FilterIcon } from "lucide-react";
+import { TagIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,29 +8,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type FilterOption = {
+type MetricOption = {
   label: string;
   value: string;
   checked: boolean;
 };
 
-interface ActionFilterProps {
+interface MetricFilterProps {
+  metrics: string[];
   onFilterChange: (filters: string[]) => void;
 }
 
-export function ActionFilter({ onFilterChange }: ActionFilterProps) {
-  const [filterOptions, setFilterOptions] = useState<FilterOption[]>([
-    { label: "Completed", value: "completed", checked: false },
-    { label: "In Progress", value: "in_progress", checked: false },
-    { label: "Not Started", value: "not_started", checked: false },
-  ]);
+export function MetricFilter({ metrics, onFilterChange }: MetricFilterProps) {
+  const [metricOptions, setMetricOptions] = useState<MetricOption[]>([]);
+
+  // Initialize metric options when metrics prop changes
+  useEffect(() => {
+    const options = metrics.map(metric => ({
+      label: metric,
+      value: metric,
+      checked: false
+    }));
+    setMetricOptions(options);
+  }, [metrics]);
 
   const handleCheckedChange = (value: string, checked: boolean) => {
-    const updatedOptions = filterOptions.map((option) =>
+    const updatedOptions = metricOptions.map((option) =>
       option.value === value ? { ...option, checked } : option
     );
     
-    setFilterOptions(updatedOptions);
+    setMetricOptions(updatedOptions);
     
     // Pass active filters to parent component
     const activeFilters = updatedOptions
@@ -40,16 +47,24 @@ export function ActionFilter({ onFilterChange }: ActionFilterProps) {
     onFilterChange(activeFilters);
   };
 
+  // Count checked options
+  const checkedCount = metricOptions.filter(option => option.checked).length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
-          <FilterIcon className="h-4 w-4" />
-          Filter
+        <Button 
+          variant="outline" 
+          className={`flex items-center gap-2 ${
+            checkedCount > 0 ? 'bg-[#eef7e2] border-[#86BC25] text-[#86BC25]' : ''
+          }`}
+        >
+          <TagIcon className="h-4 w-4" />
+          Metrics {checkedCount > 0 && `(${checkedCount})`}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        {filterOptions.map((option) => (
+        {metricOptions.map((option) => (
           <DropdownMenuCheckboxItem
             key={option.value}
             checked={option.checked}
