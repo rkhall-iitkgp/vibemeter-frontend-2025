@@ -2,20 +2,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"; // Using shadcn Button component
 import Badge from "@/components/ui/badge";
 import { Users } from "lucide-react";
-
+import { useNavigate} from "react-router";
 interface TaskForceCardProps {
   title: string;
   date: string;
   description: string;
-  memberCount: number;
+  members: number;
+  focus_group_id: string;
 }
+
 
 export function TaskForceCard({
   title,
   date,
   description,
-  memberCount,
+  members,
+  focus_group_id
 }: TaskForceCardProps) {
+  const navigate = useNavigate();
+  const handleViewDetails = () => {
+    navigate(`/focus-groups/${focus_group_id}`); 
+  };
+  
   return (
     <Card className="mb-4 border-2 shadow-none hover:bg-gray-50 transition-colors py-2">
       <CardContent className="p-4">
@@ -42,14 +50,14 @@ export function TaskForceCard({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1 text-sm text-[#7CC243]-600">
             <Users size={16} />
-            <span>{memberCount} Members</span>
+            <span>{members} Members</span>
           </div>
 
           <Button
             variant="outline"
             size="sm"
             className="text-sm font-medium"
-            onClick={() => console.log("View details clicked")}
+            onClick={handleViewDetails}
           >
             View Details
           </Button>

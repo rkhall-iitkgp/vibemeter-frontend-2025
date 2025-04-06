@@ -29,3 +29,33 @@ export interface ActionPlan {
   target_groups: FocusGroup[];
   created_at: string;
 }
+
+export type EmployeeDetail = {
+  name: string;
+  job_title: string;
+  email: string;
+  phone_number: string;
+  created_at: string | null;
+  employee_id: string;
+  awards: {
+    award_type: string;
+    award_date: string;
+    reward_points: number;
+  }[];
+  vibemeter: {
+    average_vibe_score: number;
+    score_change: {
+      percentage: number;
+      direction: string;
+    };
+    monthly_scores: {
+      month: string;
+      score: number;
+    }[];
+  };
+  chat_summary: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  focus_groups: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action_plans: any[];
+};

@@ -44,13 +44,13 @@ export type Employee = {
     title: string;
     date: string;
     description: string;
-    memberCount: number;
+    members: number;
   }[];
   actionPlans?: {
     title: string;
     date: string;
     description: string;
-    memberCount: number;
+    members: number;
   }[];
 };
 

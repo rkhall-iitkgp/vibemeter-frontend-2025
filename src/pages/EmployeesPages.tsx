@@ -3,6 +3,7 @@ import { DataTable, type Employee } from "@/components/Employees/DataTable";
 import SearchBar from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import { EmployeeDetail } from "@/types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -14,37 +15,6 @@ type BackendEmployee = {
   risk_score: number;
   job_title: string;
   date_added: string;
-};
-
-// New type for the detailed employee data from API
-type EmployeeDetail = {
-  name: string;
-  job_title: string;
-  email: string;
-  phone_number: string;
-  created_at: string | null;
-  employee_id: string;
-  awards: {
-    award_type: string;
-    award_date: string;
-    reward_points: number;
-  }[];
-  vibemeter: {
-    average_vibe_score: number;
-    score_change: {
-      percentage: number;
-      direction: string;
-    };
-    monthly_scores: {
-      month: string;
-      score: number;
-    }[];
-  };
-  chat_summary: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  focus_groups: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  action_plans: any[];
 };
 
 // Function to convert backend employee format to frontend Employee format
@@ -62,9 +32,22 @@ const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
 // Function to format date from YYYY-MM-DD to MM/DD/YYYY
 const formatDate = (dateString: string): string => {
   if (!dateString) return "";
+
   const date = new Date(dateString);
-  return `${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getDate().toString().padStart(2, "0")}/${date.getFullYear()}`;
+
+  if (isNaN(date.getTime())) {
+    console.warn("Invalid date passed to formatDate:", dateString);
+    return "Invalid Date";
+  }
+
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 };
+
+
 
 export default function EmployeesPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -92,14 +75,15 @@ export default function EmployeesPage() {
     await fetchEmployeeDetails(employee.id);
   };
 
-  const fetchEmployeeDetails = async (employeeId: string) => {
+  const fetchEmployeeDetails = async (employee_id: string) => {
     setIsLoadingDetails(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/employee/${employeeId}`);
+      const response = await fetch(`${BACKEND_URL}/api/employee/${employee_id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch employee details");
       }
       const data = await response.json();
+      
       setSelectedEmployeeDetails(data);
     } catch (error) {
       console.error("Error fetching employee details:", error);
@@ -169,13 +153,14 @@ export default function EmployeesPage() {
       selectedEmployeeDetails.focus_groups
     )
       ? selectedEmployeeDetails.focus_groups.map((fg) => ({
+        focusGroupId: fg.focus_group_id || fg.id,
           title: fg.title || fg.name || "Unnamed Group",
           date:
             fg.date || fg.created_at || formatDate(new Date().toISOString()),
           description:
             fg.description || fg.summary || "No description available",
-          memberCount:
-            fg.memberCount || fg.member_count || fg.members?.length || 0,
+          members:
+            fg.members || fg.member_count || fg.members?.length || 0,
         }))
       : [];
 
@@ -188,8 +173,8 @@ export default function EmployeesPage() {
             ap.date || ap.created_at || formatDate(new Date().toISOString()),
           description:
             ap.description || ap.summary || "No description available",
-          memberCount:
-            ap.memberCount || ap.member_count || ap.members?.length || 0,
+          members:
+            ap.members || ap.member_count || ap.members?.length || 0,
         }))
       : [];
 
@@ -205,7 +190,7 @@ export default function EmployeesPage() {
       dateAdded:
         formatDate(selectedEmployeeDetails.created_at!) ||
         selectedEmployee.dateAdded,
-      employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
+        employee_id: selectedEmployeeDetails.employee_id || selectedEmployee.id,
       avatar: "/placeholder.svg?height=80&width=80",
       recentAchievements: Array.isArray(selectedEmployeeDetails.awards)
         ? selectedEmployeeDetails.awards.map((award) => ({
@@ -307,45 +292,9 @@ export default function EmployeesPage() {
           </div>
         )}
 
-        {selectedEmployee && (
+        {selectedEmployee && selectedEmployeeDetails && (
           <EmployeeDetailsSheet
-            employee={
-              selectedEmployeeDetails
-                ? mapEmployeeDetailsToSheetFormat()
-                : selectedEmployee
-                  ? {
-                      ...selectedEmployee,
-                      email:
-                        selectedEmployee.email ||
-                        `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
-                      phone: selectedEmployee.phone || "+1 (555) 123-4567",
-                      employeeId: selectedEmployee.id,
-                      avatar: "/placeholder.svg?height=80&width=80",
-                      recentAchievements: [],
-                      chatInteractionSummary: isLoadingDetails
-                        ? "Loading..."
-                        : "",
-                      focusGroups: [],
-                      actionPlans: [],
-                    }
-                  : {
-                      id: "unknown",
-                      name: "Unknown",
-                      jobTitle: "N/A",
-                      email: "unknown@deloitte.com",
-                      phone: "+1 (555) 123-4567",
-                      dateAdded: new Date().toISOString(),
-                      employeeId: "unknown",
-                      avatar: "/placeholder.svg?height=80&width=80",
-                      recentAchievements: [],
-                      chatInteractionSummary: isLoadingDetails
-                        ? "Loading..."
-                        : "",
-                      focusGroups: [],
-                      actionPlans: [],
-                    }
-            }
-            isLoading={isLoadingDetails}
+            employee={selectedEmployeeDetails}
             open={sheetOpen}
             onOpenChange={setSheetOpen}
           />

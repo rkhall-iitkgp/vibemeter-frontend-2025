@@ -1,18 +1,25 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"; // Using shadcn Button component
 import Badge from "@/components/ui/badge";
+import { useNavigate} from "react-router";
 
 interface TaskForceCardProps {
   title: string;
   date: string;
   description: string;
+  action_id: string;
 }
 
 export function ActionPlanCard({
   title,
   date,
   description,
+  action_id
 }: TaskForceCardProps) {
+  const navigate = useNavigate();
+  const handleViewDetails = () => {
+    navigate(`/action-group/${action_id}`); 
+  };
   return (
     <Card className="mb-4 border-2 shadow-none hover:bg-gray-50 transition-colors py-2">
       <CardContent className="p-4">
@@ -41,7 +48,7 @@ export function ActionPlanCard({
             variant="outline"
             size="sm"
             className="text-sm font-medium"
-            onClick={() => console.log("View details clicked")}
+            onClick={handleViewDetails}
           >
             View Details
           </Button>
