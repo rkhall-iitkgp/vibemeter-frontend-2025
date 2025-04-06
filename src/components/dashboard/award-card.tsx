@@ -124,7 +124,7 @@ const AwardsCard: React.FC<AwardsCardProps> = ({
           {awards.slice(0, 6).map((award) => (
             <div
               key={award.id}
-              className="flex flex-col items-center text-cente"
+              className="flex flex-col items-center text-center"
             >
               {renderIcon(award.icon)}
               <h4

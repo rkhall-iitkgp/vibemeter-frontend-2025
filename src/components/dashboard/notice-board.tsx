@@ -31,7 +31,7 @@ const notices = [
 
 export default function NoticeBoard() {
   return (
-    <Card className="w-full max-w-md rounded-xl border p-4 shadow-sm">
+    <Card className="w-full rounded-xl border p-4 shadow-sm">
       <CardContent className="space-y-4">
         <div className="flex items-center gap-2 text-lg font-semibold text-gray-800">
           <Bell className="h-5 w-5 text-lime-600" />
