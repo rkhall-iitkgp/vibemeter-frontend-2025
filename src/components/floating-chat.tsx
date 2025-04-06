@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ChatPage from "./Chat"; // Import your existing chat component
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, X } from "lucide-react";
+import { useState } from "react";
+import ChatPage from "./Chat"; // Import your existing chat component
 
 export function FloatingChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +49,7 @@ export function FloatingChat() {
               >
                 <X className="h-4 w-4" />
               </Button>
-              
+
               {/* Chat component */}
               <ChatPage />
             </div>

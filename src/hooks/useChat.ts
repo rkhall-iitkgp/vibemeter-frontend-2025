@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 
 import {
   connectWebSocket,
   disconnectWebSocket,
   sendMessage,
   stopBotResponse,
-} from "@/store/actions/webSocketActions"
+} from "@/store/actions/webSocketActions";
 
 import { RootState } from "@/store/store";
 
@@ -16,11 +16,11 @@ export const useChat = () => {
 
   const messages = useSelector((state: RootState) => state.chat.messages);
   const connectionStatus = useSelector(
-    (state: RootState) => state.chat.connectionStatus,
+    (state: RootState) => state.chat.connectionStatus
   );
   const isTyping = useSelector((state: RootState) => state.chat.isBotTyping);
   const isThinking = useSelector(
-    (state: RootState) => state.chat.isBotThinking,
+    (state: RootState) => state.chat.isBotThinking
   );
   const error = useSelector((state: RootState) => state.chat.error);
 

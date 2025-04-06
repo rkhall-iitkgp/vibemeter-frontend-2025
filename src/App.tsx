@@ -9,7 +9,6 @@ import { Route, Routes } from "react-router";
 import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 
-
 function App() {
   return (
     <>
@@ -75,6 +74,14 @@ function App() {
         />
         <Route
           path="/surveys"
+          element={
+            <AdminLayout>
+              <SurveysPage />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/surveys/:survey_id"
           element={
             <AdminLayout>
               <SurveysPage />

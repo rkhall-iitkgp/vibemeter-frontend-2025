@@ -1,5 +1,3 @@
-import { Middleware } from "redux";
-import { RootState } from "../index";
 import {
   addBotMessage,
   addUserMessage,
@@ -10,6 +8,8 @@ import {
   setError,
   stopBotResponse,
 } from "../slices/chatSlice";
+import { RootState } from "../index";
+import { Middleware } from "redux";
 
 // Define WebSocket message types
 interface Action {
@@ -129,7 +129,7 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
               type: "user_message",
               content: actionObj.payload,
               context: store.getState().chat.messages || [],
-            }),
+            })
           );
         } else {
           dispatch(setError("WebSocket is not connected"));
@@ -141,7 +141,7 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
           socket.send(
             JSON.stringify({
               type: "stop",
-            }),
+            })
           );
 
           dispatch(stopBotResponse());

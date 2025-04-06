@@ -1,46 +1,62 @@
+import CreateSurveyModal from "@/components/Surveys/create-survey-modal";
 import { Search, ChevronRight, ChevronDown, Plus } from "lucide-react";
-import React, { useState } from "react";
+import SurveyDetails from "@/components/Surveys/survey-details";
+import { useNavigate, useParams } from "react-router";
+import React, { useEffect, useState } from "react";
+import { FocusGroup } from "@/types";
+
+interface QuestionData {
+  id: string;
+  text: string;
+}
 
 interface Survey {
-  id: number;
+  survey_id: string;
   title: string;
-  createdDate: string;
   description: string;
-  status: "Active" | "Inactive";
+  target_groups: FocusGroup[];
+  ends_at: string;
+  questions: QuestionData[];
+  is_active: boolean;
+  created_at: string;
 }
 
 const SurveysPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("Date");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [surveys, setSurveys] = useState<Survey[]>([]);
+  const { survey_id } = useParams<{ survey_id: string | undefined }>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // Sample data
-  const surveys: Survey[] = [
-    {
-      id: 1,
-      title: "Employee Engagement Survey 2025",
-      createdDate: "Mar 15, 2025",
-      description:
-        "Annual survey to measure employee satisfaction and engagement across all departments.",
-      status: "Active",
-    },
-    {
-      id: 2,
-      title: "Customer Feedback Survey",
-      createdDate: "Feb 10, 2025",
-      description:
-        "Survey to gather customer feedback on recent product launches.",
-      status: "Active",
-    },
-    {
-      id: 3,
-      title: "Exit Interview Survey",
-      createdDate: "Jan 5, 2025",
-      description:
-        "Survey for employees leaving the organization to understand their reasons and feedback.",
-      status: "Inactive",
-    },
-  ];
+  // const surveys: Survey[] = [
+  // 	{
+  // 		id: 1,
+  // 		title: "Employee Engagement Survey 2025",
+  // 		createdDate: "Mar 15, 2025",
+  // 		description:
+  // 			"Annual survey to measure employee satisfaction and engagement across all departments.",
+  // 		status: "Active",
+  // 	},
+  // 	{
+  // 		id: 2,
+  // 		title: "Customer Feedback Survey",
+  // 		createdDate: "Feb 10, 2025",
+  // 		description:
+  // 			"Survey to gather customer feedback on recent product launches.",
+  // 		status: "Active",
+  // 	},
+  // 	{
+  // 		id: 3,
+  // 		title: "Exit Interview Survey",
+  // 		createdDate: "Jan 5, 2025",
+  // 		description:
+  // 			"Survey for employees leaving the organization to understand their reasons and feedback.",
+  // 		status: "Inactive",
+  // 	},
+  // ];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -54,6 +70,11 @@ const SurveysPage: React.FC = () => {
     setShowDropdown(!showDropdown);
   };
 
+  const onSuccess = (surveyData: Survey) => {
+    // Create a new survey with the form data
+    setSurveys([surveyData, ...surveys]);
+  };
+
   // Filter surveys based on search term
   const filteredSurveys = surveys.filter(
     (survey) =>
@@ -61,13 +82,47 @@ const SurveysPage: React.FC = () => {
       survey.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    // Fetch surveys from the API (replace with your actual API endpoint)
+    const fetchSurveys = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/survey`
+        );
+        const data = await response.json();
+        if (data.status === "success") {
+          setSurveys(data.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching surveys:", error);
+      }
+    };
+
+    fetchSurveys();
+  }, []);
+
+  if (survey_id) {
+    return <SurveyDetails survey_id={survey_id} />;
+  }
   return (
     <div className="flex-1 overflow-auto">
       {/* Header - consistent padding with main content */}
       <header className="bg-gray-100 z-10 p-6 pt-8">
         <div className="flex items-center gap-3">
           <span className="text-[#80C342]">
-            <img src="/icons/Survey.svg" className="h-[40px] w-[40px]" />
+            <svg
+              className="text-[#80C342]"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+            >
+              <path
+                d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
+                fill="currentColor"
+              />
+            </svg>
           </span>
           <h1 className="text-4xl font-semibold text-gray-800">Surveys</h1>
         </div>
@@ -158,7 +213,10 @@ const SurveysPage: React.FC = () => {
             </div>
           </div>
 
-          <button className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md">
+          <button
+            className="flex items-center bg-[#80C342] hover:bg-[#80c342dd] text-white px-4 py-2 rounded-md"
+            onClick={() => setIsModalOpen(true)}
+          >
             <Plus className="w-5 h-5 mr-2" />
             Create Survey
           </button>
@@ -167,7 +225,7 @@ const SurveysPage: React.FC = () => {
         <div className="space-y-4">
           {filteredSurveys.map((survey) => (
             <div
-              key={survey.id}
+              key={survey.survey_id}
               className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
             >
               <div className="flex justify-between items-start">
@@ -178,12 +236,12 @@ const SurveysPage: React.FC = () => {
                     </h2>
                     <span
                       className={`px-2 py-0.5 text-xs rounded-full ${
-                        survey.status === "Active"
+                        survey.is_active
                           ? "bg-[#80C342] text-white"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >
-                      {survey.status}
+                      {survey.is_active ? "Active" : "Inactive"}
                     </span>
                   </div>
                   <div className="text-sm text-gray-500 mb-2 flex items-center">
@@ -222,12 +280,22 @@ const SurveysPage: React.FC = () => {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    <span>Created: {survey.createdDate}</span>
+                    <span>
+                      Created:{" "}
+                      {new Date(survey.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "2-digit",
+                      })}
+                    </span>
                   </div>
                   <p className="text-gray-700">{survey.description}</p>
                 </div>
-                <div className="flex justify-end items-end mt-16">
-                  <button className="text-gray-600 hover:text-gray-800 flex items-center text-sm border border-gray-600 px-3 py-1 rounded-md">
+                <div className="flex justify-end items-end mt-16 min-w-fit">
+                  <button
+                    className="text-gray-600 hover:text-gray-800 flex items-center text-sm border border-gray-600 px-3 py-1 rounded-md"
+                    onClick={() => navigate(`/surveys/${survey.survey_id}`)}
+                  >
                     View Details
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </button>
@@ -240,6 +308,11 @@ const SurveysPage: React.FC = () => {
           )}
         </div>
       </main>
+      <CreateSurveyModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={onSuccess}
+      />
     </div>
   );
 };

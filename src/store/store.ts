@@ -1,7 +1,7 @@
-import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
-import chatReducer from "./slices/chatSlice";
 import { websocketMiddleware } from "./middlewares/webSocketMiddleware";
+import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import chatReducer from "./slices/chatSlice";
+import authReducer from "./authSlice";
 
 export const store: EnhancedStore = configureStore({
   reducer: {

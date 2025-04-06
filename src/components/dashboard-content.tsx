@@ -2,10 +2,9 @@ import UpcomingMeetings from "./dashboard/upcoming-meet";
 import NoticeBoard from "./dashboard/notice-board";
 import ProfileCard from "./dashboard/profile-card";
 import AwardsCard from "./dashboard/award-card";
-import ClockInOut from "./dashboard/clock-in";
-import ContactCard from "./dashboard/contact";
-import Navbar from "./Navbar";
 import { FloatingChat } from "./floating-chat";
+import ClockInOut from "./dashboard/clock-in";
+import Navbar from "./Navbar";
 
 export function DashboardContent() {
   // const [name, setName] = useState("Tridibesh");
@@ -17,7 +16,7 @@ export function DashboardContent() {
     email: "dummy@example.com",
     phone: "+1 (123) 456-7890",
     addedDate: "01-03-2025",
-    id: "EM000000"
+    id: "EM000000",
   };
 
   return (
@@ -32,7 +31,7 @@ export function DashboardContent() {
             {/* Profile Card - Full width, content-based height */}
             <div className="flex flex-row space-y-4 md:space-x-1">
               <div className="w-full">
-                <ProfileCard userData={userProfileData}/>
+                <ProfileCard userData={userProfileData} />
               </div>
 
               {/* Contact Card - Full width, content-based height */}
@@ -87,9 +86,9 @@ export function DashboardContent() {
           </button>
         </div>
       </main>
-        
-        {/* Floating chat button */}
-        <FloatingChat />
+
+      {/* Floating chat button */}
+      <FloatingChat />
     </div>
   );
 }

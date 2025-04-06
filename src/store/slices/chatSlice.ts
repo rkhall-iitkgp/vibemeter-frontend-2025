@@ -67,7 +67,7 @@ const chatSlice = createSlice({
 
     updateBotMessage: (state, action: PayloadAction<string>) => {
       const message = state.messages.find(
-        (msg) => msg.id === state.lastbotMessageId,
+        (msg) => msg.id === state.lastbotMessageId
       );
       if (message) {
         message.content += action.payload;

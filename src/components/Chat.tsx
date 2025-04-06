@@ -4,15 +4,14 @@ import React, {
   useRef,
   useCallback,
   useMemo,
-  use,
 } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
-import { useChat } from "@/hooks/useChat";
 import Vibemeter from "@/components/Vibemeter";
+import { useChat } from "@/hooks/useChat";
+import { cn } from "@/lib/utils";
 
 /**
  * Defines the structure of a chat message
@@ -54,10 +53,8 @@ export default function ChatPage() {
       "What's the timeline?",
       "Do you have any examples?",
     ],
-    [],
+    []
   );
-
-
 
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
@@ -77,7 +74,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null); // Reference for auto-scrolling
   const inputRef = useRef<HTMLTextAreaElement>(null); // Reference for the textarea
 
-
   useEffect(() => {
     // Optimized smooth scrolling using native browser animation
     const scrollToBottom = () => {
@@ -91,8 +87,6 @@ export default function ChatPage() {
     // Use RAF for next frame rendering to ensure smooth animation
     requestAnimationFrame(scrollToBottom);
   }, [messages, isTyping]);
-
-
 
   /**
    * Form submission handler for sending messages
@@ -183,7 +177,8 @@ export default function ChatPage() {
 
       <div
         className="flex-1 space-y-3 overflow-y-auto p-3 will-change-scroll"
-        style={{ scrollBehavior: "smooth", overscrollBehavior: "contain" }}>
+        style={{ scrollBehavior: "smooth", overscrollBehavior: "contain" }}
+      >
         {messages.map((message: any) => {
           // Apply animation to all messages
           return (
@@ -212,7 +207,7 @@ export default function ChatPage() {
                   "relative max-w-[75%] p-3",
                   message.role === "user"
                     ? "rounded-tl-xl rounded-br-xl rounded-bl-xl bg-lime-500 text-white hover:bg-lime-600"
-                    : "rounded-tr-xl rounded-br-xl rounded-bl-xl bg-gray-100 text-gray-700 hover:bg-gray-200",
+                    : "rounded-tr-xl rounded-br-xl rounded-bl-xl bg-gray-100 text-gray-700 hover:bg-gray-200"
                 )}
               >
                 <p className="break-words whitespace-pre-wrap">
@@ -262,7 +257,6 @@ export default function ChatPage() {
         <div className="w-full p-2 flex justify-center items-center">
           <Vibemeter onMoodSelect={handleMoodSelect} />
         </div>
-
       )}
 
       {/* Suggested Replies - Quick response options */}
