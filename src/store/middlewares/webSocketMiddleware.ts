@@ -9,7 +9,7 @@ import {
   setConnectionStatus,
   setError,
   stopBotResponse,
-} from "../chatSlice";
+} from "../slices/chatSlice";
 
 // Define WebSocket message types
 interface Action {

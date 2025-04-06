@@ -69,13 +69,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null); // Reference for auto-scrolling
   const inputRef = useRef<HTMLTextAreaElement>(null); // Reference for the textarea
 
-  /**
-   * Auto-scrolls to the most recent message with enhanced smoothness
-   */
-
-  useEffect(() => {
-    console.log("Working!!!");
-  },[]);
 
   useEffect(() => {
     // Optimized smooth scrolling using native browser animation
@@ -141,9 +134,9 @@ export default function ChatPage() {
 
   return (
     <div
-      className="mx-auto flex flex-col bg-white"
+      className="mx-auto flex flex-col bg-white border rounded-lg shadow-lg"
       style={{
-        height: "99vh",
+        height: "85vh",
         width: "400px",
         maxHeight: "844px",
         display: "grid",

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,23 +37,21 @@ export function FloatingChat() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-2 right-0 z-50 h-full md:right-6 md:bottom-6"
+            className="fixed right-0 bottom-0 z-50 md:right-6 md:bottom-6"
           >
-            <div className="relative h-full w-full rounded-t-lg border border-gray-200 bg-white shadow-xl md:h-[600px] md:max-h-[80vh] md:w-[400px] md:rounded-lg">
+            <div className="relative">
               {/* Close button */}
               <Button
                 onClick={() => setIsOpen(false)}
-                size="icon"
-                variant="ghost"
-                className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full hover:bg-gray-200"
+                size="sm"
+                variant="secondary"
+                className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-gray-200 p-0  hover:bg-gray-300"
               >
                 <X className="h-4 w-4" />
               </Button>
-
-              {/* Your existing chat component */}
-              <div className="h-full">
-                <ChatPage />
-              </div>
+              
+              {/* Chat component */}
+              <ChatPage />
             </div>
           </motion.div>
         )}
