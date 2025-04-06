@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 
 export interface EmployeeSatisfaction {
-	percentage: number;
-	change: number;
-	period: string;
+  percentage: number;
+  change: number;
+  period: string;
 }
 
 interface EmployeeSatisfactionGaugeProps {
-	title?: string;
-	subtitle?: string;
-	percentage?: number; // Satisfaction percentage value
-	change?: number; // Monthly change percentage
-	period?: string; // Label for the month
-	className?: string; // Additional class name for custom styling
+  title?: string;
+  subtitle?: string;
+  percentage?: number; // Satisfaction percentage value
+  change?: number; // Monthly change percentage
+  period?: string; // Label for the month
+  className?: string; // Additional class name for custom styling
 }
 
 export default function EmployeeSatisfactionGauge({
