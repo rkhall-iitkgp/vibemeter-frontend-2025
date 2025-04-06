@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import { X, Info, Plus, ArrowRight, Save } from "lucide-react";
+import { X, Info, Plus, ArrowRight, Save, Edit, Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { ActionPlan, FocusGroup } from "@/types";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { MultiSelect } from "../ui/multi-select";
 
 // Step components
 enum FormStep {
   BasicInfo = 0,
-  TargetGroups = 1,
-  MetricsAndSteps = 2,
+  TargetGroupsMetrics = 1,
+  ActionSteps = 2,
 }
 
 interface Step {
@@ -35,6 +34,7 @@ interface MultiStepActionPlanModalProps {
   focusGroups?: FocusGroup[];
   metrics?: string[];
   isSubmitting: boolean;
+  onAfterClose?: () => void; // Optional prop for triggering reload
 }
 
 const MultiStepActionPlanModal = ({
@@ -45,10 +45,15 @@ const MultiStepActionPlanModal = ({
   focusGroups = [],
   metrics = [],
   isSubmitting,
+  onAfterClose,
 }: MultiStepActionPlanModalProps) => {
   const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.BasicInfo);
-  const [newStep, setNewStep] = useState<Step>({ title: "", description: "" });
+  const [newStep, setNewStep] = useState<{ title: string; description: string }>({
+    title: "",
+    description: "",
+  });
   const [newGroupInput, setNewGroupInput] = useState("");
+  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
 
   const [formValues, setFormValues] = useState<ActionPlanFormValues>({
     title: "",
@@ -62,11 +67,25 @@ const MultiStepActionPlanModal = ({
   // For the UI components
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [currentStepNumber, setCurrentStepNumber] = useState(1);
 
   // Determine if we're editing or creating new
   const isEditing = !!plan;
   const modalTitle = isEditing ? "Edit Initiative" : "Create Initiative";
   const modalSubtitle = "Design your next big impact";
+
+  const handleClose = () => {
+    // Call the onClose function passed from parent
+    onClose();
+    
+    // After closing, trigger the reload callback if provided
+    if (onAfterClose) {
+      // Small delay to ensure modal is closed before reload
+      setTimeout(() => {
+        onAfterClose();
+      }, 100);
+    }
+  };
 
   // Extract focus_group_ids from target_groups
   const extractFocusGroupIds = (targetGroups: any[]): string[] => {
@@ -117,19 +136,42 @@ const MultiStepActionPlanModal = ({
       setSelectedGroupIds([]);
       setSelectedGroups([]);
       setCurrentStep(FormStep.BasicInfo);
+      setCurrentStepNumber(1);
+      setEditingStepIndex(null);
     }
   }, [isOpen, plan]);
+
+  // Validation functions for each step
+  const validateBasicInfo = () => {
+    return !!formValues.title && !!formValues.purpose;
+  };
+
+  const validateTargetGroups = () => {
+    return formValues.target_groups.length > 0;
+  };
+  
+  const validateMetrics = () => {
+    return formValues.metric.length > 0;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormValues(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleStepInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
+    const { value } = e.target;
+    setNewStep(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleAddStep = () => {
-    if (newStep.title && newStep.description) {
+    if (newStep.description) {
       setFormValues(prev => ({
         ...prev,
-        steps: [...prev.steps, newStep]
+        steps: [...prev.steps, { 
+          title: newStep.title || `Step ${prev.steps.length + 1}`,
+          description: newStep.description 
+        }]
       }));
       setNewStep({ title: "", description: "" });
     }
@@ -142,25 +184,63 @@ const MultiStepActionPlanModal = ({
     }));
   };
 
+  // Edit step functions
+  const handleStartEditStep = (index: number) => {
+    const stepToEdit = formValues.steps[index];
+    setNewStep({
+      title: stepToEdit.title || `Step ${index + 1}`,
+      description: stepToEdit.description
+    });
+    setEditingStepIndex(index);
+  };
+
+  const handleSaveEditStep = () => {
+    if (editingStepIndex === null || !newStep.description) return;
+
+    setFormValues(prev => ({
+      ...prev,
+      steps: prev.steps.map((step, index) => 
+        index === editingStepIndex 
+          ? { 
+              title: newStep.title || `Step ${index + 1}`,
+              description: newStep.description 
+            }
+          : step
+      )
+    }));
+
+    // Reset editing state
+    setNewStep({ title: "", description: "" });
+    setEditingStepIndex(null);
+  };
+
+  const handleCancelEditStep = () => {
+    setNewStep({ title: "", description: "" });
+    setEditingStepIndex(null);
+  };
+
   const handleAddGroup = () => {
     if (newGroupInput) {
       // Find if the input matches any existing focus group
-      const matchedGroup = focusGroups.find(
+      const matchedGroups = focusGroups.filter(
+        group => group.name.toLowerCase().includes(newGroupInput.toLowerCase())
+      );
+      
+      // If there's an exact match, add it
+      const exactMatch = matchedGroups.find(
         group => group.name.toLowerCase() === newGroupInput.toLowerCase()
       );
       
-      if (matchedGroup) {
-        // If matched, add it to selected groups if not already there
-        if (!selectedGroupIds.includes(matchedGroup.focus_group_id)) {
-          setSelectedGroupIds(prev => [...prev, matchedGroup.focus_group_id]);
-          setSelectedGroups(prev => [...prev, matchedGroup.name]);
-          setFormValues(prev => ({
-            ...prev,
-            target_groups: [...prev.target_groups, { focus_group_id: matchedGroup.focus_group_id }]
-          }));
-        }
+      if (exactMatch && !selectedGroupIds.includes(exactMatch.focus_group_id)) {
+        setSelectedGroupIds(prev => [...prev, exactMatch.focus_group_id]);
+        setSelectedGroups(prev => [...prev, exactMatch.name]);
+        setFormValues(prev => ({
+          ...prev,
+          target_groups: [...prev.target_groups, { focus_group_id: exactMatch.focus_group_id }]
+        }));
       }
-      // Reset input field
+      
+      // Reset input field (this will now filter back to showing all groups)
       setNewGroupInput("");
     }
   };
@@ -202,34 +282,98 @@ const MultiStepActionPlanModal = ({
   };
 
   const handleContinue = () => {
-    setCurrentStep(prev => prev + 1);
+    if (currentStep === FormStep.BasicInfo && validateBasicInfo()) {
+      setCurrentStep(FormStep.TargetGroupsMetrics);
+      setCurrentStepNumber(2);
+    } else if (currentStep === FormStep.TargetGroupsMetrics && validateTargetGroups() && validateMetrics()) {
+      setCurrentStep(FormStep.ActionSteps);
+      setCurrentStepNumber(3);
+    }
   };
 
   const handleBack = () => {
-    setCurrentStep(prev => prev - 1);
+    if (currentStep === FormStep.TargetGroupsMetrics) {
+      setCurrentStep(FormStep.BasicInfo);
+      setCurrentStepNumber(1);
+    } else if (currentStep === FormStep.ActionSteps) {
+      setCurrentStep(FormStep.TargetGroupsMetrics);
+      setCurrentStepNumber(2);
+    }
   };
 
   const handleSubmit = async () => {
-    await onSubmit(formValues);
+    try {
+      // Determine if we're editing or creating new
+      if (isEditing && plan) {
+        // Format data according to the ActionData model for editing
+        const formattedData = {
+          action_id: plan.action_id,
+          title: formValues.title,
+          purpose: formValues.purpose,
+          metric: formValues.metric,
+          target_groups: formValues.target_groups.map(group => group.focus_group_id),
+          steps: formValues.steps,
+          is_completed: formValues.is_completed,
+          created_at: plan.created_at
+        };
+        
+        console.log('Updating action plan:', JSON.stringify(formattedData, null, 2));
+        await onSubmit(formattedData);
+        
+        // Close the modal and trigger reload
+        handleClose();
+      } else {
+        // Format data according to the ActionCreate model for new action
+        const formattedData = {
+          title: formValues.title,
+          purpose: formValues.purpose,
+          metric: formValues.metric,
+          target_groups: formValues.target_groups.map(group => group.focus_group_id),
+          steps: formValues.steps,
+          is_completed: formValues.is_completed
+        };
+        
+        console.log('Creating action plan:', JSON.stringify(formattedData, null, 2));
+        await onSubmit(formattedData);
+        
+        // Close the modal and trigger reload
+        handleClose();
+      }
+    } catch (error) {
+      console.error('Error submitting action plan:', error);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleAddGroup();
+      // If text is entered, try to add as a group
+      if (newGroupInput.trim()) {
+        handleAddGroup();
+      } else {
+        // If no text, do nothing
+        return;
+      }
     }
   };
+
+  // Filter groups based on search input
+  const filteredGroups = newGroupInput 
+    ? focusGroups.filter(group => 
+        group.name.toLowerCase().includes(newGroupInput.toLowerCase()))
+    : focusGroups;
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
-        <div className="flex justify-between items-center p-6 border-b">
+        {/* Header */}
+        <div className="flex justify-between items-center p-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-              <div className="text-purple-600">
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+            <div className="w-16 h-16 bg-[#86BC25] rounded-full flex items-center justify-center">
+              <div className="text-white">
+                <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8">
                   <path d="M12 2v6m0 8v6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24" 
                         stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
@@ -241,7 +385,7 @@ const MultiStepActionPlanModal = ({
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-500 hover:text-gray-700"
             aria-label="Close"
             disabled={isSubmitting}
@@ -250,34 +394,74 @@ const MultiStepActionPlanModal = ({
           </button>
         </div>
 
-        {/* Navigation tabs */}
+        {/* Navigation tabs - Redesigned to match screenshots */}
         <div className="flex border-b">
           <button 
-            className={`flex items-center gap-2 px-6 py-3 ${currentStep === FormStep.BasicInfo ? 'border-b-2 border-[#86BC25] text-[#86BC25]' : 'text-gray-500'}`}
-            onClick={() => setCurrentStep(FormStep.BasicInfo)}
+            className={`flex-1 py-4 text-center ${
+              currentStep === FormStep.BasicInfo 
+                ? 'border-b-2 border-[#86BC25] text-[#86BC25] font-medium' 
+                : 'text-gray-500'
+            }`}
+            onClick={() => {
+              setCurrentStep(FormStep.BasicInfo);
+              setCurrentStepNumber(1);
+            }}
           >
-            <span className="w-5 h-5 rounded-full border flex items-center justify-center">
-              1
-            </span>
-            <span>Basic Info</span>
+            <div className="flex items-center justify-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+                <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <span>Basic Info</span>
+            </div>
           </button>
           <button 
-            className={`flex items-center gap-2 px-6 py-3 ${currentStep === FormStep.TargetGroups ? 'border-b-2 border-[#86BC25] text-[#86BC25]' : 'text-gray-500'}`}
-            onClick={() => setCurrentStep(FormStep.TargetGroups)}
+            className={`flex-1 py-4 text-center ${
+              currentStep === FormStep.TargetGroupsMetrics 
+                ? 'border-b-2 border-[#86BC25] text-[#86BC25] font-medium' 
+                : !validateBasicInfo() 
+                  ? 'text-gray-300 cursor-not-allowed' 
+                  : 'text-gray-500'
+            }`}
+            onClick={() => {
+              if (validateBasicInfo()) {
+                setCurrentStep(FormStep.TargetGroupsMetrics);
+                setCurrentStepNumber(2);
+              }
+            }}
+            disabled={!validateBasicInfo()}
           >
-            <span className="w-5 h-5 rounded-full border flex items-center justify-center">
-              2
-            </span>
-            <span>Target Groups</span>
+            <div className="flex items-center justify-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" 
+                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Target Groups & Metrics</span>
+            </div>
           </button>
           <button 
-            className={`flex items-center gap-2 px-6 py-3 ${currentStep === FormStep.MetricsAndSteps ? 'border-b-2 border-[#86BC25] text-[#86BC25]' : 'text-gray-500'}`}
-            onClick={() => setCurrentStep(FormStep.MetricsAndSteps)}
+            className={`flex-1 py-4 text-center ${
+              currentStep === FormStep.ActionSteps 
+                ? 'border-b-2 border-[#86BC25] text-[#86BC25] font-medium' 
+                : !validateBasicInfo() || !validateTargetGroups() || !validateMetrics()
+                  ? 'text-gray-300 cursor-not-allowed' 
+                  : 'text-gray-500'
+            }`}
+            onClick={() => {
+              if (validateBasicInfo() && validateTargetGroups() && validateMetrics()) {
+                setCurrentStep(FormStep.ActionSteps);
+                setCurrentStepNumber(3);
+              }
+            }}
+            disabled={!validateBasicInfo() || !validateTargetGroups() || !validateMetrics()}
           >
-            <span className="w-5 h-5 rounded-full border flex items-center justify-center">
-              3
-            </span>
-            <span>Metrics & Steps</span>
+            <div className="flex items-center justify-center gap-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" 
+                      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Action Steps</span>
+            </div>
           </button>
         </div>
 
@@ -317,151 +501,230 @@ const MultiStepActionPlanModal = ({
             </div>
           )}
 
-          {/* Target Groups Step */}
-          {currentStep === FormStep.TargetGroups && (
-            <div className="space-y-6">
+          {/* Target Groups & Metrics Step */}
+          {currentStep === FormStep.TargetGroupsMetrics && (
+            <div className="space-y-8">
+              {/* Target Groups */}
               <div className="space-y-2">
                 <label className="flex items-center text-sm font-medium text-gray-700">
                   <span className="bg-gray-200 w-6 h-6 rounded-full flex items-center justify-center mr-2">3</span>
                   Target Groups
                 </label>
                 
-                <div className="border rounded-md p-4">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {selectedGroups.map((group, index) => (
-                      <div key={index} className="bg-purple-100 rounded-full px-3 py-1 flex items-center gap-1">
-                        <span className="text-sm text-purple-800">{group}</span>
-                        <button 
-                          onClick={() => handleRemoveGroup(group)}
-                          className="text-purple-800 hover:text-purple-900"
-                        >
-                          <X size={14} />
-                        </button>
+                <div className="rounded-md border border-gray-200 p-4">
+                  {/* Display selected groups */}
+                  {selectedGroups.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {selectedGroups.map((group, index) => (
+                        <div key={index} className="bg-green-100 rounded-full px-3 py-1 flex items-center gap-1">
+                          <span className="text-sm text-green-800">{group}</span>
+                          <button 
+                            onClick={() => handleRemoveGroup(group)}
+                            className="text-green-800 hover:text-green-900"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <Input
+                    value={newGroupInput}
+                    onChange={(e) => setNewGroupInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Add target group and press Enter"
+                    className="w-full"
+                  />
+                  
+                  {/* List of available groups */}
+                  <div className="h-36 overflow-y-auto bg-white border border-gray-100 rounded-md mt-3">
+                    {filteredGroups.map((group) => (
+                      <div 
+                        key={group.focus_group_id}
+                        className="py-2 px-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between border-b border-gray-100 last:border-b-0"
+                        onClick={() => {
+                          if (!selectedGroupIds.includes(group.focus_group_id)) {
+                            // Add to selected IDs and names for UI
+                            setSelectedGroupIds(prev => [...prev, group.focus_group_id]);
+                            setSelectedGroups(prev => [...prev, group.name]);
+                            
+                            // Add to form values in format expected by API
+                            setFormValues(prev => ({
+                              ...prev,
+                              target_groups: [...prev.target_groups, { focus_group_id: group.focus_group_id }]
+                            }));
+                          }
+                        }}
+                      >
+                        <span>{group.name}</span>
+                        {selectedGroupIds.includes(group.focus_group_id) && (
+                          <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white">
+                            <Check size={12} />
+                          </div>
+                        )}
                       </div>
                     ))}
-                  </div>
-                  
-                  <div className="flex">
-                    <Input
-                      value={newGroupInput}
-                      onChange={(e) => setNewGroupInput(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Add target group and press Enter"
-                      className="w-full rounded-r-none"
-                      list="focus-group-options"
-                    />
-                    <datalist id="focus-group-options">
-                      {focusGroups.map((group) => (
-                        <option key={group.focus_group_id} value={group.name} />
-                      ))}
-                    </datalist>
-                    <Button 
-                      onClick={handleAddGroup}
-                      type="button" 
-                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-none"
-                    >
-                      <Plus size={18} />
-                    </Button>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-blue-50 border border-blue-100 rounded-md p-4">
-                <div className="flex items-start gap-3">
-                  <Info size={20} className="text-blue-500 mt-0.5" />
-                  <div>
-                    <h4 className="text-sm font-medium text-blue-700 mb-1">Pro Tip</h4>
-                    <p className="text-sm text-blue-600">
-                      Target specific groups for better engagement. Consider demographics, roles, or
-                      departments that will benefit most from this initiative.
-                    </p>
+              {/* Metrics */}
+              <div className="space-y-2">
+                <label className="flex items-center text-sm font-medium text-gray-700">
+                  <span className="bg-gray-200 w-6 h-6 rounded-full flex items-center justify-center mr-2">4</span>
+                  Metrics
+                </label>
+                
+                <div className="rounded-md border border-gray-200 p-2">
+                  <div className="flex flex-wrap gap-2 p-2">
+                    {metrics.map((metric) => (
+                      <button
+                        key={metric}
+                        type="button"
+                        onClick={() => handleMetricChange(metric)}
+                        className={`rounded-full px-3 py-1 text-sm border flex items-center gap-1 ${
+                          formValues.metric.includes(metric) 
+                            ? 'bg-[#eef7e2] border-[#86BC25] text-[#86BC25]' 
+                            : 'bg-white border-gray-200 text-gray-600'
+                        }`}
+                      >
+                        <div className={`w-2 h-2 rounded-full ${
+                          formValues.metric.includes(metric) 
+                            ? 'bg-[#86BC25]' 
+                            : 'bg-gray-300'
+                        }`} />
+                        <span>{metric}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Metrics & Steps Step */}
-          {currentStep === FormStep.MetricsAndSteps && (
+          {/* Action Steps */}
+          {currentStep === FormStep.ActionSteps && (
             <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="flex items-center text-sm font-medium text-gray-700">
-                  <span className="bg-gray-200 w-6 h-6 rounded-full flex items-center justify-center mr-2">4</span>
-                  Metric
-                </label>
-                
-                <div className="border rounded-md p-2">
-                  {metrics.map((metric) => (
-                    <button
-                      key={metric}
-                      type="button"
-                      onClick={() => handleMetricChange(metric)}
-                      className={`flex items-center gap-2 w-full text-left px-3 py-2 rounded hover:bg-gray-50 ${
-                        formValues.metric.includes(metric) ? 'bg-gray-50' : ''
-                      }`}
-                    >
-                      <div className={`w-3 h-3 rounded-full ${
-                        formValues.metric.includes(metric) 
-                          ? 'bg-[#86BC25]' 
-                          : 'border border-gray-300'
-                      }`} />
-                      <span>{metric}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               <div className="space-y-2">
                 <label className="flex items-center text-sm font-medium text-gray-700">
                   <span className="bg-gray-200 w-6 h-6 rounded-full flex items-center justify-center mr-2">5</span>
                   Steps
                 </label>
                 
-                <Textarea
-                  value={newStep.description}
-                  onChange={(e) => setNewStep({...newStep, description: e.target.value})}
-                  placeholder="Outline the key steps required for this initiative. Be clear and actionable."
-                  className="w-full min-h-[100px]"
-                />
-                
+                {/* Display existing steps */}
                 {formValues.steps.length > 0 && (
-                  <div className="border rounded-md mt-4 mb-2">
+                  <div className="mb-6 space-y-4">
                     {formValues.steps.map((step, index) => (
-                      <div key={index} className="border-b last:border-b-0 p-3">
-                        <div className="flex justify-between">
-                          <h4 className="font-medium">Step {index + 1}</h4>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveStep(index)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            <X size={16} />
-                          </button>
+                      <div 
+                        key={index}
+                        className={`border rounded-md bg-white p-4 relative ${
+                          editingStepIndex === index ? 'border-[#86BC25] bg-[#f9fcf5]' : 'border-green-200'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-[#86BC25] rounded-full flex items-center justify-center text-white mr-3">
+                              {index + 1}
+                            </div>
+                            <h3 className="font-medium">{step.title || `Step ${index + 1}`}</h3>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              className={`${
+                                editingStepIndex === index 
+                                  ? 'text-[#86BC25]' 
+                                  : 'text-gray-400 hover:text-gray-600'
+                              }`}
+                              onClick={() => handleStartEditStep(index)}
+                              disabled={editingStepIndex !== null && editingStepIndex !== index}
+                            >
+                              <Edit size={16} />
+                            </button>
+                            <button
+                              type="button"
+                              className="text-gray-400 hover:text-red-500"
+                              onClick={() => handleRemoveStep(index)}
+                              disabled={editingStepIndex !== null}
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{step.description}</p>
+                        <p className="mt-2 text-gray-600 pl-11">{step.description}</p>
                       </div>
                     ))}
                   </div>
                 )}
                 
-                <Button
-                  type="button"
-                  onClick={() => {
-                    if (newStep.description) {
-                      setFormValues(prev => ({
-                        ...prev,
-                        steps: [...prev.steps, { 
-                          title: `Step ${formValues.steps.length + 1}`,
-                          description: newStep.description 
-                        }]
-                      }));
-                      setNewStep({ title: "", description: "" });
-                    }
-                  }}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 mt-2"
-                >
-                  Add Step
-                </Button>
+                {/* Add/Edit step form */}
+                <div className="border border-gray-200 rounded-md bg-white p-4">
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {editingStepIndex !== null 
+                        ? `Edit Step ${editingStepIndex + 1}` 
+                        : `Step ${formValues.steps.length + 1}`}: Title
+                    </label>
+                    <Input 
+                      value={newStep.title}
+                      onChange={(e) => handleStepInputChange(e, 'title')}
+                      placeholder="Enter step title"
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Description
+                    </label>
+                    <Textarea 
+                      value={newStep.description}
+                      onChange={(e) => handleStepInputChange(e, 'description')}
+                      placeholder="Outline the key steps required for this initiative. Be clear and actionable."
+                      className="w-full min-h-[100px]"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    {editingStepIndex !== null ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handleCancelEditStep}
+                          className="px-4 py-2 rounded-md text-sm bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSaveEditStep}
+                          disabled={!newStep.description}
+                          className={`px-4 py-2 rounded-md text-sm ${
+                            !newStep.description 
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                              : 'bg-[#86BC25] text-white hover:bg-[#75a621]'
+                          }`}
+                        >
+                          Save Changes
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleAddStep}
+                        disabled={!newStep.description}
+                        className={`px-4 py-2 rounded-md text-sm ${
+                          !newStep.description 
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        Add Step
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -469,10 +732,27 @@ const MultiStepActionPlanModal = ({
 
         {/* Footer with progress indicator and buttons */}
         <div className="flex justify-between items-center p-6 border-t">
-          <div className="flex gap-1">
-            <div className={`w-6 h-2 rounded-full ${currentStep >= 0 ? 'bg-[#86BC25]' : 'bg-gray-200'}`}></div>
-            <div className={`w-6 h-2 rounded-full ${currentStep >= 1 ? 'bg-[#86BC25]' : 'bg-gray-200'}`}></div>
-            <div className={`w-6 h-2 rounded-full ${currentStep >= 2 ? 'bg-[#86BC25]' : 'bg-gray-200'}`}></div>
+          <div className="flex items-center gap-2">
+            {[1, 2, 3].map((step) => (
+              <div key={step} className="flex items-center">
+                <div 
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step <= currentStepNumber 
+                      ? 'bg-[#86BC25] text-white' 
+                      : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
+                  {step}
+                </div>
+                {step < 3 && (
+                  <div 
+                    className={`w-8 h-0.5 ${
+                      step < currentStepNumber ? 'bg-[#86BC25]' : 'bg-gray-200'
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
           </div>
           
           <div className="flex gap-3">
@@ -487,49 +767,34 @@ const MultiStepActionPlanModal = ({
               </Button>
             )}
             
-            {currentStep < FormStep.MetricsAndSteps && (
+            {currentStep < FormStep.ActionSteps && (
               <Button
                 type="button"
                 onClick={handleContinue}
                 className="bg-[#86BC25] hover:bg-[#75a621] text-white"
                 disabled={
-                  (currentStep === FormStep.BasicInfo && (!formValues.title || !formValues.purpose)) ||
-                  (currentStep === FormStep.TargetGroups && formValues.target_groups.length === 0)
+                  (currentStep === FormStep.BasicInfo && !validateBasicInfo()) ||
+                  (currentStep === FormStep.TargetGroupsMetrics && (!validateTargetGroups() || !validateMetrics()))
                 }
               >
                 Continue <ArrowRight size={16} className="ml-1" />
               </Button>
             )}
             
-            {currentStep === FormStep.MetricsAndSteps && (
-              <>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    // Save draft functionality
-                    handleSubmit();
-                  }}
-                  className="bg-white border hover:bg-gray-50 text-gray-700"
-                  disabled={isSubmitting}
-                >
-                  <Save size={16} className="mr-1" /> Save Draft
-                </Button>
-                
-                <Button
-                  type="button"
-                  onClick={handleSubmit}
-                  className="bg-[#86BC25] hover:bg-[#75a621] text-white"
-                  disabled={
-                    isSubmitting || 
-                    !formValues.title || 
-                    !formValues.purpose ||
-                    formValues.target_groups.length === 0 ||
-                    formValues.metric.length === 0
-                  }
-                >
-                  {isSubmitting ? "Saving..." : "Apply Initiative"} <ArrowRight size={16} className="ml-1" />
-                </Button>
-              </>
+            {currentStep === FormStep.ActionSteps && (
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                className="bg-[#86BC25] hover:bg-[#75a621] text-white"
+                disabled={
+                  isSubmitting || 
+                  !validateBasicInfo() || 
+                  !validateTargetGroups() ||
+                  !validateMetrics()
+                }
+              >
+                {isSubmitting ? "Saving..." : "Apply Initiative"} <ArrowRight size={16} className="ml-1" />
+              </Button>
             )}
           </div>
         </div>

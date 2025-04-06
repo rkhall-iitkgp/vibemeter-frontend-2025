@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { PlusIcon } from "lucide-react";
 import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal";
-import { ActionFilter } from "@/components/ActionPlan/ActionFilter";
 import { ActionSort } from "@/components/ActionPlan/ActionSort";
+import { MetricFilter } from "@/components/ActionPlan/MetricFilter";
 import { ActionPlanCard } from "@/components/ActionPlan/ActionPlanCard";
 import DeleteConfirmationModal from "../components/ActionPlan/DeleteConfirmationModal";
-import ActionPlanFormModal from "../components/ActionPlan/MultiStepActionPlanModal";
+import MultiStepActionPlanModal from "../components/ActionPlan/MultiStepActionPlanModal";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -19,6 +19,7 @@ interface ActionPlanFormValues {
   is_completed: boolean;
   target_groups: string[];
   metric: string[];
+  steps: any[];
 }
 
 export default function ActionPlanPage() {
@@ -32,7 +33,7 @@ export default function ActionPlanPage() {
   ]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [activeMetricFilters, setActiveMetricFilters] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState("newest");
   
   // Modal states
@@ -41,13 +42,13 @@ export default function ActionPlanPage() {
   const [selectedPlan, setSelectedPlan] = useState<ActionPlan | undefined>(undefined);
   const [planToDelete, setPlanToDelete] = useState<{ id: string; title: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const handleFilterChange = (filters: string[]) => {
-    setActiveFilters(filters);
+  const handleMetricFilterChange = (metrics: string[]) => {
+    setActiveMetricFilters(metrics);
   };
 
   const handleSortChange = (sortValue: string) => {
@@ -107,6 +108,13 @@ export default function ActionPlanPage() {
     }
   };
 
+  // Function to reload data after modal actions
+  const reloadData = () => {
+    console.log('Reloading data...');
+    fetchActionPlans();
+    fetchFocusGroups();
+  };
+
   // First filter by search query
   let processedPlans = searchQuery
     ? actionPlans.filter((plan) =>
@@ -114,20 +122,12 @@ export default function ActionPlanPage() {
       )
     : actionPlans;
 
-  // Then apply status filters if any are active
-  if (activeFilters.length > 0) {
+  // Apply metric filters if any are active
+  if (activeMetricFilters.length > 0) {
     processedPlans = processedPlans.filter((plan) => {
-      // Check if plan status matches any of the active filters
-      if (activeFilters.includes("completed") && plan.is_completed) {
-        return true;
-      }
-      if (activeFilters.includes("in_progress") && !plan.is_completed) {
-        return true;
-      }
-      if (activeFilters.includes("not_started") && !plan.is_completed) {
-        return true;
-      }
-      return false;
+      // Check if the plan has any of the selected metrics
+      return plan.metric && Array.isArray(plan.metric) && 
+        plan.metric.some(metric => activeMetricFilters.includes(metric));
     });
   }
 
@@ -223,11 +223,41 @@ export default function ActionPlanPage() {
     setIsSubmitting(true);
     try {
       const isEditing = !!selectedPlan;
+      
+      // Format the data according to the API expectations
+      let formattedData;
+      
+      if (isEditing && selectedPlan) {
+        // For editing - use ActionData model
+        formattedData = {
+          action_id: selectedPlan.action_id,
+          title: data.title,
+          purpose: data.purpose,
+          metric: data.metric,
+          target_groups: data.target_groups.map(group => group),
+          steps: data.steps,
+          is_completed: data.is_completed,
+          created_at: selectedPlan.created_at
+        };
+      } else {
+        // For creating - use ActionCreate model
+        formattedData = {
+          title: data.title,
+          purpose: data.purpose,
+          metric: data.metric,
+          target_groups: data.target_groups,
+          steps: data.steps,
+          is_completed: data.is_completed
+        };
+      }
+      
       const url = isEditing 
         ? `${BACKEND_URL}/api/actions/${selectedPlan.action_id}` 
         : `${BACKEND_URL}/api/actions`;
       
       const method = isEditing ? "PUT" : "POST";
+      
+      console.log(`${isEditing ? 'Updating' : 'Creating'} action plan:`, JSON.stringify(formattedData, null, 2));
       
       const response = await fetch(url, {
         method,
@@ -235,15 +265,18 @@ export default function ActionPlanPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formattedData),
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Server responded with ${response.status}: ${errorText}`);
         throw new Error(`Failed to ${isEditing ? 'update' : 'create'} action plan`);
       }
 
       const responseData = await response.json();
       
+      // Update the UI state based on response
       if (isEditing) {
         // Update existing plan in the list
         setActionPlans(actionPlans.map(plan => 
@@ -291,7 +324,7 @@ export default function ActionPlanPage() {
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
               <Search placeholder="Search Action Plans" onSearch={handleSearch} />
-              <ActionFilter onFilterChange={handleFilterChange} />
+              <MetricFilter metrics={metrics} onFilterChange={handleMetricFilterChange} />
               <ActionSort onSortChange={handleSortChange} />
             </div>
             <Button
@@ -312,7 +345,7 @@ export default function ActionPlanPage() {
         ) : processedPlans.length === 0 ? (
           <div className="flex items-center justify-center h-64">
             <span className="text-gray-500">
-              {searchQuery || activeFilters.length > 0
+              {(searchQuery || activeMetricFilters.length > 0)
                 ? "No action plans match your filters"
                 : "No action plans found"}
             </span>
@@ -341,8 +374,8 @@ export default function ActionPlanPage() {
         isSubmitting={isSubmitting}
       />
 
-      {/* Action Plan Form Modal */}
-      <ActionPlanFormModal
+      {/* Action Plan Creation/Edit Modal */}
+      <MultiStepActionPlanModal
         isOpen={isFormModalOpen}
         onClose={handleCloseFormModal}
         onSubmit={handleSubmitForm}
@@ -350,6 +383,7 @@ export default function ActionPlanPage() {
         focusGroups={focusGroups}
         metrics={metrics}
         isSubmitting={isSubmitting}
+        onAfterClose={reloadData}
       />
     </div>
   );
