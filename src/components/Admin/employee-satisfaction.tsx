@@ -1,17 +1,32 @@
 import { useState, useEffect, useRef } from "react";
 
+export interface EmployeeSatisfaction {
+	percentage: number;
+	change: number;
+	period: string;
+}
+
+interface EmployeeSatisfactionGaugeProps {
+	title?: string;
+	subtitle?: string;
+	percentage?: number; // Satisfaction percentage value
+	change?: number; // Monthly change percentage
+	period?: string; // Label for the month
+	className?: string; // Additional class name for custom styling
+}
+
 export default function EmployeeSatisfactionGauge({
   title = "Employee Satisfaction",
   subtitle = "Employees who need most attention",
-  satisfactionValue = 68,
-  monthlyChange = 5.3,
-  monthLabel = "in past 1 month",
+  percentage,
+  change,
+  period,
   className = "", // Add className prop for custom styling
-}) {
+}: EmployeeSatisfactionGaugeProps) {
   const [animatedAngle, setAnimatedAngle] = useState(-90);
   const [animatedRatio, setAnimatedRatio] = useState(0);
 
-  const ratio = Math.min(Math.max(satisfactionValue / 100, 0), 1);
+  const ratio = Math.min(Math.max((percentage || 0) / 100, 0), 1);
   const targetNeedleAngle = -90 + 180 * ratio;
 
   const animationRef = useRef<number | null>(null);
@@ -56,9 +71,9 @@ export default function EmployeeSatisfactionGauge({
   }, [ratio, targetNeedleAngle]);
 
   // Format monthly change display
-  const changeSign = monthlyChange >= 0 ? "+" : "";
+  const changeSign = (change || 0) >= 0 ? "+" : "";
   const changeColor =
-    monthlyChange >= 0 ? "text-[#7CC243]-600" : "text-red-600";
+    (change || 0) >= 0 ? "text-[#7CC243]-600" : "text-red-600";
 
   // Arc properties
   const radius = 90;
@@ -162,8 +177,8 @@ export default function EmployeeSatisfactionGauge({
 
         <div className={`mt-1 text-sm text-center ${changeColor}`}>
           {changeSign}
-          {monthlyChange.toFixed(1)}%{" "}
-          <span className="text-gray-400">({monthLabel})</span>
+          {(change || 0).toFixed(1)}%{" "}
+          <span className="text-gray-400">({period})</span>
         </div>
       </div>
     </div>
