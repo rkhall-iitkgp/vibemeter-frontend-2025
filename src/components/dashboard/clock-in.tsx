@@ -94,10 +94,10 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   };
 
   return (
-    <Card className="w-full mx-auto border shadow-sm">
+    <Card className="w-full mx-auto border shadow-sm py-4">
       <CardHeader className="px-6 py-2">
         <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-semibold text-gray-800">
+          <CardTitle className="text-2xl font-semibold text-gray-800">
             Clock In / Out
           </CardTitle>
           <span className="text-xs sm:text-sm text-[#80C342] font-medium">
@@ -114,36 +114,40 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2 px-6">
+      <CardContent className="space-y-4 px-6">
         {/* Clock In / Out Times */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-50 py-2 px-4 rounded-md text-left">
+          <div className="bg-gray-50 py-4 px-4 rounded-md text-left border flex flex-col gap-0.5">
             <p className="text-xs sm:text-sm text-gray-500">Clock In</p>
-            <p className="text-sm sm:text-base font-semibold text-gray-800 truncate">
+            <p className="text-xl font-semibold text-gray-800 truncate">
               {formatTime(clockInTime)}
             </p>
           </div>
-          <div className="bg-gray-50 py-2 px-4 rounded-md text-left">
+          <div className="bg-gray-50 py-4 px-4 rounded-md text-left border flex flex-col gap-0.5">
             <p className="text-xs sm:text-sm text-gray-500">Clock Out</p>
-            <p className="text-sm sm:text-base font-semibold text-gray-800 truncate">
+            <p className="text-xl font-semibold text-gray-800 truncate">
               {formatTime(clockOutTime)}
             </p>
           </div>
         </div>
 
         {/* Current Time and Working Time */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 pt-4 text-center">
           <div className="text-left px-4">
-            <p className="text-lg sm:text-2xl font-bold text-gray-800">
+            <p className="text-lg sm:text-2xl font-bold text-gray-800 text-center">
               {format(currentTime, "h:mm:ss a")}
             </p>
-            <p className="text-xs sm:text-sm text-gray-500">Current time</p>
+            <p className="text-xs sm:text-sm text-gray-500 text-center">
+              Current time
+            </p>
           </div>
           <div className="text-left px-4">
-            <p className="text-lg sm:text-2xl font-bold text-[#80C342]">
+            <p className="text-lg sm:text-2xl font-bold text-[#80C342] text-center">
               {clockOutTime ? workingTime : clockInTime ? workingTime : "-"}
             </p>
-            <p className="text-xs sm:text-sm text-gray-500">Working time</p>
+            <p className="text-xs sm:text-sm text-gray-500 text-center">
+              Working time
+            </p>
           </div>
         </div>
 

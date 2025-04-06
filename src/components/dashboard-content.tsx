@@ -1,27 +1,57 @@
+import ProfileCard, { UserData } from "./dashboard/profile-card";
+import AwardsCard, { Award } from "./dashboard/award-card";
 import UpcomingMeetings from "./dashboard/upcoming-meet";
 import NoticeBoard from "./dashboard/notice-board";
-import ProfileCard from "./dashboard/profile-card";
-import AwardsCard from "./dashboard/award-card";
 import { FloatingChat } from "./floating-chat";
 import ClockInOut from "./dashboard/clock-in";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import Navbar from "./Navbar";
+
+interface DashboardData {
+  awards: Award[];
+  user_data: UserData;
+}
 
 export function DashboardContent() {
   // const [name, setName] = useState("Tridibesh");
-  const name = "Tridibesh";
-  const userProfileData = {
-    name: "Ankan",
-    jobTitle: "Job Title",
-    avatarUrl: "", // Optional: URL for profile image
-    email: "dummy@example.com",
-    phone: "+1 (123) 456-7890",
-    addedDate: "01-03-2025",
-    id: "EM000000",
-  };
+  const [data, setData] = useState<DashboardData | undefined>();
+  const selectedPersona = useSelector(
+    (state: RootState) => state.persona.persona_id
+  );
+  const navigate = useNavigate();
+  console.log("Selected Persona ID:", selectedPersona);
+
+  useEffect(() => {
+    if (!selectedPersona) {
+      navigate("/");
+    }
+  }, [selectedPersona, navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/employee/${selectedPersona}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        console.log("Fetched data:", result);
+        setData(result.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [selectedPersona]);
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      <Navbar name={name} />
+      <Navbar name={data?.user_data?.name || ""} />
 
       <main className="flex-1 p-4 md:p-4 overflow-hidden">
         {/* Main Grid - Fixed width columns on larger screens */}
@@ -31,7 +61,7 @@ export function DashboardContent() {
             {/* Profile Card - Full width, content-based height */}
             <div className="flex flex-row md:space-x-1">
               <div className="w-full">
-                <ProfileCard userData={userProfileData} />
+                <ProfileCard userData={data?.user_data} />
               </div>
 
               {/* Contact Card - Full width, content-based height */}
@@ -58,7 +88,7 @@ export function DashboardContent() {
 
             {/* Upcoming Meetings - Full width, fills remaining space */}
             <div className="w-full flex-grow">
-              <AwardsCard className="w-full" />
+              <AwardsCard className="w-full" awards={data?.awards} />
             </div>
           </div>
 

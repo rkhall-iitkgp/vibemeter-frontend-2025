@@ -1,15 +1,32 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function ProfileCard({ userData }) {
+export interface UserData {
+  employee_id: string;
+  name: string;
+  job_title: string;
+  profile_picture: string;
+  email: string;
+  phone: string;
+  created_at: string;
+}
+
+export default function ProfileCard({
+  userData,
+}: {
+  userData: UserData | undefined;
+}) {
   return (
     <Card className="rounded-2xl shadow-sm w-full">
       <CardContent className="py-4 px-6">
-        <div className="flex flex-row items-start gap-8">
+        <div className="flex flex-row items-center gap-8">
           {/* Left side - Profile info */}
-          <div className="flex flex-col items-center text-center min-w-max w-28">
+          <div className="flex flex-col items-center justify-center text-center min-w-max w-28 h-full">
             <Avatar className="w-20 h-20 bg-gray-100 mb-3">
-              <AvatarImage src={userData.avatarUrl} alt={userData.name} />
+              <AvatarImage
+                src={userData?.profile_picture}
+                alt={userData?.name}
+              />
               <AvatarFallback>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -26,10 +43,18 @@ export default function ProfileCard({ userData }) {
                 </svg>
               </AvatarFallback>
             </Avatar>
-            <div className="font-semibold text-lg">{userData.name}</div>
-            <div className="text-sm text-muted-foreground">
-              {userData.jobTitle}
-            </div>
+            {userData?.name ? (
+              <div className="font-semibold text-lg">{userData?.name}</div>
+            ) : (
+              <div className="h-4 w-24 rounded-md bg-gray-300 animate-pulse mb-1"></div>
+            )}
+            {userData?.job_title ? (
+              <div className="text-sm text-muted-foreground">
+                {userData?.job_title}
+              </div>
+            ) : (
+              <div className="h-4 w-36 rounded-md bg-gray-300 animate-pulse"></div>
+            )}
           </div>
 
           {/* Right side - Contact information */}
@@ -52,7 +77,11 @@ export default function ProfileCard({ userData }) {
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
-                <span>{userData.email}</span>
+                {userData?.email ? (
+                  <span>{userData?.email}</span>
+                ) : (
+                  <div className="h-4 w-36 rounded-md bg-gray-300 animate-pulse"></div>
+                )}
               </div>
 
               {/* Phone */}
@@ -69,7 +98,11 @@ export default function ProfileCard({ userData }) {
                 >
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
-                <span>{userData.phone}</span>
+                {userData?.phone ? (
+                  <span>{userData?.phone}</span>
+                ) : (
+                  <div className="h-4 w-24 rounded-md bg-gray-300 animate-pulse"></div>
+                )}
               </div>
 
               {/* Added Date */}
@@ -89,7 +122,11 @@ export default function ProfileCard({ userData }) {
                   <line x1="8" x2="8" y1="2" y2="6" />
                   <line x1="3" x2="21" y1="10" y2="10" />
                 </svg>
-                <span>Added on {userData.addedDate}</span>
+                {userData?.created_at ? (
+                  <span>Added on {userData?.created_at}</span>
+                ) : (
+                  <div className="h-4 w-30 rounded-md bg-gray-300 animate-pulse"></div>
+                )}
               </div>
 
               {/* ID */}
@@ -107,7 +144,11 @@ export default function ProfileCard({ userData }) {
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span>ID: {userData.id}</span>
+                {userData?.employee_id ? (
+                  <span>{userData?.employee_id}</span>
+                ) : (
+                  <div className="h-4 w-28 rounded-md bg-gray-300 animate-pulse"></div>
+                )}
               </div>
             </div>
           </div>

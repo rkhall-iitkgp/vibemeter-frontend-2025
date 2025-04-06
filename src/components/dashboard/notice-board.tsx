@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 
@@ -31,12 +31,14 @@ const notices = [
 
 export default function NoticeBoard() {
   return (
-    <Card className="w-full rounded-xl border p-4 shadow-sm">
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-2 text-lg font-semibold text-gray-800">
-          <Bell className="h-5 w-5 text-lime-600" />
-          Notice board
-        </div>
+    <Card className="w-full rounded-xl border py-4 shadow-sm gap-2">
+      <CardHeader className="py-2">
+        <CardTitle className="text-2xl font-semibold text-gray-800 flex gap-2 items-center">
+          <Bell className="text-2xl text-lime-600" />
+          Notice Board
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 px-4">
         <div className="space-y-4">
           {notices.map((notice, index) => (
             <div key={index} className="border-l-4 border-lime-600 pl-2">

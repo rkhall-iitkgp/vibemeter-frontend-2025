@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 // TypeScript interface for award data
-interface Award {
+export interface Award {
   id: number;
   title: string;
   icon: string;
@@ -17,29 +17,8 @@ interface AwardsCardProps {
   className?: string;
 }
 
-const dummyAwards = [
-  {
-    id: 1,
-    title: "Innovation Champion",
-    icon: "lightbulb",
-    date: "03/2025",
-  },
-  {
-    id: 2,
-    title: "Leadership Excellence",
-    icon: "award",
-    date: "02/2025",
-  },
-  {
-    id: 3,
-    title: "Best Team Player",
-    icon: "users",
-    date: "01/2025",
-  },
-];
-
 const AwardsCard: React.FC<AwardsCardProps> = ({
-  awards = dummyAwards,
+  awards,
   onViewAll = () => {},
   className = "",
 }) => {
@@ -121,21 +100,30 @@ const AwardsCard: React.FC<AwardsCardProps> = ({
       </CardHeader>
       <CardContent className="py-0">
         <div className="grid grid-cols-3 gap-1 px-4 py-4">
-          {awards.slice(0, 6).map((award) => (
-            <div
-              key={award.id}
-              className="flex flex-col items-center text-center"
-            >
-              {renderIcon(award.icon)}
-              <h4
-                className="mt-2 text-xs font-medium overflow-hidden text-ellipsis whitespace-normal max-w-full"
-                style={{ minWidth: "120px", wordBreak: "break-word" }}
-              >
-                {award.title}
-              </h4>
-              <p className="text-xs text-gray-400 mt-1">{award.date}</p>
-            </div>
-          ))}
+          {awards
+            ? awards?.slice(0, 6).map((award) => (
+                <div
+                  key={award.id}
+                  className="flex flex-col items-center text-center"
+                >
+                  {renderIcon(award.icon)}
+                  <h4
+                    className="mt-2 text-xs font-medium overflow-hidden text-ellipsis whitespace-normal max-w-full"
+                    style={{ minWidth: "120px", wordBreak: "break-word" }}
+                  >
+                    {award.title}
+                  </h4>
+                  <p className="text-xs text-gray-400 mt-1">{award.date}</p>
+                </div>
+              ))
+            : Array(3)
+                .fill(0)
+                .map((_, index: number) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center text-center h-[108px] bg-gray-300 animate-pulse"
+                  />
+                ))}
         </div>
       </CardContent>
     </Card>
