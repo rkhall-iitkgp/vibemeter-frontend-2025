@@ -9,6 +9,7 @@ import { FC, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { FocusGroup } from "../types";
 import { Plus } from "lucide-react";
+import FocusGroupSkeleton from '../components/skeletons/FocusGroupSkeleton';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -34,14 +35,17 @@ const FocusGroupPage: FC = () => {
     created_at: ["All"],
   });
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    // console.log(BACKEND_URL);
+    setIsLoading(true);
     fetch(`${BACKEND_URL}/api/groups`)
       .then((res) => res.json())
       .then((data) => {
         setFocusGroups(data.data);
         setFilteredGroups(data.data);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -200,6 +204,19 @@ const FocusGroupPage: FC = () => {
       !focusGroupFilters.created_at.includes("All")
     );
   };
+  if (isLoading) {
+    return (
+      <FocusGroupSkeleton
+        onSearch={handleSearch}
+        onFilter={handleFocusGroupFilter}
+        onAddGroup={() => {
+          setEditingFocusGroup(null);
+          setShowCreateModal(true);
+        }}
+        hasActiveFilters={hasFocusGroupActiveFilters()}
+      />
+    );
+  }
 
   if (id && selectedGroup) {
     return (
