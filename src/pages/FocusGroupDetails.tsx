@@ -1,3 +1,4 @@
+import FocusGroupDetailsSkeleton from "../components/skeletons/FocusGroupDetailsSkeleton";
 import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal";
 import ParticipantFilterModal from "../components/ParticipantFilterModal";
 import AddParticipantsModal from "../components/AddParticipantsModal";
@@ -6,7 +7,6 @@ import SearchBar from "@/components/ui/search";
 import { Employee, FocusGroup } from "@/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import FocusGroupDetailsSkeleton from '../components/skeletons/FocusGroupDetailsSkeleton';
 
 export default function FocusGroupDetails({
   selectedGroup,

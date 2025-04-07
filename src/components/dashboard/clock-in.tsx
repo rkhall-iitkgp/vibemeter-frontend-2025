@@ -6,13 +6,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar, Clock, Coffee, LogOut, Timer } from "lucide-react";
-import { setShowVibemeter } from "@/store";
 import { format, differenceInMinutes } from "date-fns";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
-import { cn } from "@/lib/utils";
 import Vibemeter from "@/components/Vibemeter";
+import { cn } from "@/lib/utils";
 
 interface ClockInOutProps {
   className?: string;
@@ -36,7 +34,6 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   const [isOnBreak, setIsOnBreak] = useState<boolean>(false);
   const [workingTime, setWorkingTime] = useState<string>("0h 0m");
   const [showToastVibemeter, setShowToastVibemeter] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,10 +101,10 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
     // Handle the mood selection
     console.log(`User mood: ${mood}`);
     // You can add your logic to store or process the mood here
-    
+
     // Hide the vibemeter
     setShowToastVibemeter(false);
-    
+
     // Optionally, you can also set Redux state if needed
     // dispatch(setMood(mood));
   };

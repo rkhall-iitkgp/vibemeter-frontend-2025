@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 export default function Vibemeter({
   onMoodSelect,
@@ -18,7 +18,7 @@ export default function Vibemeter({
     { emoji: "😫", label: "Tired", color: "#9C27B0" }, // Purple
     { emoji: "😤", label: "Frustrated", color: "#F44336" }, // Red
   ];
-  
+
   return (
     <Card className="w-full border shadow-2xl rounded-lg relative">
       <div className="absolute top-3 right-3">
@@ -31,11 +31,9 @@ export default function Vibemeter({
           <X className="h-8 w-8" />
         </Button>
       </div>
-     
+
       <CardContent className="p-6">
-        <h3 className="text-xl font-medium mb-6">
-          How are you feeling today?
-        </h3>
+        <h3 className="text-xl font-medium mb-6">How are you feeling today?</h3>
         <div className="grid grid-cols-3 gap-6">
           {moods.map((mood) => (
             <div
@@ -55,7 +53,9 @@ export default function Vibemeter({
               >
                 <span className="text-3xl">{mood.emoji}</span>
               </div>
-              <span className="text-sm text-center font-medium">{mood.label}</span>
+              <span className="text-sm text-center font-medium">
+                {mood.label}
+              </span>
             </div>
           ))}
         </div>

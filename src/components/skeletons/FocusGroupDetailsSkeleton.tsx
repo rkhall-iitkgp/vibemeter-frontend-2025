@@ -78,7 +78,13 @@ const FocusGroupDetailsSkeleton = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="w-12 px-6 py-3" />
-                  {['Employee Name', 'Employee ID', 'Job Title', 'Date Added', ''].map((_, index) => (
+                  {[
+                    "Employee Name",
+                    "Employee ID",
+                    "Job Title",
+                    "Date Added",
+                    "",
+                  ].map((_, index) => (
                     <th key={index} className="px-6 py-3">
                       <div className="w-24 h-4 bg-gray-200 animate-pulse rounded" />
                     </th>

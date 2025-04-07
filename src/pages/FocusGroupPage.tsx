@@ -1,4 +1,5 @@
 import FocusGroupFilterModal from "../components/focus-group/FocusGroupFilterModal";
+import FocusGroupSkeleton from "../components/skeletons/FocusGroupSkeleton";
 import FocusGroupModal from "../components/focus-group/FocusGroupModal";
 import FocusGroupList from "../components/focus-group/FocusGroupList";
 import FilterButton from "@/components/FilterButton";
@@ -9,7 +10,6 @@ import { FC, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { FocusGroup } from "../types";
 import { Plus } from "lucide-react";
-import FocusGroupSkeleton from '../components/skeletons/FocusGroupSkeleton';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
