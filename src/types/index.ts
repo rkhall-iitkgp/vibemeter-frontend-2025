@@ -5,6 +5,15 @@ export interface FocusGroup {
   description: string;
   metrics: string[];
   members: number;
+  metrixSelections: MetrixSelection[];
+  metrixId: string;
+  minRange: string;
+  maxRange: string;
+}
+interface MetrixSelection {
+  metrixId: string
+  minRange: string
+  maxRange: string
 }
 
 export interface Employee {
