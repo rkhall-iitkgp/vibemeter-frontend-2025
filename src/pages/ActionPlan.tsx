@@ -3,9 +3,9 @@ import DeleteConfirmationModal from "../components/ActionPlan/DeleteConfirmation
 import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal";
 import InitiativeModal from "../components/ActionPlan/Initiative-model";
 import { FilterComponent } from "../components/ActionPlan/Filter";
-import SearchBar from "../components/ui/search";
 import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
+import SearchBar from "../components/ui/search";
 import { useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import { ActionPlan } from "@/types";
@@ -247,7 +247,10 @@ export default function ActionPlanComponent() {
           <div className="flex justify-between items-center mb-6">
             <div className="flex gap-2 items-center">
               <div className="w-95 ">
-                <SearchBar onSearch={handleSearch} placeholder="Search Action Plans" />
+                <SearchBar
+                  onSearch={handleSearch}
+                  placeholder="Search Action Plans"
+                />
               </div>
 
               <FilterComponent

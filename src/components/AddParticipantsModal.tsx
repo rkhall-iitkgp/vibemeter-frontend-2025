@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
-import { Employee } from "@/types";
 import SearchBar from "./ui/search";
+import { Employee } from "@/types";
 
 interface AddParticipantsModalProps {
   onClose: () => void;
@@ -219,7 +219,10 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
                 </svg>
               </div>
               {/* <div className="relative w-95 mr-3"> */}
-              <SearchBar onSearch={handleSearchQuery} placeholder="Search Employee" />
+              <SearchBar
+                onSearch={handleSearchQuery}
+                placeholder="Search Employee"
+              />
               {/* </div> */}
               {/* Clear search button */}
               {searchQuery && (

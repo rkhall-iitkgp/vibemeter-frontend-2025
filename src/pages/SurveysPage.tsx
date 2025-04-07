@@ -3,8 +3,8 @@ import { Search, ChevronRight, ChevronDown, Plus } from "lucide-react";
 import SurveyDetails from "@/components/Surveys/survey-details";
 import { useNavigate, useParams } from "react-router";
 import React, { useEffect, useState } from "react";
-import { FocusGroup } from "@/types";
 import SearchBar from "@/components/ui/search";
+import { FocusGroup } from "@/types";
 
 interface QuestionData {
   id: string;
@@ -137,7 +137,10 @@ const SurveysPage: React.FC = () => {
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search className="w-5 h-5 text-gray-400" />
               </div>
-              <SearchBar onSearch={handleSearchChange} placeholder="Search Surveys" />
+              <SearchBar
+                onSearch={handleSearchChange}
+                placeholder="Search Surveys"
+              />
               {searchTerm && (
                 <button
                   className="absolute inset-y-0 right-0 flex items-center pr-3"
