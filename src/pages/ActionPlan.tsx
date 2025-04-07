@@ -3,7 +3,7 @@ import DeleteConfirmationModal from "../components/ActionPlan/DeleteConfirmation
 import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal";
 import InitiativeModal from "../components/ActionPlan/Initiative-model";
 import { FilterComponent } from "../components/ActionPlan/Filter";
-import SearchBar from "../components/ActionPlan/Search-bar";
+import SearchBar from "../components/ui/search";
 import { SortBy } from "../components/ActionPlan/Sortby";
 import { Button } from "../components/ui/button";
 import { useState, useEffect } from "react";
@@ -246,8 +246,8 @@ export default function ActionPlanComponent() {
           {/* Search, Filter, and Create Button Row */}
           <div className="flex justify-between items-center mb-6">
             <div className="flex gap-2 items-center">
-              <div className="w-100">
-                <SearchBar onSearch={handleSearch} />
+              <div className="w-95 ">
+                <SearchBar onSearch={handleSearch} placeholder="Search Action Plans" />
               </div>
 
               <FilterComponent
