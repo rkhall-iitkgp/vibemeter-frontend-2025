@@ -13,19 +13,37 @@ interface FocusGroups {
   name: string;
   focus_group_id: string;
 }
+
+export interface CreateSurvey {
+  survey_id: string;
+  title: string;
+  description: string;
+  target_groups: { focus_group_id: string }[];
+  ends_at: string;
+  questions: { id: string | number; text: string }[];
+  is_active: boolean;
+  created_at: string;
+}
+
+interface QuestionData {
+  id: string;
+  text: string;
+}
+export interface Survey {
+  survey_id: string;
+  title: string;
+  description: string;
+  target_groups: FocusGroups[];
+  ends_at: string;
+  questions: QuestionData[];
+  is_active: boolean;
+  created_at: string;
+}
+
 interface CreateSurveyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: (surveyData: {
-    survey_id: string;
-    title: string;
-    description: string;
-    target_groups: { focus_group_id: string }[];
-    ends_at: string;
-    questions: { id: string | number; text: string }[];
-    is_active: boolean;
-    created_at: string;
-  }) => void;
+  onSuccess: (surveyData: Survey) => void;
 }
 
 const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({

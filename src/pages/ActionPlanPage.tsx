@@ -4,6 +4,7 @@ import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal
 import { ActionPlanCard } from "@/components/ActionPlan/ActionPlanCard";
 import { MetricFilter } from "@/components/ActionPlan/MetricFilter";
 import { ActionSort } from "@/components/ActionPlan/ActionSort";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ActionPlan, FocusGroup } from "@/types";
 import { Button } from "@/components/ui/button";
 import Search from "@/components/ui/search";
@@ -375,9 +376,51 @@ export default function ActionPlanPage() {
 
         {/* Action Plans List */}
         {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <span className="text-gray-500">Loading...</span>
-          </div>
+          Array.from({ length: 3 }, (_, index) => (
+            <div
+              key={index}
+              className="mt-2 mx-0 border border-gray-200 rounded-lg p-6 bg-white shadow-sm relative"
+            >
+              {/* Edit and Delete Icons skeleton */}
+              <div className="absolute top-4 right-4 flex space-x-2">
+                <Skeleton className="h-5 w-5 rounded-md" />
+                <Skeleton className="h-5 w-5 rounded-md" />
+              </div>
+
+              <div className="space-y-1">
+                {/* Title skeleton */}
+                <Skeleton className="h-[26px] w-96 rounded-md mb-1" />
+
+                {/* Date and tags skeleton */}
+                <div className="flex items-center space-x-2">
+                  <Skeleton className="h-[16px] w-32 rounded-md" />
+
+                  <div className="flex items-center space-x-2 ml-2">
+                    <Skeleton className="h-[22px] w-16 rounded-[0.5vw]" />
+                    <Skeleton className="h-[22px] w-20 rounded-[0.5vw]" />
+                  </div>
+                </div>
+
+                {/* Purpose text skeleton */}
+                <Skeleton className="h-[20px] w-[80%] rounded-md mt-2" />
+
+                {/* Target group and view details skeleton */}
+                <div className="flex justify-between items-center mt-3">
+                  {/* Target group skeleton */}
+                  <div className="flex items-center space-x-2">
+                    <Skeleton className="h-4 w-4 rounded-full" />
+                    <Skeleton className="h-[18px] w-24 rounded-md" />
+                    <Skeleton className="h-[18px] w-32 rounded-md" />
+                  </div>
+
+                  {/* View details button skeleton */}
+                  <div className="flex space-x-2">
+                    <Skeleton className="h-[20px] w-28 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
         ) : processedPlans.length === 0 ? (
           <div className="flex items-center justify-center h-64">
             <span className="text-gray-500">

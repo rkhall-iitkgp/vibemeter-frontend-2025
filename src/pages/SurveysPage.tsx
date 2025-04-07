@@ -1,26 +1,12 @@
-import CreateSurveyModal from "@/components/Surveys/create-survey-modal";
+import CreateSurveyModal, {
+  Survey,
+} from "@/components/Surveys/create-survey-modal";
 import { Search, ChevronRight, ChevronDown, Plus } from "lucide-react";
 import SurveyDetails from "@/components/Surveys/survey-details";
 import { useNavigate, useParams } from "react-router";
+import { Skeleton } from "@/components/ui/skeleton";
 import React, { useEffect, useState } from "react";
 import SearchBar from "@/components/ui/search";
-import { FocusGroup } from "@/types";
-
-interface QuestionData {
-  id: string;
-  text: string;
-}
-
-interface Survey {
-  survey_id: string;
-  title: string;
-  description: string;
-  target_groups: FocusGroup[];
-  ends_at: string;
-  questions: QuestionData[];
-  is_active: boolean;
-  created_at: string;
-}
 
 const SurveysPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -30,6 +16,7 @@ const SurveysPage: React.FC = () => {
   const { survey_id } = useParams<{ survey_id: string | undefined }>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Sample data
   // const surveys: Survey[] = [
@@ -84,6 +71,7 @@ const SurveysPage: React.FC = () => {
   );
 
   useEffect(() => {
+    setLoading(true);
     // Fetch surveys from the API (replace with your actual API endpoint)
     const fetchSurveys = async () => {
       try {
@@ -96,6 +84,8 @@ const SurveysPage: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching surveys:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -219,92 +209,122 @@ const SurveysPage: React.FC = () => {
             Create Survey
           </button>
         </div>
-
-        <div className="space-y-4">
-          {filteredSurveys.map((survey) => (
-            <div
-              key={survey.survey_id}
-              className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="flex items-center mb-1">
-                    <h2 className="text-lg font-semibold mr-2">
-                      {survey.title}
-                    </h2>
-                    <span
-                      className={`px-2 py-0.5 text-xs rounded-full ${
-                        survey.is_active
-                          ? "bg-[#80C342] text-white"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {survey.is_active ? "Active" : "Inactive"}
-                    </span>
+        {loading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center mb-1 gap-2">
+                      <Skeleton className="h-5 w-96 rounded-xl" />
+                      <Skeleton className="h-6 w-20 rounded-2xl" />
+                    </div>
+                    <div className="text-sm text-gray-500 mb-2 flex items-center gap-1">
+                      <Skeleton className="h-6 w-6 rounded-md" />
+                      <Skeleton className="h-4 w-36 rounded-md" />
+                    </div>
+                    <Skeleton className="h-4 w-[48rem] rounded-md" />
                   </div>
-                  <div className="text-sm text-gray-500 mb-2 flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M16 2V6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M8 2V6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 10H21"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span>
-                      Created:{" "}
-                      {new Date(survey.created_at).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "2-digit",
-                      })}
-                    </span>
+                  <div className="flex justify-end items-end mt-16 min-w-fit">
+                    <Skeleton className="h-[26px] w-36 rounded-md" />
                   </div>
-                  <p className="text-gray-700">{survey.description}</p>
-                </div>
-                <div className="flex justify-end items-end mt-16 min-w-fit">
-                  <button
-                    className="text-gray-600 hover:text-gray-800 flex items-center text-sm border border-gray-600 px-3 py-1 rounded-md"
-                    onClick={() => navigate(`/surveys/${survey.survey_id}`)}
-                  >
-                    View Details
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-          {filteredSurveys.length === 0 && (
-            <div className="text-center text-gray-500">No surveys found.</div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredSurveys.map((survey) => (
+              <div
+                key={survey.survey_id}
+                className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center mb-1">
+                      <h2 className="text-lg font-semibold mr-2">
+                        {survey.title}
+                      </h2>
+                      <span
+                        className={`px-2 py-0.5 text-xs rounded-full ${
+                          survey.is_active
+                            ? "bg-[#80C342] text-white"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {survey.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-500 mb-2 flex items-center">
+                      <svg
+                        className="w-4 h-4 mr-1"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M16 2V6"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M8 2V6"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M3 10H21"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span>
+                        Created:{" "}
+                        {new Date(survey.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "2-digit",
+                          }
+                        )}
+                      </span>
+                    </div>
+                    <p className="text-gray-700">{survey.description}</p>
+                  </div>
+                  <div className="flex justify-end items-end mt-16 min-w-fit">
+                    <button
+                      className="text-gray-600 hover:text-gray-800 flex items-center text-sm border border-gray-600 px-3 py-1 rounded-md"
+                      onClick={() => navigate(`/surveys/${survey.survey_id}`)}
+                    >
+                      View Details
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {filteredSurveys.length === 0 && (
+              <div className="text-center text-gray-500">No surveys found.</div>
+            )}
+          </div>
+        )}
       </main>
       <CreateSurveyModal
         isOpen={isModalOpen}
