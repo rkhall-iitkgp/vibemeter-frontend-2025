@@ -8,8 +8,6 @@ import {
   stopBotResponse,
 } from "@/store/actions/webSocketActions";
 
-import { RootState } from "@/store/store";
-
 export const useChat = () => {
   const dispatch = useDispatch();
   const [inputMessage, setInputMessage] = useState<string>("");

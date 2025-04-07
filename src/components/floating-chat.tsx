@@ -1,17 +1,26 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setShowChat } from "@/store";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, X } from "lucide-react";
-import { useState } from "react";
 import ChatPage from "./Chat"; // Import your existing chat component
 
 export function FloatingChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const showChat = useSelector((state: RootState) => state.chat.showChat);
+  const dispatch = useDispatch();
+  const vibemeterVisible = useSelector(
+    (state: RootState) => state.chat.showVibemeter
+  );
+
+  const setOpen = (open: boolean) => {
+    dispatch(setShowChat(open));
+  };
 
   return (
     <>
       {/* Floating chat button */}
       <AnimatePresence>
-        {!isOpen && (
+        {!showChat && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -19,11 +28,16 @@ export function FloatingChat() {
             className="fixed right-6 bottom-6 z-50"
           >
             <Button
-              onClick={() => setIsOpen(true)}
+              onClick={() => setOpen(true)}
               size="lg"
-              className="h-14 w-14 rounded-full bg-lime-500 shadow-lg hover:bg-lime-600"
+              className="h-14 w-14 rounded-full bg-lime-500 shadow-lg hover:bg-lime-600 relative"
             >
               <MessageCircle className="h-6 w-6" />
+              {vibemeterVisible && (
+                <div className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  !
+                </div>
+              )}
             </Button>
           </motion.div>
         )}
@@ -31,7 +45,7 @@ export function FloatingChat() {
 
       {/* Chat modal */}
       <AnimatePresence>
-        {isOpen && (
+        {showChat && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,7 +56,7 @@ export function FloatingChat() {
             <div className="relative">
               {/* Close button */}
               <Button
-                onClick={() => setIsOpen(false)}
+                onClick={() => setOpen(false)}
                 size="sm"
                 variant="secondary"
                 className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-gray-200 p-0  hover:bg-gray-300"
