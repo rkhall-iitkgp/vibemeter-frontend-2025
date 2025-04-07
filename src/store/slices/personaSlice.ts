@@ -6,10 +6,10 @@ interface PersonaState {
 }
 
 const personas = [
-  { id: "EMP001", name: "Adarsh", avatar: "/icons/Employees.svg" },
-  { id: "EMP002", name: "Ankan", avatar: "/icons/Employees.svg" },
-  { id: "EMP003", name: "Harsh", avatar: "/icons/Employees.svg" },
-  { id: "EMP004", name: "Bansal", avatar: "/icons/Employees.svg" },
+  { id: "EMP001", name: "Joey", avatar: "/avatars/Joey.png" },
+  { id: "EMP002", name: "Ross", avatar: "/avatars/Monica.png" },
+  { id: "EMP003", name: "Rachel", avatar: "/avatars/Rachel.png" },
+  { id: "EMP004", name: "Monica", avatar: "/avatars/Ross.png" },
 ];
 
 const initialState: PersonaState = {

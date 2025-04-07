@@ -83,7 +83,7 @@ export function DashboardContent() {
           <div className="w-full space-y-4 md:space-y-4 order-2 md:order-2">
             {/* Clock In/Out Component - Full width, content-based height */}
             <div className="w-full">
-              <ClockInOut className="w-full" />
+              <ClockInOut className="w-full"/>
             </div>
 
             {/* Upcoming Meetings - Full width, fills remaining space */}

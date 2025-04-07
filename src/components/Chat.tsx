@@ -9,9 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setShowVibemeter } from "@/store";
+import { RootState } from "@/store";
 import { Button } from "@/components/ui/button";
-import Vibemeter from "@/components/Vibemeter";
 import { useChat } from "@/hooks/useChat";
 import { cn } from "@/lib/utils";
 
@@ -48,9 +47,6 @@ export default function ChatPage() {
     reconnect,
   } = useChat();
   const dispatch = useDispatch();
-  const showVibemeter = useSelector(
-    (state: RootState) => state.chat.showVibemeter
-  );
 
   // Predefined quick reply options for common responses
   const suggestedReplies = useMemo(
@@ -65,13 +61,6 @@ export default function ChatPage() {
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
   const [showSuggestions, setShowSuggestions] = useState(false); // Suggested replies visibility
-  // const [showVibemeter, setShowVibemeter] = useState(true);
-  const handleMoodSelect = (mood: string) => {
-    // Send the selected mood as a user message
-    sendUserMessage(`I'm feeling ${mood} today`);
-    // Hide the vibemeter after selection
-    dispatch(setShowVibemeter(false));
-  };
 
   // Common emoji options for the emoji picker
   const emojis = useMemo(() => ["😊", "👍", "🎉", "❤️", "🙏", "👋"], []);
@@ -142,7 +131,7 @@ export default function ChatPage() {
 
   return (
     <div
-      className="mx-auto flex flex-col bg-white border rounded-lg shadow-lg"
+      className="mx-auto flex flex-col bg-white border rounded-lg shadow-2xl"
       style={{
         height: "85vh",
         width: "400px",
@@ -158,7 +147,7 @@ export default function ChatPage() {
           <AvatarFallback>AI</AvatarFallback>
         </Avatar>
         <div>
-          <h1 className="text-xl font-bold text-gray-800">AI Assistant</h1>
+          <h1 className="text-xl font-bold text-gray-800">Chatbot</h1>
           {connectionStatus === "connected" ? (
             <p className="text-lime-500">Online</p>
           ) : (
@@ -259,13 +248,6 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {showVibemeter && (
-        <div className="w-full p-2 flex justify-center items-center">
-          <Vibemeter onMoodSelect={handleMoodSelect} />
-        </div>
-      )}
-
-      {/* Suggested Replies - Quick response options */}
       {/* Suggested Replies - Quick response options */}
       <div
         className={`max-h-32 overflow-y-auto border-t p-2 ${showSuggestions ? "block" : "hidden"}`}
