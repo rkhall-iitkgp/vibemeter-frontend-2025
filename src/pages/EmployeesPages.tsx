@@ -9,6 +9,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 // Updated Employee type to match backend format
 type BackendEmployee = {
   employee_id: string;
+  name: string;
   email: string;
   is_verified: boolean;
   risk_score: number;
@@ -51,7 +52,7 @@ type EmployeeDetail = {
 const convertToFrontendFormat = (employee: BackendEmployee): Employee => {
   return {
     id: employee.employee_id,
-    name: employee.email.split("@")[0].replace("_", " "), // Extracting name from email
+    name: employee.name, // Extracting name from email
     jobTitle: employee.job_title,
     dateAdded: formatDate(employee.date_added),
     email: employee.email,
@@ -195,7 +196,7 @@ export default function EmployeesPage() {
 
     return {
       ...selectedEmployee,
-      name: selectedEmployeeDetails.name || selectedEmployee.name,
+      //   name: selectedEmployeeDetails.name || selectedEmployee.name,
       jobTitle: selectedEmployeeDetails.job_title || selectedEmployee.jobTitle,
       email: selectedEmployeeDetails.email || selectedEmployee.email,
       phone:
@@ -267,7 +268,7 @@ export default function EmployeesPage() {
           <div className="space-y-0">
             <DataTable
               title="High Risk Employees"
-              data={highRiskEmployees}
+              data={highRiskEmployees || []}
               iconColor="#ff0000"
               searchQuery={searchQuery}
               handleViewDetails={handleViewDetails}
@@ -275,7 +276,7 @@ export default function EmployeesPage() {
 
             <DataTable
               title="Medium Risk Employees"
-              data={mediumRiskEmployees}
+              data={mediumRiskEmployees || []}
               iconColor="#ffa500"
               searchQuery={searchQuery}
               handleViewDetails={handleViewDetails}
@@ -283,7 +284,7 @@ export default function EmployeesPage() {
 
             <DataTable
               title="Low Risk Employees"
-              data={lowRiskEmployees}
+              data={lowRiskEmployees || []}
               iconColor="#00ff00"
               searchQuery={searchQuery}
               handleViewDetails={handleViewDetails}

@@ -23,6 +23,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "../ui/skeleton";
 import { useState } from "react";
 
 export type Employee = {
@@ -60,6 +61,7 @@ type DataTableProps = {
   iconColor: string;
   searchQuery: string;
   handleViewDetails: (employee: Employee) => void;
+  isLoading?: boolean;
 };
 
 export function DataTable({
@@ -68,6 +70,7 @@ export function DataTable({
   iconColor,
   searchQuery,
   handleViewDetails,
+  isLoading,
 }: DataTableProps) {
   const [sortBy, setSortBy] = useState("priority");
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,9 +80,9 @@ export function DataTable({
   // Filter data based on search query
   const filteredData = data.filter(
     (employee) =>
-      employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.jobTitle.toLowerCase().includes(searchQuery.toLowerCase())
+      employee?.name?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+      employee?.id?.toLowerCase()?.includes(searchQuery.toLowerCase()) ||
+      employee?.jobTitle?.toLowerCase()?.includes(searchQuery.toLowerCase())
   );
 
   // Sort data based on sort option
@@ -152,65 +155,75 @@ export function DataTable({
             <TableHead className="w-[40px]"></TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {paginatedData.length > 0 ? (
-            paginatedData.map((employee) => (
-              <TableRow
-                key={employee.id}
-                className="cursor-pointer hover:bg-gray-50"
-                onClick={() => handleViewDetails(employee)}
-              >
-                <TableCell></TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.id}</TableCell>
-                <TableCell>{employee.jobTitle}</TableCell>
-                <TableCell>{employee.dateAdded}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-full  border-none"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="start"
-                      side="left"
-                      className="w-[180px]"
-                    >
-                      <DropdownMenuItem
-                        onClick={() => handleScheduleMeet(employee.id)}
-                        className="cursor-pointer"
-                      >
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule Meet
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent row click from triggering
-                          handleViewDetails(employee);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
+        {isLoading ? (
+          <TableBody>
             <TableRow>
               <TableCell colSpan={6} className="text-center py-4">
-                No results found
+                <Skeleton className="h-4 w-1/2 mx-auto" />
               </TableCell>
             </TableRow>
-          )}
-        </TableBody>
+          </TableBody>
+        ) : (
+          <TableBody>
+            {paginatedData.length > 0 ? (
+              paginatedData.map((employee) => (
+                <TableRow
+                  key={employee.id}
+                  className="cursor-pointer hover:bg-gray-50"
+                  onClick={() => handleViewDetails(employee)}
+                >
+                  <TableCell></TableCell>
+                  <TableCell>{employee.name}</TableCell>
+                  <TableCell>{employee.id}</TableCell>
+                  <TableCell>{employee.jobTitle}</TableCell>
+                  <TableCell>{employee.dateAdded}</TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 rounded-full  border-none"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="start"
+                        side="left"
+                        className="w-[180px]"
+                      >
+                        <DropdownMenuItem
+                          onClick={() => handleScheduleMeet(employee.id)}
+                          className="cursor-pointer"
+                        >
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Schedule Meet
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent row click from triggering
+                            handleViewDetails(employee);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-4">
+                  No results found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        )}
       </Table>
 
       {/* Always show pagination */}
