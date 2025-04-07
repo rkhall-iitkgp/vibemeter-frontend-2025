@@ -267,7 +267,7 @@ export default function EmployeesPage() {
         ) : ( */}
         <div className="space-y-0">
           <DataTable
-            title="High Risk Employees"
+            title="High Concern Employees"
             data={highRiskEmployees || []}
             iconColor="#ff0000"
             searchQuery={searchQuery}
@@ -276,7 +276,7 @@ export default function EmployeesPage() {
           />
 
           <DataTable
-            title="Medium Risk Employees"
+            title="Medium Concern Employees"
             data={mediumRiskEmployees || []}
             iconColor="#ffa500"
             searchQuery={searchQuery}
@@ -285,7 +285,7 @@ export default function EmployeesPage() {
           />
 
           <DataTable
-            title="Low Risk Employees"
+            title="Low Concern Employees"
             data={lowRiskEmployees || []}
             iconColor="#00ff00"
             searchQuery={searchQuery}
