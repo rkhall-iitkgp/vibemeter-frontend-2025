@@ -2,7 +2,7 @@ import ParticipantFilterModal from "../components/ParticipantFilterModal";
 import { ActionPlansCarousel } from "@/components/action-plan-carousel";
 import AddParticipantsModal from "../components/AddParticipantsModal";
 import FilterButton from "@/components/FilterButton";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/ui/search";
 import { Employee, FocusGroup } from "@/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
@@ -289,10 +289,10 @@ export default function FocusGroupDetails({
           </h2>
 
           <div className="mb-4 flex justify-between items-center">
-            <div className="w-1/2">
+            <div className="w-95">
               <SearchBar
                 onSearch={handleParticipantSearch}
-                placeholder="Search Participant"
+                placeholder="Search Participants"
               />
             </div>
             <div className="flex items-center space-x-3">

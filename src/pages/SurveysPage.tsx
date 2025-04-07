@@ -4,6 +4,7 @@ import SurveyDetails from "@/components/Surveys/survey-details";
 import { useNavigate, useParams } from "react-router";
 import React, { useEffect, useState } from "react";
 import { FocusGroup } from "@/types";
+import SearchBar from "@/components/ui/search";
 
 interface QuestionData {
   id: string;
@@ -58,8 +59,8 @@ const SurveysPage: React.FC = () => {
   // 	},
   // ];
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
   };
 
   const handleClearSearch = () => {
@@ -132,17 +133,11 @@ const SurveysPage: React.FC = () => {
       <main className="p-6 pt-2">
         <div className="flex justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="relative w-96">
+            <div className="relative w-95">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search className="w-5 h-5 text-gray-400" />
               </div>
-              <input
-                type="text"
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-md block w-full pl-10 p-2.5 pr-10"
-                placeholder="Search Focus Group"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
+              <SearchBar onSearch={handleSearchChange} placeholder="Search Surveys" />
               {searchTerm && (
                 <button
                   className="absolute inset-y-0 right-0 flex items-center pr-3"

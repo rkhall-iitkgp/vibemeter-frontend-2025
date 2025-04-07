@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { Employee } from "@/types";
+import SearchBar from "./ui/search";
 
 interface AddParticipantsModalProps {
   onClose: () => void;
@@ -33,6 +34,9 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
   const [tempDateAddedFilters, setTempDateAddedFilters] = useState<string[]>([
     "All",
   ]);
+  const handleSearchQuery = (value: string) => {
+    setSearchQuery(value);
+  };
 
   // Get unique job titles and dates from all employees
   const uniqueJobTitles = [
@@ -214,13 +218,10 @@ const AddParticipantsModal: FC<AddParticipantsModalProps> = ({
                   />
                 </svg>
               </div>
-              <input
-                type="text"
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Search Employee"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+              {/* <div className="relative w-95 mr-3"> */}
+              <SearchBar onSearch={handleSearchQuery} placeholder="Search Employee" />
+              {/* </div> */}
+              {/* Clear search button */}
               {searchQuery && (
                 <button
                   className="absolute inset-y-0 right-0 flex items-center pr-3"

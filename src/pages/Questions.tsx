@@ -1,5 +1,5 @@
 import { X, Plus, Edit, Trash2 } from "lucide-react";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/ui/search";
 import { useEffect, useState } from "react";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -399,24 +399,8 @@ const Questions = () => {
       <main className="p-6 pt-2">
         {/* Search and Create button in same line */}
         <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <div className="relative w-128 mr-4">
-            <SearchBar onSearch={handleSearch} placeholder="Search questions" />
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg
-                className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                ></path>
-              </svg>
-            </div>
+          <div className="relative w-95 mr-4">
+            <SearchBar onSearch={handleSearch} placeholder="Search Questions" />
           </div>
           <button
             type="button"
