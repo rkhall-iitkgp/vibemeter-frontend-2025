@@ -7,6 +7,7 @@ interface Profile {
   id: string;
   name: string;
   avatar: string;
+  description: string
 }
 
 const ProfileSelectPage: React.FC = () => {
@@ -60,6 +61,7 @@ const ProfileSelectPage: React.FC = () => {
             >
               {profile.name}
             </span>
+            <span className="text-sm font-semibold text-gray-400">{profile.description}</span>
           </div>
         ))}
       </div>
