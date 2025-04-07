@@ -1,5 +1,13 @@
-import React, { useEffect, useRef, useState, KeyboardEvent } from "react";
-import { RefreshCcw, X } from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { RefreshCcw, X, Trash2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type React from "react";
 
 interface FocusGroups {
   name: string;
@@ -28,6 +36,8 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
   const [surveyName, setSurveyName] = useState("");
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState<string[]>([""]);
+  const [questionErrors, setQuestionErrors] = useState<boolean[]>([false]);
+  const [showEmptyQuestionAlert, setShowEmptyQuestionAlert] = useState(false);
   const [date, setDate] = useState<string>(() => {
     const now = new Date();
     return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -92,21 +102,80 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
   };
 
   const handleAddQuestion = () => {
+    // Check if the last question is empty
+    if (questions[questions.length - 1].trim() === "") {
+      // Show error for the last question
+      const newErrors = [...questionErrors];
+      newErrors[questions.length - 1] = true;
+      setQuestionErrors(newErrors);
+
+      // Show alert
+      setShowEmptyQuestionAlert(true);
+
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        setShowEmptyQuestionAlert(false);
+      }, 3000);
+
+      return;
+    }
+
+    // Add new question and corresponding error state
     setQuestions([...questions, ""]);
+    setQuestionErrors([...questionErrors, false]);
   };
 
   const handleQuestionChange = (index: number, value: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index] = value;
     setQuestions(updatedQuestions);
+
+    // Clear error for this question if it has content
+    if (value.trim() !== "") {
+      const newErrors = [...questionErrors];
+      newErrors[index] = false;
+      setQuestionErrors(newErrors);
+    }
+  };
+
+  const handleDeleteQuestion = (index: number) => {
+    // Don't allow deleting if there's only one question
+    if (questions.length <= 1) return;
+
+    const updatedQuestions = questions.filter((_, i) => i !== index);
+    const updatedErrors = questionErrors.filter((_, i) => i !== index);
+
+    setQuestions(updatedQuestions);
+    setQuestionErrors(updatedErrors);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check for empty questions
+    const hasEmptyQuestions = questions.some((q) => q.trim() === "");
+
+    if (hasEmptyQuestions) {
+      // Mark all empty questions with errors
+      const newErrors = questions.map((q) => q.trim() === "");
+      setQuestionErrors(newErrors);
+
+      // Show alert
+      setShowEmptyQuestionAlert(true);
+
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        setShowEmptyQuestionAlert(false);
+      }, 3000);
+
+      return;
+    }
+
     if (!targetGroups.length) {
       setShowTargetGroupsError(true);
       return;
     }
+
     const submitData = async () => {
       setLoading(true);
       try {
@@ -135,6 +204,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
           setSurveyName("");
           setDescription("");
           setQuestions([""]);
+          setQuestionErrors([false]);
           setDate(() => {
             const now = new Date();
             return new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -149,11 +219,8 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
       } finally {
         setLoading(false);
       }
-
-      // Add the new survey to the surveys array
     };
     submitData();
-    // Reset form
   };
 
   return (
@@ -174,19 +241,25 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
             Design your survey and collect responses from your audience.
           </p>
 
+          {showEmptyQuestionAlert && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Questions cannot be empty. Please enter text for all questions.
+              </AlertDescription>
+            </Alert>
+          )}
+
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
-              <label
-                htmlFor="surveyName"
-                className="block text-lg font-medium mb-2"
-              >
+              <Label htmlFor="surveyName" className="text-lg font-medium">
                 Survey Name
-              </label>
-              <input
+              </Label>
+              <Input
                 id="surveyName"
                 type="text"
                 placeholder="Enter survey name"
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="mt-2"
                 value={surveyName}
                 onChange={(e) => setSurveyName(e.target.value)}
                 required
@@ -194,30 +267,24 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
             </div>
 
             <div className="mb-6">
-              <label
-                htmlFor="description"
-                className="block text-lg font-medium mb-2"
-              >
+              <Label htmlFor="description" className="text-lg font-medium">
                 Description
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id="description"
                 placeholder="Briefly describe the purpose of this survey"
-                className="w-full p-3 border border-gray-300 rounded-lg min-h-[120px]"
+                className="mt-2 min-h-[120px]"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div className="mb-6">
-              <label
-                htmlFor="description"
-                className="block text-lg font-medium mb-2"
-              >
+              <Label htmlFor="date" className="text-lg font-medium">
                 End Date
-              </label>
-              <input
+              </Label>
+              <Input
                 id="date"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="mt-2"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
@@ -226,11 +293,13 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
               />
             </div>
             <div>
-              <label className="block text-lg font-medium mb-2">
-                Target Groups
-              </label>
+              <Label className="text-lg font-medium">Target Groups</Label>
               <div
-                className={`mt-3 rounded-lg border ${showTargetGroupsError && targetGroups.length === 0 ? "border-red-500" : "border-dashed border-gray-300"} p-4`}
+                className={`mt-3 rounded-lg border ${
+                  showTargetGroupsError && targetGroups.length === 0
+                    ? "border-red-500"
+                    : "border-dashed border-gray-300"
+                } p-4`}
               >
                 {/* Selected Target Groups */}
                 <div className="flex flex-wrap gap-2 mb-2">
@@ -242,26 +311,14 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
                       <div
                         key={index}
                         className="flex items-center rounded-full bg-[#80C342]/10 px-3 py-1.5 text-sm text-[#80C342] border border-[#80C342]/20"
-                        style={{ whiteSpace: "nowrap" }} // Prevent text from wrapping inside the item
+                        style={{ whiteSpace: "nowrap" }}
                       >
                         <span>{group.name}</span>
                         <button
                           onClick={() => removeTargetGroup(groupId)}
                           className="ml-2 text-[#80C342] hover:text-[#6ba238]"
                         >
-                          <svg
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
+                          <X className="h-4 w-4" />
                         </button>
                       </div>
                     ) : null;
@@ -270,14 +327,14 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
 
                 {/* Input for new target group */}
                 <div className="flex">
-                  <input
+                  <Input
                     ref={inputRef}
                     type="text"
                     value={targetGroupInput}
                     onChange={(e) => setTargetGroupInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Add target group and press Enter"
-                    className="flex-1 rounded-l-md border border-gray-300 p-2 text-gray-700 focus:border-[#80C342] focus:outline-none"
+                    className="flex-1"
                   />
                 </div>
 
@@ -305,49 +362,62 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({
               </div>
             </div>
             <div className="mb-6">
-              <label className="block text-lg font-medium mb-2">
+              <Label className="block text-lg font-medium mb-2">
                 Questions
-              </label>
+              </Label>
               {questions.map((question, index) => (
-                <div key={index} className="flex items-center mb-4">
-                  <input
-                    type="text"
-                    placeholder={`Question ${index + 1}`}
-                    className="w-full p-3 border border-gray-300 rounded-lg"
-                    value={question}
-                    onChange={(e) =>
-                      handleQuestionChange(index, e.target.value)
-                    }
-                  />
+                <div key={index} className="flex items-start mb-4 gap-2">
+                  <div className="flex-1">
+                    <Input
+                      type="text"
+                      placeholder={`Question ${index + 1}`}
+                      className={`w-full ${questionErrors[index] ? "border-red-500" : ""}`}
+                      value={question}
+                      onChange={(e) =>
+                        handleQuestionChange(index, e.target.value)
+                      }
+                    />
+                    {questionErrors[index] && (
+                      <p className="text-sm text-red-500 mt-1">
+                        Question cannot be empty
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleDeleteQuestion(index)}
+                    disabled={questions.length <= 1}
+                    className="flex-shrink-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               ))}
-              <button
+              <Button
                 type="button"
                 onClick={handleAddQuestion}
-                className="px-4 py-2 bg-[#80C342] text-white rounded-lg hover:bg-[#74b13c]"
+                className="bg-[#80C342] hover:bg-[#74b13c]"
               >
                 Add Question
-              </button>
+              </Button>
             </div>
 
             <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
+              <Button type="button" onClick={onClose} variant="outline">
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-[#80C342] disabled:bg-[#aeec75] text-white rounded-lg hover:bg-[#74b13c] flex items-center"
+                className="bg-[#80C342] hover:bg-[#74b13c]"
               >
                 {loading ? (
-                  <RefreshCcw className="animate-spin h-5 w-5 mr-3 text-white" />
+                  <RefreshCcw className="animate-spin h-5 w-5 mr-3" />
                 ) : null}
                 Create Survey
-              </button>
+              </Button>
             </div>
           </form>
         </div>
