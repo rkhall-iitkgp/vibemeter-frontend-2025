@@ -147,18 +147,18 @@ const EmployeeCardSkeleton = () => {
     <Card className="border border-gray-200 rounded-lg mb-2 animate-pulse">
       <CardContent className="py-2 px-3 sm:px-4">
         <div className="flex items-center gap-2 sm:gap-2">
-          <Avatar className="w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-100 shrink-0 bg-gray-300" />
+          <Avatar className="w-8 h-8 sm:w-9 sm:h-9 ring-1 ring-gray-100 shrink-0 bg-gray-200" />
           <div className="flex-grow min-w-0 flex gap-1 flex-col">
             <div className="flex justify-between items-baseline">
-              <p className="bg-gray-300 h-[14px] w-[120px] sm:w-[200px] rounded-md" />
-              <p className="bg-gray-300 h-[14px] w-[50px] rounded-md" />
+              <p className="bg-gray-200 h-[14px] w-[120px] sm:w-[200px] rounded-md" />
+              <p className="bg-gray-200 h-[14px] w-[50px] rounded-md" />
             </div>
-            <p className="text-xs text-gray-500 truncate bg-gray-300 h-[14px] w-[150px] rounded-md" />
+            <p className="text-xs text-gray-500 truncate bg-gray-200 h-[14px] w-[150px] rounded-md" />
           </div>
         </div>
         <div className="mt-1 flex gap-1.5 flex-wrap">
-          <p className="bg-gray-300 h-[24px] w-[120px] rounded-sm" />
-          <p className="bg-gray-300 h-[24px] w-[200px] rounded-sm" />
+          <p className="bg-gray-200 h-[24px] w-[120px] rounded-sm" />
+          <p className="bg-gray-200 h-[24px] w-[200px] rounded-sm" />
         </div>
       </CardContent>
     </Card>
