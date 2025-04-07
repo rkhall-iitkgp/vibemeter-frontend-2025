@@ -157,11 +157,24 @@ export function DataTable({
         </TableHeader>
         {isLoading ? (
           <TableBody>
-            <TableRow>
-              <TableCell colSpan={6} className="text-center py-4">
-                <Skeleton className="h-4 w-1/2 mx-auto" />
-              </TableCell>
-            </TableRow>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <TableRow key={index} className="cursor-pointer hover:bg-gray-50">
+                <TableCell></TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-1/2" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-1/2" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-1/2" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-1/2" />
+                </TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         ) : (
           <TableBody>

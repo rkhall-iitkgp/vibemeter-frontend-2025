@@ -260,37 +260,40 @@ export default function EmployeesPage() {
           </div>
         </div>
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-gray-500">Loading employee data...</p>
           </div>
-        ) : (
-          <div className="space-y-0">
-            <DataTable
-              title="High Risk Employees"
-              data={highRiskEmployees || []}
-              iconColor="#ff0000"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
+        ) : ( */}
+        <div className="space-y-0">
+          <DataTable
+            title="High Risk Employees"
+            data={highRiskEmployees || []}
+            iconColor="#ff0000"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+            isLoading={isLoading}
+          />
 
-            <DataTable
-              title="Medium Risk Employees"
-              data={mediumRiskEmployees || []}
-              iconColor="#ffa500"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
+          <DataTable
+            title="Medium Risk Employees"
+            data={mediumRiskEmployees || []}
+            iconColor="#ffa500"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+            isLoading={isLoading}
+          />
 
-            <DataTable
-              title="Low Risk Employees"
-              data={lowRiskEmployees || []}
-              iconColor="#00ff00"
-              searchQuery={searchQuery}
-              handleViewDetails={handleViewDetails}
-            />
-          </div>
-        )}
+          <DataTable
+            title="Low Risk Employees"
+            data={lowRiskEmployees || []}
+            iconColor="#00ff00"
+            searchQuery={searchQuery}
+            handleViewDetails={handleViewDetails}
+            isLoading={isLoading}
+          />
+        </div>
+        {/* )} */}
 
         {selectedEmployee && (
           <EmployeeDetailsSheet
