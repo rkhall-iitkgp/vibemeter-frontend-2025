@@ -1,12 +1,12 @@
 import { DashboardPage, Graph, AdminDashboard } from "./pages";
 import ActionPlanDetails from "./pages/ActionPlanDetails";
 import FocusGroupPage from "./pages/FocusGroupPage";
+import ActionPlanPage from "./pages/ActionPlanPage";
 import AdminLayout from "./components/AdminLayout";
 import EmployeesPage from "./pages/EmployeesPages";
 import SurveysPage from "./pages/SurveysPage";
 import PersonaPage from "./pages/PersonaPage";
 import { Route, Routes } from "react-router";
-import ActionPlan from "./pages/ActionPlan";
 import Questions from "./pages/Questions";
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
           path="/action-plan"
           element={
             <AdminLayout>
-              <ActionPlan />
+              <ActionPlanPage />
             </AdminLayout>
           }
         />

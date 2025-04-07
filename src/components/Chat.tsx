@@ -8,6 +8,8 @@ import React, {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setShowVibemeter } from "@/store";
 import { Button } from "@/components/ui/button";
 import Vibemeter from "@/components/Vibemeter";
 import { useChat } from "@/hooks/useChat";
@@ -45,6 +47,10 @@ export default function ChatPage() {
     connectionStatus,
     reconnect,
   } = useChat();
+  const dispatch = useDispatch();
+  const showVibemeter = useSelector(
+    (state: RootState) => state.chat.showVibemeter
+  );
 
   // Predefined quick reply options for common responses
   const suggestedReplies = useMemo(
@@ -59,12 +65,12 @@ export default function ChatPage() {
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
   const [showSuggestions, setShowSuggestions] = useState(false); // Suggested replies visibility
-  const [showVibemeter, setShowVibemeter] = useState(true);
+  // const [showVibemeter, setShowVibemeter] = useState(true);
   const handleMoodSelect = (mood: string) => {
     // Send the selected mood as a user message
     sendUserMessage(`I'm feeling ${mood} today`);
     // Hide the vibemeter after selection
-    setShowVibemeter(false);
+    dispatch(setShowVibemeter(false));
   };
 
   // Common emoji options for the emoji picker

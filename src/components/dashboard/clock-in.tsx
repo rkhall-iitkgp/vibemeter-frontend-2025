@@ -6,9 +6,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar, Clock, Coffee, LogOut, Timer } from "lucide-react";
+import { setShowChat, setShowVibemeter } from "@/store";
 import { format, differenceInMinutes } from "date-fns";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
 import { cn } from "@/lib/utils";
 
 interface ClockInOutProps {
@@ -32,6 +34,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   const [totalBreakMinutes, setTotalBreakMinutes] = useState<number>(0);
   const [isOnBreak, setIsOnBreak] = useState<boolean>(false);
   const [workingTime, setWorkingTime] = useState<string>("0h 0m");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -56,6 +59,8 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
 
   const handleClockIn = () => {
     const now = new Date();
+    dispatch(setShowChat(true));
+    dispatch(setShowVibemeter(true));
     setClockInTime(now);
     onClockIn?.(now);
   };

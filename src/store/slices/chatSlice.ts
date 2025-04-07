@@ -21,6 +21,8 @@ interface ChatState {
   lastbotMessageId?: string;
   error: string | null;
   connectionStatus: ConnectionStatus;
+  showChat: boolean;
+  showVibemeter: boolean;
 }
 
 const initialState: ChatState = {
@@ -30,6 +32,8 @@ const initialState: ChatState = {
   lastbotMessageId: undefined,
   error: null,
   connectionStatus: "disconnected",
+  showChat: false,
+  showVibemeter: false,
 };
 
 const generateId = () =>
@@ -97,6 +101,12 @@ const chatSlice = createSlice({
       state.isBotThinking = false;
       state.lastbotMessageId = undefined;
     },
+    setShowChat: (state, action: PayloadAction<boolean>) => {
+      state.showChat = action.payload;
+    },
+    setShowVibemeter: (state, action: PayloadAction<boolean>) => {
+      state.showVibemeter = action.payload;
+    },
   },
 });
 
@@ -110,6 +120,8 @@ export const {
   setError,
   clearChat,
   stopBotResponse,
+  setShowChat,
+  setShowVibemeter,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
