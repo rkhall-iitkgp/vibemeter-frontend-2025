@@ -11,6 +11,7 @@ import AdminBubbleChart, {
   BubbleData,
 } from "@/components/Admin/AdminBubbleChart";
 import { FaChartBar, FaDownload, FaSpinner } from "react-icons/fa";
+import Parameter from "@/components/Admin/parameters";
 import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
@@ -215,8 +216,13 @@ export default function AdminDashboard() {
             />
           </div>
         </div>
-
-        {/* Section 2 - First bubble chart */}
+        {/* Section 2 - Parameters */}
+        <div className="mt-4" ref={section2Ref}>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <Parameter />
+          </div>
+        </div>
+        {/* Section 3 - First bubble chart */}
         <div className="mt-4" ref={section2Ref}>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <AdminBubbleChart data={data.bubble_data} isLoading={loading} />
