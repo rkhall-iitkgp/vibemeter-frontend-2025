@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,7 +55,7 @@ export default function Parameter() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6">
+    <div className="w-full mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-2">
         <div>
           <h2 className="text-2xl font-semibold text-gray-900">Parameters</h2>
@@ -69,7 +67,7 @@ export default function Parameter() {
           variant="ghost"
           size="sm"
           onClick={toggleEditMode}
-          className="text-green-600 hover:text-green-700 hover:bg-green-50"
+          className="text-[#80C342] hover:text-[#80C342] hover:bg-green-50"
         >
           {isEditing ? (
             <>
@@ -121,7 +119,7 @@ function ParameterCard({
       <CardContent className="p-4">
         <Label
           htmlFor={`parameter-${parameter.id}`}
-          className="block text-sm font-medium text-green-600 mb-1"
+          className="block text-sm font-medium text-[#80C342] mb-1"
         >
           {parameter.name}
         </Label>
