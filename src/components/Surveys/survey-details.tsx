@@ -306,19 +306,6 @@ const SurveyDetails: React.FC<SurveyDetailsProps> = ({ survey_id }) => {
 
             <div className="py-4">
               <h2 className="text-lg font-semibold mb-3">Survey Questions</h2>
-              {/* <div className="mb-4">
-								<input
-									type="text"
-									placeholder="Search questions..."
-									className="w-full p-2 border rounded-lg"
-									onChange={(e) => {
-										const searchTerm = e.target.value.toLowerCase();
-										survey.questions.forEach((question) => {
-											question.expanded = question.text.toLowerCase().includes(searchTerm);
-										});
-									}}
-								/>
-							</div> */}
               <div className="flex gap-4 flex-col">
                 {survey?.questions.map((question, index) => (
                   <QuestionAccordion
