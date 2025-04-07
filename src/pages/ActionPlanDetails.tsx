@@ -23,7 +23,9 @@ const getBadgeColor = (tag: string) => {
 };
 
 // Header Component
-const ActionPlanHeader = ({ plan }: { plan: ActionPlan }) => {
+const ActionPlanHeader = ({ plan }: { plan?: ActionPlan }) => {
+  if (!plan) return null;
+  
   return (
     <div>
       <div className="mb-6">
@@ -54,7 +56,7 @@ const ActionPlanHeader = ({ plan }: { plan: ActionPlan }) => {
         </div>
         <span className="text-sm text-gray-500">
           Created on{" "}
-          {new Date(plan.created_at).toLocaleDateString("en-US", {
+          {plan.created_at && new Date(plan.created_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "2-digit",
@@ -70,7 +72,7 @@ const ActionPlanHeader = ({ plan }: { plan: ActionPlan }) => {
 };
 
 // Target Metrics Component - Made to match the image with inline badges
-const TargetMetrics = ({ metrics }: { metrics: string[] }) => {
+const TargetMetrics = ({ metrics }: { metrics?: string[] }) => {
   if (!metrics || metrics.length === 0) {
     return (
       <div className="my-4">
@@ -83,7 +85,7 @@ const TargetMetrics = ({ metrics }: { metrics: string[] }) => {
     <div className="my-4">
       <h2 className="font-semibold mb-2">Target Metrics:</h2>
       <div className="flex flex-wrap gap-2">
-        {metrics.map((metric, index) => (
+        {metrics?.map((metric, index) => (
           <span
             key={index}
             className={`px-2 py-1 rounded-md text-xs ${getBadgeColor(metric)}`}
@@ -97,7 +99,7 @@ const TargetMetrics = ({ metrics }: { metrics: string[] }) => {
 };
 
 // Focus Groups Component with Sort
-const FocusGroups = ({ groups }: { groups: FocusGroup[] }) => {
+const FocusGroups = ({ groups }: { groups?: FocusGroup[] }) => {
   const navigate = useNavigate();
   const [sortedGroups, setSortedGroups] = useState<FocusGroup[]>([]);
   const [sortBy, setSortBy] = useState("priority");
@@ -118,6 +120,7 @@ const FocusGroups = ({ groups }: { groups: FocusGroup[] }) => {
     );
   }
 
+  console.log(groups)
   return (
     <div className="my-6">
       <div className="flex justify-between items-center mb-3">
@@ -151,7 +154,7 @@ const FocusGroups = ({ groups }: { groups: FocusGroup[] }) => {
                   <h3 className="font-medium">{group.name}</h3>
                   <p className="text-xs text-gray-500">
                     Created on{" "}
-                    {new Date(group.created_at).toLocaleDateString("en-US", {
+                    {group.created_at && new Date(group.created_at).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
                       day: "2-digit",
@@ -187,7 +190,7 @@ const FocusGroups = ({ groups }: { groups: FocusGroup[] }) => {
 };
 
 // Steps Component - Fixed to have the line pass through the center of the circles
-const ActionSteps = ({ steps }: { steps: ActionStep[] }) => {
+const ActionSteps = ({ steps }: { steps?: ActionStep[] }) => {
   if (!steps || steps.length === 0) {
     return (
       <div className="my-6">
@@ -236,12 +239,14 @@ const ActionSteps = ({ steps }: { steps: ActionStep[] }) => {
 // Main Component
 const ActionPlanDetails = () => {
   const { actionId } = useParams(); // Get id from URL params
-  const [plan, setPlan] = useState<ActionPlan | null>(null); // State to hold the action plan data
+  const [plan, setPlan] = useState<ActionPlan | null>(null); // Changed from {} to null for better type safety
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch the action plan data from the backend using the id from URL params
     const fetchActionPlan = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${BACKEND_URL}/api/actions/${actionId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -250,18 +255,32 @@ const ActionPlanDetails = () => {
         setPlan(data.data); // Set the plan data
       } catch (error) {
         console.error("Error fetching action plan:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchActionPlan();
+    
+    if (actionId) {
+      fetchActionPlan();
+    }
   }, [actionId]);
 
+  if (loading) {
+    return <div className="w-full mx-auto p-4 sm:p-6 bg-gray-50">Loading...</div>;
+  }
+
+  if (!plan) {
+    return <div className="w-full mx-auto p-4 sm:p-6 bg-gray-50">Action plan not found</div>;
+  }
+
+  console.log(plan.target_groups)
   return (
     <div className="w-full mx-auto p-4 sm:p-6 bg-gray-50 overflow-auto">
       <div className="bg-white p-5 rounded-lg shadow-sm">
-        <ActionPlanHeader plan={plan!} />
-        <TargetMetrics metrics={plan!.metric} />
-        <FocusGroups groups={plan!.target_groups} />
-        <ActionSteps steps={plan!.steps} />
+        <ActionPlanHeader plan={plan} />
+        <TargetMetrics metrics={plan.metric} />
+        <FocusGroups groups={plan.target_groups} />
+        <ActionSteps steps={plan.steps} />
       </div>
     </div>
   );

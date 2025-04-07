@@ -6,7 +6,7 @@ import EmployeesPage from "./pages/EmployeesPages";
 import SurveysPage from "./pages/SurveysPage";
 import PersonaPage from "./pages/PersonaPage";
 import { Route, Routes } from "react-router";
-import ActionPlan from "./pages/ActionPlan";
+import ActionPlanPage from "./pages/ActionPlanPage";
 import Questions from "./pages/Questions";
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
           path="/action-plan"
           element={
             <AdminLayout>
-              <ActionPlan />
+              <ActionPlanPage />
             </AdminLayout>
           }
         />
