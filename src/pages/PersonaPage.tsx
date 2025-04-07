@@ -53,7 +53,9 @@ const ProfileSelectPage: React.FC = () => {
             </div>
             <span
               className={`text-lg font-medium transition-colors duration-200 ${
-                hoveredProfile === profile.id ? "text-[#80C342]" : "text-gray-700"
+                hoveredProfile === profile.id
+                  ? "text-[#80C342]"
+                  : "text-gray-700"
               }`}
             >
               {profile.name}

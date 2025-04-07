@@ -1,7 +1,7 @@
-import React from 'react';
-import SearchBar from "@/components/ui/search";
 import FilterButton from "@/components/FilterButton";
+import SearchBar from "@/components/ui/search";
 import { Plus } from "lucide-react";
+import React from "react";
 
 interface FocusGroupSkeletonProps {
   onSearch: (query: string) => void;
@@ -14,7 +14,7 @@ const FocusGroupSkeleton: React.FC<FocusGroupSkeletonProps> = ({
   onSearch,
   onFilter,
   onAddGroup,
-  hasActiveFilters
+  hasActiveFilters,
 }) => {
   return (
     <div className="flex-1 overflow-auto">
@@ -39,10 +39,7 @@ const FocusGroupSkeleton: React.FC<FocusGroupSkeletonProps> = ({
                 placeholder="Search Focus Groups"
               />
             </div>
-            <FilterButton
-              onClick={onFilter}
-              isActive={hasActiveFilters}
-            />
+            <FilterButton onClick={onFilter} isActive={hasActiveFilters} />
           </div>
           <button
             type="button"
@@ -64,20 +61,26 @@ const FocusGroupSkeleton: React.FC<FocusGroupSkeletonProps> = ({
               {/* First Row: Name, Members Count, Edit & Delete */}
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-4">
-              <div className="w-70 h-6 bg-gray-200 animate-pulse rounded" /> {/* Name */}
-              <div className="w-20 h-6 bg-gray-200 animate-pulse rounded" /> {/* Members count */}
-            </div>
-            <div className="flex gap-2">
-              <div className="w-6 h-6 bg-gray-200 animate-pulse rounded" /> {/* Delete */}
-              <div className="w-6 h-6 bg-gray-200 animate-pulse rounded" /> {/* Edit */}
-            </div>
+                  <div className="w-70 h-6 bg-gray-200 animate-pulse rounded" />{" "}
+                  {/* Name */}
+                  <div className="w-20 h-6 bg-gray-200 animate-pulse rounded" />{" "}
+                  {/* Members count */}
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 bg-gray-200 animate-pulse rounded" />{" "}
+                  {/* Delete */}
+                  <div className="w-6 h-6 bg-gray-200 animate-pulse rounded" />{" "}
+                  {/* Edit */}
+                </div>
               </div>
 
               {/* Second Row: Created Date and Selected Metrics */}
               <div className="flex items-center gap-4 mb-4">
-            <div className="w-40 h-5 bg-gray-200 animate-pulse rounded" /> {/* Created date */}
-            <div className="w-36 h-5 bg-gray-200 animate-pulse rounded" /> {/* Selected metrics */}
-            <div className="w-42 h-5 bg-gray-200 animate-pulse rounded" />
+                <div className="w-40 h-5 bg-gray-200 animate-pulse rounded" />{" "}
+                {/* Created date */}
+                <div className="w-36 h-5 bg-gray-200 animate-pulse rounded" />{" "}
+                {/* Selected metrics */}
+                <div className="w-42 h-5 bg-gray-200 animate-pulse rounded" />
               </div>
 
               {/* Third Row: Description */}

@@ -8,8 +8,6 @@ import React, {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/useChat";
 import { cn } from "@/lib/utils";
@@ -46,7 +44,6 @@ export default function ChatPage() {
     connectionStatus,
     reconnect,
   } = useChat();
-  const dispatch = useDispatch();
 
   // Predefined quick reply options for common responses
   const suggestedReplies = useMemo(
