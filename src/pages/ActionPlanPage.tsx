@@ -19,7 +19,7 @@ interface ActionPlanFormValues {
   is_completed: boolean;
   target_groups: string[];
   metric: string[];
-  steps: any[];
+  steps: { title: string; description: string }[];
 }
 
 export default function ActionPlanPage() {
