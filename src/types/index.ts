@@ -29,3 +29,21 @@ export interface ActionPlan {
   target_groups: FocusGroup[];
   created_at: string;
 }
+
+export interface Step {
+  title: string;
+  description: string;
+}
+
+export interface Suggestion {
+  title: string;
+  purpose: string;
+  metric: string[];
+  steps: Step[];
+}
+
+export interface SuggestionsState {
+  items: Suggestion[];
+  loading: boolean;
+  error: string | null;
+}

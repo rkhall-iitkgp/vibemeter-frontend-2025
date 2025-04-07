@@ -1,3 +1,8 @@
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "@/store/store";
+import { fetchSuggestions } from '../../store/slices/suggestionsSlice';
+
 import {
   Carousel,
   CarouselContent,
@@ -7,50 +12,21 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "./Card";
 
-// Use the same data structure as your original component
-const actionPlans = [
-  {
-    id: 1,
-    title: "Recognition Program",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale.",
-    priorityLevel: "high",
-    targetGroup: "All Departments",
-    categories: ["Team Building", "Morale"],
-  },
-  {
-    id: 2,
-    title: "Recognition Program",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale.",
-    priorityLevel: "high",
-    targetGroup: "All Departments",
-    categories: ["Team Building", "Morale"],
-  },
-  {
-    id: 3,
-    title: "Recognition Program",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale.",
-    priorityLevel: "high",
-    targetGroup: "All Departments",
-    categories: ["Team Building", "Morale"],
-  },
-  {
-    id: 4,
-    title: "Recognition Program",
-    description:
-      "Implement a monthly employee recognition program to celebrate achievements and boost morale.",
-    priorityLevel: "high",
-    targetGroup: "All Departments",
-    categories: ["Team Building", "Morale"],
-  },
-];
-
 export function ActionPlansCarousel() {
+  const dispatch = useDispatch();
+  const { items, loading, error } = useSelector((state : RootState) => state.suggestions);
+
+  useEffect(() => {
+    dispatch(fetchSuggestions());
+  }, [dispatch]);
+  
+  
   const isVisible = true;
 
   if (!isVisible) return null;
+  if (loading) return <div>Loading suggestions...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (items.length === 0) return <div>No suggestions available.</div>;
 
   return (
     <div className="bg-slate-100 rounded-sm p-6 px-10 relative mx-auto max-w-7xl">
@@ -69,19 +45,19 @@ export function ActionPlansCarousel() {
         }}
       >
         <CarouselContent className="-ml-4">
-          {actionPlans.map((plan) => (
+          {items.map((plan : any,index : number) => (
             <CarouselItem
-              key={plan.id}
+              key={index}
               className="pl-4 w-full sm:basis-1/2 lg:basis-1/3"
             >
               <Card
                 title={plan.title}
-                description={plan.description}
-                priorityLevel={plan.priorityLevel as "high" | "medium" | "low"}
+                description={plan.purpose}
+                priorityLevel={"high"}
                 targetGroup={plan.targetGroup}
-                categories={plan.categories}
+                categories={plan.metric}
                 onViewDetails={() =>
-                  console.log(`View details for plan ${plan.id}`)
+                  console.log(`View details for plan ${index}`)
                 }
               />
             </CarouselItem>
