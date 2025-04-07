@@ -1,90 +1,154 @@
-import { useState, useEffect, useRef } from "react";
+"use client"
 
-export interface EmployeeSatisfaction {
-	percentage: number;
-	change: number;
-	period: string;
-}
-
-interface EmployeeSatisfactionGaugeProps {
-	title?: string;
-	subtitle?: string;
-	percentage?: number; // Satisfaction percentage value
-	change?: number; // Monthly change percentage
-	period?: string; // Label for the month
-	className?: string; // Additional class name for custom styling
-}
+import { useState, useEffect, useRef } from "react"
 
 export default function EmployeeSatisfactionGauge({
   title = "Employee Satisfaction",
   subtitle = "Employees who need most attention",
-  percentage,
-  change,
-  period,
-  className = "", // Add className prop for custom styling
-}: EmployeeSatisfactionGaugeProps) {
-  const [animatedAngle, setAnimatedAngle] = useState(-90);
-  const [animatedRatio, setAnimatedRatio] = useState(0);
+  satisfactionValue = 68,
+  monthlyChange = 5.3,
+  monthLabel = "in past 1 month",
+  className = "",
+  isLoading = false, // Add isLoading prop to control skeleton state
+}) {
+  const [animatedAngle, setAnimatedAngle] = useState(-90)
+  const [animatedRatio, setAnimatedRatio] = useState(0)
 
-  const ratio = Math.min(Math.max((percentage || 0) / 100, 0), 1);
-  const targetNeedleAngle = -90 + 180 * ratio;
+  const ratio = Math.min(Math.max(satisfactionValue / 100, 0), 1)
+  const targetNeedleAngle = -90 + 180 * ratio
 
-  const animationRef = useRef<number | null>(null);
+  const animationRef = useRef<number | null>(null)
 
   useEffect(() => {
+    if (isLoading) return // Don't animate if we're in loading state
+
     if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
+      cancelAnimationFrame(animationRef.current)
     }
 
-    const startTime = Date.now();
-    const duration = 1500;
-    const startAngle = -90;
-    const startRatio = 0;
-    const angleChange = targetNeedleAngle - startAngle;
-    const ratioChange = ratio - startRatio;
+    const startTime = Date.now()
+    const duration = 1500
+    const startAngle = -90
+    const startRatio = 0
+    const angleChange = targetNeedleAngle - startAngle
+    const ratioChange = ratio - startRatio
 
     // Animation function
     const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
 
-      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const easeOut = 1 - Math.pow(1 - progress, 3)
 
-      const currentAngle = startAngle + angleChange * easeOut;
-      const currentRatio = startRatio + ratioChange * easeOut;
+      const currentAngle = startAngle + angleChange * easeOut
+      const currentRatio = startRatio + ratioChange * easeOut
 
-      setAnimatedAngle(currentAngle);
-      setAnimatedRatio(currentRatio);
+      setAnimatedAngle(currentAngle)
+      setAnimatedRatio(currentRatio)
 
       if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
+        animationRef.current = requestAnimationFrame(animate)
       }
-    };
+    }
 
-    animationRef.current = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(animate)
 
     return () => {
       if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+        cancelAnimationFrame(animationRef.current)
       }
-    };
-  }, [ratio, targetNeedleAngle]);
+    }
+  }, [ratio, targetNeedleAngle, isLoading])
 
   // Format monthly change display
-  const changeSign = (change || 0) >= 0 ? "+" : "";
-  const changeColor =
-    (change || 0) >= 0 ? "text-[#7CC243]-600" : "text-red-600";
+  const changeSign = monthlyChange >= 0 ? "+" : ""
+  const changeColor = monthlyChange >= 0 ? "text-green-600" : "text-red-600"
 
   // Arc properties
-  const radius = 90;
-  const arcLength = Math.PI * radius; // Length of a semicircle arc
+  const radius = 90
+  const arcLength = Math.PI * radius // Length of a semicircle arc
+
+  // Skeleton component
+  if (isLoading) {
+    return (
+      <div className={`w-full bg-white rounded-lg shadow-sm ${className}`}>
+        <div className="pt-4 pl-4">
+          <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse mt-2"></div>
+        </div>
+
+        <div className="px-2 pb-4">
+          <div className="relative max-w-xs mx-auto">
+            <svg
+              className="w-full h-48"
+              viewBox="0 0 200 105"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              {/* Concentric half circles - just two as requested */}
+              <path
+                d="M 30,100 A 70,70 0 0 1 170,100"
+                fill="none"
+                stroke="#CBD5E1"
+                strokeWidth="1"
+                strokeDasharray="2,2"
+              />
+
+              <path
+                d="M 60,100 A 40,40 0 0 1 140,100"
+                fill="none"
+                stroke="#CBD5E1"
+                strokeWidth="1"
+                strokeDasharray="2,2"
+              />
+
+              {/* Background arc */}
+              <path
+                d="M 10,100 A 90,90 0 0 1 190,100"
+                fill="none"
+                stroke="#e5e7eb"
+                strokeWidth="20"
+                strokeLinecap="round"
+              />
+
+              {/* Skeleton arc - pulsing */}
+              <path
+                d="M 10,100 A 90,90 0 0 1 190,100"
+                fill="none"
+                stroke="#e2e8f0"
+                strokeWidth="20"
+                strokeLinecap="round"
+                className="animate-pulse"
+              />
+
+              {/* Skeleton needle */}
+              <g transform={`rotate(-90, 100, 100)`}>
+                <path d="M 92,100 L 100,30 L 108,100 Z" fill="#e2e8f0" className="animate-pulse" />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="8"
+                  fill="#ffffff"
+                  stroke="#e2e8f0"
+                  strokeWidth="2"
+                  className="animate-pulse"
+                />
+              </g>
+            </svg>
+          </div>
+
+          {/* Skeleton percentage display */}
+          <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mx-auto mt-2"></div>
+          <div className="h-5 w-24 bg-gray-200 rounded animate-pulse mx-auto mt-2"></div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`w-full bg-white rounded-lg shadow-sm ${className}`}>
       <div className="pt-4 pl-4">
-        <div className="text-lg sm:text-xl font-semibold text-gray-900">
-          {title}
-        </div>
+        <div className="text-lg sm:text-xl font-semibold text-gray-900">{title}</div>
         <div className="text-xs text-gray-500">{subtitle}</div>
       </div>
 
@@ -137,50 +201,30 @@ export default function EmployeeSatisfactionGauge({
             <g transform={`rotate(${animatedAngle}, 100, 100)`}>
               {/* Enhanced indicator */}
               <defs>
-                <linearGradient
-                  id="needleGradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="0%"
-                  y2="100%"
-                >
+                <linearGradient id="needleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="#8BC34A" stopOpacity="1" />
                   <stop offset="100%" stopColor="#7CB342" stopOpacity="1" />
                 </linearGradient>
               </defs>
 
               {/* Main needle shape with thicker base */}
-              <path
-                d="M 92,100 L 100,30 L 108,100 Z"
-                fill="url(#needleGradient)"
-                stroke="#7CB342"
-                strokeWidth="0.5"
-              />
+              <path d="M 92,100 L 100,30 L 108,100 Z" fill="url(#needleGradient)" stroke="#7CB342" strokeWidth="0.5" />
 
               {/* Center pivot */}
-              <circle
-                cx="100"
-                cy="100"
-                r="8"
-                fill="#ffffff"
-                stroke="#8BC34A"
-                strokeWidth="2"
-              />
+              <circle cx="100" cy="100" r="8" fill="#ffffff" stroke="#8BC34A" strokeWidth="2" />
             </g>
           </svg>
         </div>
 
         {/* Animated percentage display */}
-        <div className="text-2xl font-bold mt-2 text-center">
-          {Math.round(animatedRatio * 100 * 10) / 10}%
-        </div>
+        <div className="text-2xl font-bold mt-2 text-center">{Math.round(animatedRatio * 100 * 10) / 10}%</div>
 
         <div className={`mt-1 text-sm text-center ${changeColor}`}>
           {changeSign}
-          {(change || 0).toFixed(1)}%{" "}
-          <span className="text-gray-400">({period})</span>
+          {monthlyChange.toFixed(1)}% <span className="text-gray-400">({monthLabel})</span>
         </div>
       </div>
     </div>
-  );
+  )
 }
+
