@@ -1,5 +1,5 @@
+import { ActionPlansCarousel } from "@/components/ActionPlan/Actionplan-carousal";
 import ParticipantFilterModal from "../components/ParticipantFilterModal";
-import { ActionPlansCarousel } from "@/components/action-plan-carousel";
 import AddParticipantsModal from "../components/AddParticipantsModal";
 import FilterButton from "@/components/FilterButton";
 import SearchBar from "@/components/SearchBar";
@@ -279,7 +279,7 @@ export default function FocusGroupDetails({
 
         {/* Suggested Action Plans Section */}
         <div className="mb-6 w-full">
-          <ActionPlansCarousel />
+          <ActionPlansCarousel targetGroupId={selectedGroup.focus_group_id} />
         </div>
 
         {/* Participants Section */}

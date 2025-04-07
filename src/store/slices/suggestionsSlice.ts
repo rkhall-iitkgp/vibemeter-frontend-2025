@@ -14,24 +14,30 @@ const initialState: SuggestionsState = {
 // Create async thunk for fetching suggestions
 export const fetchSuggestions = createAsyncThunk<
   Suggestion[],
-  void,
+  string | undefined,
   { rejectValue: string }
->("suggestions/fetchSuggestions", async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/suggestions`);
+>(
+  "suggestions/fetchSuggestions",
+  async (targetGroupId, { rejectWithValue }) => {
+    try {
+      console.log(targetGroupId);
+      const response = await fetch(
+        `${BACKEND_URL}/api/suggestions/${targetGroupId || ""}`
+      );
 
-    if (!response.ok) {
-      throw new Error("Server Error");
+      if (!response.ok) {
+        throw new Error("Server Error");
+      }
+
+      const data = await response.json();
+      return data as Suggestion[];
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
     }
-
-    const data = await response.json();
-    return data as Suggestion[];
-  } catch (error) {
-    return rejectWithValue(
-      error instanceof Error ? error.message : "Unknown error occurred"
-    );
   }
-});
+);
 
 // Create the suggestions slice
 const suggestionsSlice = createSlice({

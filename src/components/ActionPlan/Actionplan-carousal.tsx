@@ -13,21 +13,25 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "./Card";
 
-export function ActionPlansCarousel() {
+export function ActionPlansCarousel({
+  targetGroupId,
+}: {
+  targetGroupId?: string;
+}) {
   const dispatch: AppDispatch = useDispatch();
   const { items, loading, error } = useSelector(
     (state: RootState) => state.suggestions
   );
 
   useEffect(() => {
-    dispatch(fetchSuggestions());
-  }, [dispatch]);
-
+    dispatch(fetchSuggestions(targetGroupId));
+  }, [dispatch, targetGroupId]);
+  console.log(items);
   const isVisible = true;
 
   if (!isVisible) return null;
   if (loading) return <div>Loading suggestions...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (!loading && !items && !items.length) return <div>Error: {error}</div>;
   if (items.length === 0) return <div>No suggestions available.</div>;
 
   return (
