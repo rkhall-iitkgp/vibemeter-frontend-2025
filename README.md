@@ -1,19 +1,25 @@
 # VibeMeter Frontend
+
 A modern frontend application for employee well-being analytics, built with React, TypeScript, and Vite.
 
 ## Overview
+
 VibeMeter Frontend provides an intuitive interface for Deloitte's employee well-being system. It offers:
+
 - Real-time mood tracking visualization
 - AI-powered conversational interface
 - Administrative dashboard for the People Experience team
 - Employee analytics and focus group management
 
 ## Getting Started
+
 ### Prerequisites
+
 - Node.js (v16 or newer)
 - pnpm package manager (v7 or newer)
 
 If you don't have pnpm installed, you can install it with:
+
 ```bash
 npm install -g pnpm
 ```
@@ -21,22 +27,26 @@ npm install -g pnpm
 ### Installation
 
 1. **Clone the Repository:**
+
    ```bash
    git clone https://github.com/rkhall-iitkgp/vibemeter-frontend-2025.git
    ```
 
 2. **Navigate to the Project Directory:**
+
    ```bash
    cd vibemeter-frontend-2025
    ```
 
 3. **Install Dependencies:**
+
    ```bash
    pnpm install
    ```
 
 4. **Set Up Environment Variables:**
    Create a `.env` file in the root directory:
+
    ```
    VITE_BACKEND_URL=your_api_url_here
    ```
@@ -48,6 +58,7 @@ npm install -g pnpm
    The application should now be running at `http://localhost:5173`
 
 ## Tech Stack
+
 - **React** - UI library for building interactive components
 - **TypeScript** - Strongly typed programming language for better code quality
 - **Vite** - Fast build tool and development server
@@ -59,6 +70,7 @@ npm install -g pnpm
 - **WebSocket** - Real-time communication with the backend
 
 ## Project Structure
+
 ```
 vibemeter-frontend-2025/
 ├── public/              # Static assets
@@ -97,8 +109,11 @@ vibemeter-frontend-2025/
 - `pnpm run test:coverage` - Run tests with coverage report
 
 ## Deployment
+
 To build the application for production:
+
 ```bash
 pnpm run build
 ```
+
 This will generate optimized files in the `dist` directory that can be deployed to any static hosting service.
