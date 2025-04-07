@@ -74,89 +74,47 @@ export default function AdminDashboard() {
     fetchData();
   }, []);
 
-  // Function to generate multi-page PDF
+  // Function to fetch and download PDF from backend
   const generateMultiPagePDF = async () => {
     setIsExporting(true);
-
-    // Set up A4 PDF - 210 x 297mm
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-
+    
     try {
-      // Create a title page
-      pdf.setFontSize(24);
-      pdf.setTextColor(0, 163, 66); // Green color for header
-      pdf.text("Dashboard Report", 105, 40, { align: "center" });
-
-      pdf.setFontSize(12);
-      pdf.setTextColor(0, 0, 0);
-      pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 50, {
-        align: "center",
-      });
-
-      // Reference to all sections that need to be captured
-      const sections = [section1Ref.current, section2Ref.current].filter(
-        Boolean
-      ); // Filter out any null refs
-
-      // Process each section
-      for (let i = 0; i < sections.length; i++) {
-        const section = sections[i];
-        if (!section) continue;
-
-        // Add a new page for each section after the title page
-        if (i > 0 || i === 0) {
-          pdf.addPage();
+      // Fetch the PDF file from your backend
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/report`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/pdf',
+            // Include authentication headers if needed
+            // 'Authorization': `Bearer ${authToken}`,
+          },
         }
-
-        // Page header for each page except title page
-        pdf.setFontSize(14);
-        pdf.setTextColor(0, 163, 66);
-        pdf.text(`Dashboard Report - Page ${i + 1}`, 105, 15, {
-          align: "center",
-        });
-        pdf.setDrawColor(0, 163, 66);
-        pdf.line(20, 20, 190, 20);
-
-        // Generate and add image for this section
-        try {
-          const dataUrl = await toPng(section, { quality: 0.95 });
-
-          // Get the image properties and calculate dimensions
-          const imgProps = pdf.getImageProperties(dataUrl);
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-
-          // Calculate height to maintain aspect ratio, but constrain to page height
-          let pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          const maxHeight = pdf.internal.pageSize.getHeight() - 40; // Leave margin for header/footer
-
-          if (pdfHeight > maxHeight) {
-            pdfHeight = maxHeight;
-          }
-
-          // Add the image to the PDF with correct dimensions
-          pdf.addImage(dataUrl, "PNG", 0, 30, pdfWidth, pdfHeight);
-
-          // Add footer with page number
-          const pageNumber = pdf.internal.pages.length;
-          pdf.setFontSize(10);
-          pdf.setTextColor(100, 100, 100);
-          pdf.text(`Page ${pageNumber} of ${sections.length + 1}`, 105, 287, {
-            align: "center",
-          });
-        } catch (error) {
-          console.error(`Error processing section ${i}:`, error);
-        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
-      // Save the PDF
-      pdf.save("dashboard-report.pdf");
+      
+      // Get the PDF as a blob
+      const pdfBlob = await response.blob();
+      
+      // Create a download link and trigger the download
+      const url = window.URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'dashboard-report.pdf'); 
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      
     } catch (error) {
-      console.error("Error generating PDF:", error);
-      // Handle error - show notification to user
+      console.error('Error downloading PDF:', error);
+      // Show an error notification to the user
+      alert('Failed to download the PDF. Please try again later.');
     } finally {
       setIsExporting(false);
     }
