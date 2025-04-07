@@ -12,8 +12,6 @@ import AdminBubbleChart, {
 } from "@/components/Admin/AdminBubbleChart";
 import { FaChartBar, FaDownload, FaSpinner } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
-import { toPng } from "html-to-image";
-import { jsPDF } from "jspdf";
 
 interface AdminData {
   employee_satisfaction: EmployeeSatisfaction;
@@ -77,44 +75,43 @@ export default function AdminDashboard() {
   // Function to fetch and download PDF from backend
   const generateMultiPagePDF = async () => {
     setIsExporting(true);
-    
+
     try {
       // Fetch the PDF file from your backend
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/report`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Accept': 'application/pdf',
+            Accept: "application/pdf",
             // Include authentication headers if needed
             // 'Authorization': `Bearer ${authToken}`,
           },
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-      
+
       // Get the PDF as a blob
       const pdfBlob = await response.blob();
-      
+
       // Create a download link and trigger the download
       const url = window.URL.createObjectURL(pdfBlob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'dashboard-report.pdf'); 
+      link.setAttribute("download", "dashboard-report.pdf");
       document.body.appendChild(link);
       link.click();
-      
+
       // Clean up
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-      
     } catch (error) {
-      console.error('Error downloading PDF:', error);
+      console.error("Error downloading PDF:", error);
       // Show an error notification to the user
-      alert('Failed to download the PDF. Please try again later.');
+      alert("Failed to download the PDF. Please try again later.");
     } finally {
       setIsExporting(false);
     }
