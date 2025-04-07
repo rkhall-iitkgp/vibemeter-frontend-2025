@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
 
-export default function Vibemeter({ onMoodSelect }) {
+export default function Vibemeter({ onMoodSelect }: { onMoodSelect: (mood: string) => void }) {
   // Mood options with emojis and labels
   const moods = [
     [

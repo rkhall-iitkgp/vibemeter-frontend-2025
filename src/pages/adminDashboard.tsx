@@ -219,7 +219,7 @@ export default function AdminDashboard() {
         {/* Section 2 - First bubble chart */}
         <div className="mt-4" ref={section2Ref}>
           <div className="bg-white rounded-lg shadow overflow-hidden">
-            <AdminBubbleChart data={data.bubble_data} isLoading={loading}/>
+            <AdminBubbleChart data={data.bubble_data} isLoading={loading} />
           </div>
         </div>
       </main>

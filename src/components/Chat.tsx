@@ -60,7 +60,7 @@ export default function ChatPage() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
   const [showSuggestions, setShowSuggestions] = useState(false); // Suggested replies visibility
   const [showVibemeter, setShowVibemeter] = useState(true);
-  const handleMoodSelect = (mood) => {
+  const handleMoodSelect = (mood: string) => {
     // Send the selected mood as a user message
     sendUserMessage(`I'm feeling ${mood} today`);
     // Hide the vibemeter after selection
