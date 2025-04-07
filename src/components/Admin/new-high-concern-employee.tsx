@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import MeetingScheduler from "@/pages/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
@@ -32,6 +33,7 @@ type HighConcernEmployeesProps = {
 const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
   const [showMeetingScheduler, setShowMeetingScheduler] = useState(false);
   const getInitials = (name: string) => name.charAt(0).toUpperCase();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -78,7 +80,7 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
               >
                 Schedule a Meet
               </Button>
-              <Button className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto">
+              <Button className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto" onClick={() => navigate(`/employees/${employee.id}`)}>
                 View
               </Button>
             </div>

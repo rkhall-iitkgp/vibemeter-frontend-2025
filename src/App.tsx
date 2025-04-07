@@ -56,6 +56,14 @@ function App() {
             </AdminLayout>
           }
         />
+		<Route
+          path="/employees/:employee_id"
+          element={
+            <AdminLayout>
+              <EmployeesPage />
+            </AdminLayout>
+          }
+        />
         <Route
           path="/action-plan"
           element={
