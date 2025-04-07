@@ -1,5 +1,3 @@
-"use client"
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type FC, useState, useEffect } from "react"
@@ -283,9 +281,7 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
     setMetrics(metrics.filter((tag) => tag !== tagToRemove))
   }
 
-  const handleRemoveEmployee = (employeeId: string) => {
-    setSelectedEmployees(selectedEmployees.filter((employee) => employee.employee_id !== employeeId))
-  }
+ 
 
   // Helper function to get the metrix name by ID
   const getmetrixNameById = (metrixId: string | null) => {
