@@ -9,7 +9,6 @@ import { FC, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { FocusGroup } from "../types";
 import { Plus } from "lucide-react";
-
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const FocusGroupPage: FC = () => {
@@ -100,6 +99,9 @@ const FocusGroupPage: FC = () => {
     description: string;
     metrics: string[];
     participants: string[];
+    metrixId: string | null;
+    minRange: string;
+    maxRange: string;
   }) => {
     // If we're editing an existing focus group
     if (editingFocusGroup) {
@@ -111,6 +113,9 @@ const FocusGroupPage: FC = () => {
         description: newFocusGroup.description,
         tags: newFocusGroup.metrics,
         participantCount: newFocusGroup.participants.length,
+        metrixId: newFocusGroup.metrixId || "",
+        minRange: newFocusGroup.minRange,
+        maxRange: newFocusGroup.maxRange,
       };
 
       // Update the focus group in the list
@@ -143,6 +148,9 @@ const FocusGroupPage: FC = () => {
           month: "long",
           day: "numeric",
         }),
+        metrixId: newFocusGroup.metrixId || "",
+        minRange: newFocusGroup.minRange,
+        maxRange: newFocusGroup.maxRange,
       };
 
       // Add the new focus group to the list

@@ -1,9 +1,9 @@
 "use client"
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { type FC, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import type { FocusGroup } from "../../types"
 
 // Simplified Employee interface - only with employee_id
 interface Employee {
@@ -15,6 +15,29 @@ interface EmployeeWithScore extends Employee {
   score: number
 }
 
+// Updated MetrixSelection interface for multiple metrix data
+interface MetrixSelection {
+  metrixId: string | null
+  minRange: string
+  maxRange: string
+}
+
+// Updated FocusGroup interface to support multiple metrix selections
+interface FocusGroup {
+  name: string
+  description: string
+  metrics: string[]
+  members: number
+  focus_group_id: string
+  // Add metrixSelections array for multiple metrix data
+  metrixSelections?: MetrixSelection[]
+  // Keep old properties for backward compatibility
+  metrixId: string | null
+  minRange: string
+  maxRange: string
+  created_at?: string
+}
+
 interface FocusGroupModalProps {
   onClose: () => void
   onSubmit: (focusGroup: {
@@ -22,6 +45,12 @@ interface FocusGroupModalProps {
     description: string
     metrics: string[]
     participants: string[]
+    // Add metrixSelections for multiple metrix data
+    metrixSelections: MetrixSelection[]
+    // Keep old properties for backward compatibility
+    metrixId: string | null
+    minRange: string
+    maxRange: string
   }) => void
   editingFocusGroup?: FocusGroup | null
 }
@@ -36,17 +65,17 @@ const PREDEFINED_TAGS = [
   { name: "Innovation", color: "bg-purple-100 text-purple-800" },
 ]
 
-// Our simplified mock employees only need employee_id
+// Our simplified mock data
 const MOCK_MATRICES = [
-  { id: "m1", name: "Matrix 1" },
-  { id: "m2", name: "Matrix 2" },
-  { id: "m3", name: "Matrix 3" },
-  { id: "m4", name: "Matrix 4" },
-  { id: "m5", name: "Matrix 5" },
+  { metrixId: "m1", name: "Metrix 1" },
+  { metrixId: "m2", name: "Metrix 2" },
+  { metrixId: "m3", name: "Metrix 3" },
+  { metrixId: "m4", name: "Metrix 4" },
+  { metrixId: "m5", name: "Metrix 5" },
 ]
 
 // Mock employees by focus group - simplified to only have employee_id
-const MOCK_EMPLOYEES_BY_MATRIX: Record<string, EmployeeWithScore[]> = {
+const MOCK_EMPLOYEES_BY_metrix: Record<string, EmployeeWithScore[]> = {
   m1: [
     { employee_id: "EMP10071", score: 75 },
     { employee_id: "EMP10072", score: 45 },
@@ -85,16 +114,25 @@ const MOCK_EMPLOYEES_BY_MATRIX: Record<string, EmployeeWithScore[]> = {
 }
 
 // Add a function to get filtered employees count
-const getFilteredEmployeesCount = (matrixId: string | null, min: number, max: number): number => {
-  if (!matrixId) return 0
+const getFilteredEmployeesCount = (metrixId: string | null, min: number, max: number): number => {
+  if (!metrixId) return 0
 
-  const employees = MOCK_EMPLOYEES_BY_MATRIX[matrixId] || []
+  const employees = MOCK_EMPLOYEES_BY_metrix[metrixId] || []
   return employees.filter((emp) => emp.score >= min && emp.score <= max).length
 }
 
 const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingFocusGroup }) => {
+  // Debug log for metrix selections
+  const [metrixSelections, setmetrixSelections] = useState<MetrixSelection[]>([
+    { metrixId: null, minRange: "0", maxRange: "100" },
+  ])
+  useEffect(() => {
+    console.log("Current metrixSelections state:", metrixSelections)
+  }, [metrixSelections])
   // Determine if in edit mode
   const isEditMode = !!editingFocusGroup
+
+  console.log("metrixSelections: ", editingFocusGroup?.metrixSelections)
 
   // Log to help debug
   console.log("Modal opened with editing mode:", isEditMode)
@@ -120,27 +158,68 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
   const [focusGroupEmployees, setFocusGroupEmployees] = useState<EmployeeWithScore[]>([])
   const [selectedFocusGroupEmployees, setSelectedFocusGroupEmployees] = useState<Record<string, boolean>>({})
 
-  const [matrixSelections, setMatrixSelections] = useState<
-    Array<{
-      matrixId: string | null
-      minRange: string
-      maxRange: string
-    }>
-  >([{ matrixId: null, minRange: "0", maxRange: "100" }])
-
+  // Initialize form data when editing
   // Initialize form data when editing
   useEffect(() => {
     if (editingFocusGroup) {
-      console.log("Initializing form with focus group data")
+      console.log("Initializing form with focus group data", editingFocusGroup)
+
+      // Set basic group information
       setGroupName(editingFocusGroup.name || "")
       setDescription(editingFocusGroup.description || "")
       setMetrics(editingFocusGroup.metrics || [])
+
+      // Initialize metrix selections based on the data
+      let initialMetrixSelections: MetrixSelection[] = []
+
+      // Check if we have metrics array data to convert to metrixSelections
+      if (
+        Array.isArray(editingFocusGroup.metrics) &&
+        editingFocusGroup.metrics.length > 0 &&
+        editingFocusGroup.metrixId
+      ) {
+        // Create a metrixSelection for the existing metrixId
+        initialMetrixSelections.push({
+          metrixId: editingFocusGroup.metrixId,
+          minRange: editingFocusGroup.minRange || "0",
+          maxRange: editingFocusGroup.maxRange || "100",
+        })
+      }
+      // If metrixSelections already exists, use it
+      else if (Array.isArray(editingFocusGroup.metrixSelections) && editingFocusGroup.metrixSelections.length > 0) {
+        initialMetrixSelections = [...editingFocusGroup.metrixSelections]
+      }
+      // Fallback to single metrix format
+      else if (editingFocusGroup.metrixId) {
+        initialMetrixSelections = [
+          {
+            metrixId: editingFocusGroup.metrixId,
+            minRange: editingFocusGroup.minRange || "0",
+            maxRange: editingFocusGroup.maxRange || "100",
+          },
+        ]
+      }
+
+      // If we still have no selections, add a default one
+      if (initialMetrixSelections.length === 0) {
+        initialMetrixSelections = [{ metrixId: null, minRange: "0", maxRange: "100" }]
+      }
+
+      console.log("Setting initial metrix selections:", initialMetrixSelections)
+      setmetrixSelections(initialMetrixSelections)
+
+      // Set the first metrix as selected for the UI
+      if (initialMetrixSelections[0]?.metrixId) {
+        setSelectedFocusGroup(initialMetrixSelections[0].metrixId)
+        setMinRange(initialMetrixSelections[0].minRange)
+        setMaxRange(initialMetrixSelections[0].maxRange)
+      }
 
       // Initialize selected employees
       if (editingFocusGroup.members > 0) {
         // In a real app, you'd fetch the actual participants
         // This is just a simulation for mock data
-        const mockSelectedEmployees = Object.values(MOCK_EMPLOYEES_BY_MATRIX).flat().slice(0, editingFocusGroup.members)
+        const mockSelectedEmployees = Object.values(MOCK_EMPLOYEES_BY_metrix).flat().slice(0, editingFocusGroup.members)
         setSelectedEmployees(mockSelectedEmployees)
       }
     } else {
@@ -149,6 +228,10 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
       setDescription("")
       setMetrics([])
       setSelectedEmployees([])
+      setmetrixSelections([{ metrixId: null, minRange: "0", maxRange: "100" }])
+      setSelectedFocusGroup(null)
+      setMinRange("0")
+      setMaxRange("100")
     }
   }, [editingFocusGroup])
 
@@ -165,10 +248,10 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
     }
   }, [tagSearchQuery])
 
-  // Handle matrix selection
+  // Handle metrix selection
   useEffect(() => {
     if (selectedFocusGroup) {
-      const employees = MOCK_EMPLOYEES_BY_MATRIX[selectedFocusGroup] || []
+      const employees = MOCK_EMPLOYEES_BY_metrix[selectedFocusGroup] || []
       setFocusGroupEmployees(employees)
 
       // Initialize all employees as selected (checked)
@@ -204,20 +287,27 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
     setSelectedEmployees(selectedEmployees.filter((employee) => employee.employee_id !== employeeId))
   }
 
-  // Update the handleSubmit function to include the filtered employees from all matrix selections
+  // Helper function to get the metrix name by ID
+  const getmetrixNameById = (metrixId: string | null) => {
+    if (!metrixId) return "Select a metrix"
+    const metrix = MOCK_MATRICES.find((m) => m.metrixId === metrixId)
+    return metrix ? metrix.name : "Select a metrix"
+  }
+
+  // Update the handleSubmit function to include the filtered employees from all metrix selections
   const handleSubmit = () => {
     if (isFormValid) {
-      // Get filtered employees from all matrix selections
+      // Get filtered employees from all metrix selections
       let participants: string[] = []
 
-      if (matrixSelections.some((selection) => selection.matrixId)) {
-        // Collect participants from all matrix selections
-        matrixSelections.forEach((selection) => {
-          if (selection.matrixId) {
+      if (metrixSelections.some((selection) => selection.metrixId)) {
+        // Collect participants from all metrix selections
+        metrixSelections.forEach((selection) => {
+          if (selection.metrixId) {
             const min = Number.parseInt(selection.minRange) || 0
             const max = Number.parseInt(selection.maxRange) || 100
 
-            const filteredEmployees = MOCK_EMPLOYEES_BY_MATRIX[selection.matrixId]
+            const filteredEmployees = MOCK_EMPLOYEES_BY_metrix[selection.metrixId]
               .filter((emp) => emp.score >= min && emp.score <= max)
               .map((emp) => emp.employee_id)
 
@@ -233,14 +323,29 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
         participants = selectedEmployees.map((emp) => emp.employee_id)
       }
 
+      // Clean up metrix selections to remove any with null metrixId
+      const validMetrixSelections = metrixSelections
+        .filter((selection) => selection.metrixId !== null)
+        .map((selection) => ({
+          metrixId: selection.metrixId,
+          minRange: selection.minRange,
+          maxRange: selection.maxRange,
+        }))
+
       const submissionData = {
         title: groupName,
         description,
         metrics: metrics,
         participants: participants,
+        // Include all metrix selections
+        metrixSelections: validMetrixSelections,
+        // Keep the old properties for backward compatibility
+        metrixId: validMetrixSelections.length > 0 ? validMetrixSelections[0].metrixId : null,
+        minRange: validMetrixSelections.length > 0 ? validMetrixSelections[0].minRange : "0",
+        maxRange: validMetrixSelections.length > 0 ? validMetrixSelections[0].maxRange : "100",
       }
 
-      console.log("Matrix Submission Data:", submissionData)
+      console.log("Metrix Submission Data:", submissionData)
 
       onSubmit(submissionData)
     }
@@ -259,7 +364,9 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
             {/* Header with Close Button */}
             <div className="mb-3 flex justify-between items-start">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">{isEditMode ? "Edit Focus Group" : "Create Focus Group"}</h2>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {isEditMode ? "Edit Focus Group" : "Create Focus Group"}
+                </h2>
                 {isEditMode && (
                   <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     Editing {editingFocusGroup?.name}
@@ -375,63 +482,50 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                 <label htmlFor="participants" className="block text-md font-medium text-gray-900">
                   Participants
                 </label>
-                <span className="text-gray-500 text-sm">{selectedEmployees.length} members</span>
+                <span className="text-gray-500 text-sm">
+                  {metrixSelections.reduce((total, selection) => {
+                    if (selection.metrixId) {
+                      return (
+                        total +
+                        getFilteredEmployeesCount(
+                          selection.metrixId,
+                          Number.parseInt(selection.minRange) || 0,
+                          Number.parseInt(selection.maxRange) || 100,
+                        )
+                      )
+                    }
+                    return total
+                  }, 0)}{" "}
+                  members
+                </span>
               </div>
 
-              {selectedEmployees.length > 0 && (
-                <div className="mb-2 border border-gray-200 rounded-lg p-2">
-                  <ScrollArea className="w-full h-10">
-                    <div className="flex items-center gap-2 py-0.5">
-                      {selectedEmployees.map((employee) => (
-                        <span
-                          key={employee.employee_id}
-                          className="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs shrink-0"
-                        >
-                          <span className="mx-1 font-medium">{employee.employee_id}</span>
-                          <button
-                            type="button"
-                            className="ml-1 inline-flex text-blue-400 hover:text-blue-500"
-                            onClick={() => handleRemoveEmployee(employee.employee_id)}
-                          >
-                            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </div>
-              )}
-
-              {/* Matrix Selection and Range Filter */}
+              {/* metrix Selection and Range Filter */}
               <div className="space-y-4">
-                {matrixSelections.map((selection, index) => (
+                {metrixSelections.map((selection, index) => (
                   <div key={index} className="flex gap-4 items-center">
                     <div className="w-1/2">
                       <Select
                         onValueChange={(value) => {
-                          const newSelections = [...matrixSelections]
-                          newSelections[index].matrixId = value
-                          setMatrixSelections(newSelections)
+                          const newSelections = [...metrixSelections]
+                          newSelections[index].metrixId = value
+                          setmetrixSelections(newSelections)
                           if (index === 0) {
                             setSelectedFocusGroup(value)
                           }
                         }}
-                        value={selection.matrixId || undefined}
+                        value={selection.metrixId || ""}
+                        defaultValue={selection.metrixId || ""}
                       >
                         <SelectTrigger className="w-full h-10">
-                          <SelectValue placeholder="Select a matrix" />
+                          <SelectValue placeholder="Select a metrix">
+                            {getmetrixNameById(selection.metrixId)}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                          {MOCK_MATRICES.map((matrix) => (
-                            <SelectItem key={matrix.id} value={matrix.id}>
-                              {matrix.name}
+                          {MOCK_MATRICES.map((metrix) => (
+                            <SelectItem key={metrix.metrixId} value={metrix.metrixId}>
+                              {metrix.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -443,9 +537,9 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                         className="w-17 h-10 px-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                         value={selection.minRange}
                         onChange={(e) => {
-                          const newSelections = [...matrixSelections]
+                          const newSelections = [...metrixSelections]
                           newSelections[index].minRange = e.target.value
-                          setMatrixSelections(newSelections)
+                          setmetrixSelections(newSelections)
                           if (index === 0) {
                             setMinRange(e.target.value)
                           }
@@ -459,9 +553,9 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                         placeholder="100"
                         value={selection.maxRange}
                         onChange={(e) => {
-                          const newSelections = [...matrixSelections]
+                          const newSelections = [...metrixSelections]
                           newSelections[index].maxRange = e.target.value
-                          setMatrixSelections(newSelections)
+                          setmetrixSelections(newSelections)
                           if (index === 0) {
                             setMaxRange(e.target.value)
                           }
@@ -471,12 +565,12 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                       />
                     </div>
                     {/* Display filtered employee count */}
-                    {selection.matrixId && (
+                    {selection.metrixId && (
                       <div className="w-1/10 p-2 border rounded-md bg-gray-50 ml-3">
                         <p className="text-center">
                           <span className="font-medium">
                             {getFilteredEmployeesCount(
-                              selection.matrixId,
+                              selection.metrixId,
                               Number.parseInt(selection.minRange) || 0,
                               Number.parseInt(selection.maxRange) || 100,
                             )}
@@ -490,11 +584,11 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                         type="button"
                         className="text-gray-500 hover:text-red-500 ml-2"
                         onClick={() => {
-                          const newSelections = [...matrixSelections]
+                          const newSelections = [...metrixSelections]
                           newSelections.splice(index, 1)
-                          setMatrixSelections(newSelections)
+                          setmetrixSelections(newSelections)
                         }}
-                        aria-label="Delete matrix selection"
+                        aria-label="Delete metrix selection"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -513,17 +607,17 @@ const FocusGroupModal: FC<FocusGroupModalProps> = ({ onClose, onSubmit, editingF
                   </div>
                 ))}
 
-                {/* Add button for new matrix selection */}
+                {/* Add button for new metrix selection */}
                 <div className="flex justify-center">
                   <Button
                     type="button"
                     variant="outline"
                     className="mt-2"
                     onClick={() => {
-                      setMatrixSelections([...matrixSelections, { matrixId: null, minRange: "0", maxRange: "100" }])
+                      setmetrixSelections([...metrixSelections, { metrixId: null, minRange: "0", maxRange: "100" }])
                     }}
                   >
-                    Add Matrix Selection
+                    Add metrix Selection
                   </Button>
                 </div>
               </div>
