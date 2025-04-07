@@ -6,6 +6,7 @@ import SearchBar from "@/components/ui/search";
 import { Employee, FocusGroup } from "@/types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import FocusGroupDetailsSkeleton from '../components/skeletons/FocusGroupDetailsSkeleton';
 
 export default function FocusGroupDetails({
   selectedGroup,
@@ -22,6 +23,7 @@ export default function FocusGroupDetails({
 }) {
   const [participants, setParticipants] = useState<Employee[]>([]);
   const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Track filtered participants
   const [filteredParticipants, setFilteredParticipants] =
@@ -46,6 +48,7 @@ export default function FocusGroupDetails({
   });
 
   useEffect(() => {
+    setIsLoading(true);
     fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/groups/${selectedGroup.focus_group_id}`
     )
@@ -55,7 +58,8 @@ export default function FocusGroupDetails({
         setParticipants(data.data.users);
         setFilteredParticipants(data.data.users);
         setAllEmployees(data.data.users);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }, [selectedGroup]);
 
   const handleParticipantSearch = (query: string) => {
@@ -183,6 +187,10 @@ export default function FocusGroupDetails({
     return jobTitleMatches && dateAddedMatches;
   };
 
+  if (isLoading) {
+    return <FocusGroupDetailsSkeleton />;
+  }
+
   return (
     <div className="w-full h-screen overflow-auto">
       {/* Header - consistent padding with main content */}
@@ -201,7 +209,7 @@ export default function FocusGroupDetails({
           >
             <path
               fillRule="evenodd"
-              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a 1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
               clipRule="evenodd"
             />
           </svg>
