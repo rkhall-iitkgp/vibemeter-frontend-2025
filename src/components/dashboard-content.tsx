@@ -16,7 +16,6 @@ interface DashboardData {
 }
 
 export function DashboardContent() {
-  // const [name, setName] = useState("Tridibesh");
   const [data, setData] = useState<DashboardData | undefined>();
   const selectedPersona = useSelector(
     (state: RootState) => state.persona.persona_id
