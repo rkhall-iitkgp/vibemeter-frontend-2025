@@ -89,6 +89,8 @@ export function ReportModal({
     try {
       return format(parseISO(dateString), "MMM d, yyyy 'at' h:mm a");
     } catch (e) {
+      console.log(e);
+
       return dateString;
     }
   };
@@ -102,26 +104,22 @@ export function ReportModal({
   // Custom renderer components for ReactMarkdown
   const MarkdownComponents = {
     // Style the headings
-    h2: ({ node, ...props }) => (
+    h2: ({ ...props }) => (
       <h2 className="text-xl font-bold mb-4 mt-6" {...props} />
     ),
-    h3: ({ node, ...props }) => (
-      <h3 className="font-bold mt-4 mb-2" {...props} />
-    ),
+    h3: ({ ...props }) => <h3 className="font-bold mt-4 mb-2" {...props} />,
     // Style the paragraphs
-    p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+    p: ({ ...props }) => <p className="mb-2" {...props} />,
     // Style the lists
-    ul: ({ node, ...props }) => (
-      <ul className="space-y-1 ml-4 mb-4" {...props} />
-    ),
-    li: ({ node, ...props }) => (
+    ul: ({ ...props }) => <ul className="space-y-1 ml-4 mb-4" {...props} />,
+    li: ({ ...props }) => (
       <li className="flex gap-2 mb-1" {...props}>
         <span className="text-[#80c342] mr-1">•</span>
         <span>{props.children}</span>
       </li>
     ),
     // Style the strong elements (bold text)
-    strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+    strong: ({ ...props }) => <strong className="font-bold" {...props} />,
   };
 
   return (

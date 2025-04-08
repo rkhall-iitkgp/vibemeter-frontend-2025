@@ -163,7 +163,21 @@ export default function EmployeesPage() {
 
   // Map detailed employee data to the format expected by EmployeeDetailsSheet
   const mapEmployeeDetailsToSheetFormat = () => {
-    if (!selectedEmployee || !selectedEmployeeDetails) return null;
+    if (!selectedEmployee || !selectedEmployeeDetails)
+      return {
+        id: "unknown",
+        name: "Unknown",
+        jobTitle: "N/A",
+        email: "unknown@deloitte.com",
+        phone: "+1 (555) 123-4567",
+        dateAdded: new Date().toISOString(),
+        employeeId: "unknown",
+        avatar: "/placeholder.svg?height=80&width=80",
+        recentAchievements: [],
+        chatInteractionSummary: isLoadingDetails ? "Loading..." : "",
+        focusGroups: [],
+        actionPlans: [],
+      };
 
     // Ensure we're handling all focus groups and action plans correctly
     const mappedFocusGroups = Array.isArray(
@@ -302,7 +316,10 @@ export default function EmployeesPage() {
                 ? mapEmployeeDetailsToSheetFormat()
                 : selectedEmployee
                   ? {
-                      ...selectedEmployee,
+                      id: selectedEmployee.id,
+                      name: selectedEmployee.name,
+                      jobTitle: selectedEmployee.jobTitle,
+                      dateAdded: selectedEmployee.dateAdded,
                       email:
                         selectedEmployee.email ||
                         `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
@@ -315,6 +332,15 @@ export default function EmployeesPage() {
                         : "",
                       focusGroups: [],
                       actionPlans: [],
+                      // Change arrays to object structure matching mapEmployeeDetailsToSheetFormat()
+                      vibeScore: {
+                        average: 0,
+                        change: {
+                          percentage: 0,
+                          direction: "stable",
+                        },
+                        monthlyScores: [],
+                      },
                     }
                   : {
                       id: "unknown",
@@ -331,6 +357,15 @@ export default function EmployeesPage() {
                         : "",
                       focusGroups: [],
                       actionPlans: [],
+                      // Same structure change here
+                      vibeScore: {
+                        average: 0,
+                        change: {
+                          percentage: 0,
+                          direction: "stable",
+                        },
+                        monthlyScores: [],
+                      },
                     }
             }
             isLoading={isLoadingDetails}

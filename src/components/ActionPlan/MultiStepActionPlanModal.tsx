@@ -337,9 +337,7 @@ const MultiStepActionPlanModal = ({
           title: formValues.title,
           purpose: formValues.purpose,
           metric: formValues.metric,
-          target_groups: formValues.target_groups.map(
-            (group) => group.focus_group_id
-          ),
+          target_groups: formValues.target_groups, // Keep the original structure
           steps: formValues.steps,
           is_completed: formValues.is_completed,
           created_at: plan.created_at,
@@ -359,9 +357,7 @@ const MultiStepActionPlanModal = ({
           title: formValues.title,
           purpose: formValues.purpose,
           metric: formValues.metric,
-          target_groups: formValues.target_groups.map(
-            (group) => group.focus_group_id
-          ),
+          target_groups: formValues.target_groups, // Keep the original structure
           steps: formValues.steps,
           is_completed: formValues.is_completed,
         };
