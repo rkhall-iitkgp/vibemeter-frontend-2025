@@ -206,7 +206,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <FaUsers />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">Ankan</p>
+            <p className="text-sm font-medium text-gray-900">Alex</p>
             <p className="text-xs text-gray-500">People Experience Team</p>
           </div>
         </div>

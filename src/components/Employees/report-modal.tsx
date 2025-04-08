@@ -7,6 +7,7 @@ import {
   FileText,
   CheckCircle,
   AlertCircle,
+  UserRound,
 } from "lucide-react";
 import {
   Dialog,
@@ -39,6 +40,12 @@ interface Report {
       vibe_trend: string;
       performance_rating?: number | null;
       avg_work_hours?: number | null;
+    };
+    hr_intervention?: {
+      risk_level: "critical";
+      indicators: string[];
+      urgent_action_required: boolean;
+      recommendations: string[];
     };
   };
 }
@@ -89,6 +96,8 @@ export function ReportModal({
     try {
       return format(parseISO(dateString), "MMM d, yyyy 'at' h:mm a");
     } catch (e) {
+      console.log(e);
+
       return dateString;
     }
   };
@@ -102,26 +111,22 @@ export function ReportModal({
   // Custom renderer components for ReactMarkdown
   const MarkdownComponents = {
     // Style the headings
-    h2: ({ node, ...props }) => (
+    h2: ({ ...props }) => (
       <h2 className="text-xl font-bold mb-4 mt-6" {...props} />
     ),
-    h3: ({ node, ...props }) => (
-      <h3 className="font-bold mt-4 mb-2" {...props} />
-    ),
+    h3: ({ ...props }) => <h3 className="font-bold mt-4 mb-2" {...props} />,
     // Style the paragraphs
-    p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+    p: ({ ...props }) => <p className="mb-2" {...props} />,
     // Style the lists
-    ul: ({ node, ...props }) => (
-      <ul className="space-y-1 ml-4 mb-4" {...props} />
-    ),
-    li: ({ node, ...props }) => (
+    ul: ({ ...props }) => <ul className="space-y-1 ml-4 mb-4" {...props} />,
+    li: ({ ...props }) => (
       <li className="flex gap-2 mb-1" {...props}>
         <span className="text-[#80c342] mr-1">•</span>
         <span>{props.children}</span>
       </li>
     ),
     // Style the strong elements (bold text)
-    strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+    strong: ({ ...props }) => <strong className="font-bold" {...props} />,
   };
 
   return (
@@ -392,6 +397,87 @@ export function ReportModal({
                   </div>
                 </div>
               </div>
+
+              {/* HR Intervention */}
+              {selectedReport.content.hr_intervention && (
+                <div className="bg-white rounded-lg border overflow-hidden">
+                  <div className="p-4 border-b">
+                    <h3 className="text-lg font-medium flex items-center">
+                      <UserRound className="h-5 w-5 mr-2 text-[#80c342]" />
+                      HR Intervention
+                      {selectedReport.content.hr_intervention
+                        .urgent_action_required && (
+                        <span className="ml-2 bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                          Urgent Action Required
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+
+                  <div className="p-4">
+                    <div className="mb-4">
+                      <div className="flex items-center mb-2">
+                        <span className="text-sm font-semibold mr-2">
+                          Risk Level:
+                        </span>
+                        <Badge
+                          className={
+                            selectedReport.content.hr_intervention
+                              .risk_level === "critical"
+                              ? "bg-red-100 text-red-800 hover:bg-red-200"
+                              : selectedReport.content.hr_intervention
+                                    .risk_level === "high"
+                                ? "bg-orange-100 text-orange-800 hover:bg-orange-200"
+                                : selectedReport.content.hr_intervention
+                                      .risk_level === "medium"
+                                  ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                                  : selectedReport.content.hr_intervention
+                                        .risk_level === "low"
+                                    ? "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                          }
+                        >
+                          {selectedReport.content.hr_intervention.risk_level.toUpperCase()}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {selectedReport.content.hr_intervention.indicators && (
+                      <div className="mb-4">
+                        <h4 className="font-medium text-gray-700 mb-2">
+                          Risk Indicators:
+                        </h4>
+                        <ul className="space-y-1 pl-4">
+                          {selectedReport.content.hr_intervention.indicators.map(
+                            (indicator, i) => (
+                              <li key={i} className="text-sm list-disc">
+                                {indicator}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                    {selectedReport.content.hr_intervention.recommendations && (
+                      <div>
+                        <h4 className="font-medium text-gray-700 mb-2">
+                          Recommended Actions:
+                        </h4>
+                        <ul className="space-y-1 pl-4">
+                          {selectedReport.content.hr_intervention.recommendations.map(
+                            (rec, i) => (
+                              <li key={i} className="text-sm list-disc">
+                                {rec}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Root Causes */}
               <div className="bg-white rounded-lg border overflow-hidden">

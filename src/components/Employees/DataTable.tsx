@@ -23,6 +23,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 import { Skeleton } from "../ui/skeleton";
 import { useState } from "react";
 
@@ -74,6 +75,7 @@ export function DataTable({
 }: DataTableProps) {
   const [sortBy, setSortBy] = useState("priority");
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
   const itemsPerPage = 5;
 
@@ -183,7 +185,7 @@ export function DataTable({
                 <TableRow
                   key={employee.id}
                   className="cursor-pointer hover:bg-gray-50"
-                  onClick={() => handleViewDetails(employee)}
+                  onClick={() => navigate("/employees/" + employee.id)}
                 >
                   <TableCell></TableCell>
                   <TableCell>{employee.name}</TableCell>

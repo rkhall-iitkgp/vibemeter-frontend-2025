@@ -18,7 +18,7 @@ interface ActionPlanFormValues {
   title: string;
   purpose: string;
   is_completed: boolean;
-  target_groups: string[];
+  target_groups: { focus_group_id: string }[];
   metric: string[];
   steps: { title: string; description: string }[];
 }
@@ -255,7 +255,9 @@ export default function ActionPlanPage() {
           title: data.title,
           purpose: data.purpose,
           metric: data.metric,
-          target_groups: data.target_groups.map((group) => group),
+          target_groups: data.target_groups.map(
+            (group) => group.focus_group_id
+          ),
           steps: data.steps,
           is_completed: data.is_completed,
           created_at: selectedPlan.created_at,
@@ -266,7 +268,9 @@ export default function ActionPlanPage() {
           title: data.title,
           purpose: data.purpose,
           metric: data.metric,
-          target_groups: data.target_groups,
+          target_groups: data.target_groups.map(
+            (group) => group.focus_group_id
+          ),
           steps: data.steps,
           is_completed: data.is_completed,
         };

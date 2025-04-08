@@ -16,6 +16,7 @@ import { TaskForceCard } from "./task-force-card";
 import { Button } from "@/components/ui/button";
 import VibemeterChart from "./VibemeterChart"; // This is your existing component
 import { ReportModal } from "./report-modal";
+import { useNavigate } from "react-router";
 
 // Updated employee interface with new data structure
 interface EmployeeDetailsSheetProps {
@@ -24,7 +25,7 @@ interface EmployeeDetailsSheetProps {
     name: string;
     jobTitle: string;
     avatar?: string;
-    email: string;
+    email?: string;
     phone: string;
     dateAdded: string;
     employeeId: string;
@@ -113,24 +114,25 @@ export function EmployeeDetailsSheet({
   const sheetRef = useRef<HTMLDivElement>(null);
   const [reports, setReports] = useState<Report[]>([]);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [isLoadingReports, setIsLoadingReports] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [isLoadingReports, setIsLoadingReports] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
 
   // Use controlled or uncontrolled state based on props
   const isOpen = open !== undefined ? open : localOpen;
   const setOpen = onOpenChange || setLocalOpen;
+  const navigate = useNavigate();
 
   const fetchReports = async () => {
     if (!employee?.id) return;
 
-    setIsLoadingReports(true);
-    setError(null);
+    // setIsLoadingReports(true);
+    // setError(null);
 
     try {
       // Use the correct employee ID from props
       const employeeId = employee.employeeId;
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/profile/employee/EMP0014/reports`
+        `${import.meta.env.VITE_BACKEND_URL}/api/profile/employee/${employeeId}/reports`
       );
 
       if (!response.ok) {
@@ -152,9 +154,9 @@ export function EmployeeDetailsSheet({
       }
     } catch (error) {
       console.error("Error fetching reports:", error);
-      setError("Failed to load reports. Please try again later.");
+      // setError("Failed to load reports. Please try again later.");
     } finally {
-      setIsLoadingReports(false);
+      // setIsLoadingReports(false);
     }
   };
 
@@ -171,6 +173,7 @@ export function EmployeeDetailsSheet({
         !sheetRef.current.contains(event.target as Node)
       ) {
         setOpen(false);
+        navigate("/employees");
       }
     };
 

@@ -327,10 +327,11 @@ export default function ActionPlanComponent() {
         {/* Delete Confirmation Modal */}
         {isDeleteModalOpen && planToDelete && (
           <DeleteConfirmationModal
+            isOpen={isDeleteModalOpen}
             onClose={closeDeleteModal}
             onConfirm={confirmDelete}
-            actionTitle={planToDelete.title}
-            isDeleting={isDeleting}
+            title={planToDelete.title}
+            isSubmitting={isDeleting}
           />
         )}
       </main>

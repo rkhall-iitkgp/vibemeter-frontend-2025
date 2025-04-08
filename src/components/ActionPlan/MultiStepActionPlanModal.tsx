@@ -48,16 +48,12 @@ const MultiStepActionPlanModal = ({
   onAfterClose,
 }: MultiStepActionPlanModalProps) => {
   const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.BasicInfo);
-  const [newStep, setNewStep] = useState<{
-    title: string;
-    description: string;
-  }>({
+  const [newStep, setNewStep] = useState<{ title: string; description: string }>({
     title: "",
     description: "",
   });
   const [newGroupInput, setNewGroupInput] = useState("");
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
-
   const [formValues, setFormValues] = useState<ActionPlanFormValues>({
     title: "",
     purpose: "",
@@ -70,60 +66,37 @@ const MultiStepActionPlanModal = ({
   // For the UI components
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [currentStepNumber, setCurrentStepNumber] = useState(1);
 
-  // Determine if we're editing or creating new
   const isEditing = !!plan;
   const modalTitle = isEditing ? "Edit Initiative" : "Create Initiative";
   const modalSubtitle = "Design your next big impact";
 
   const handleClose = () => {
-    // Call the onClose function passed from parent
     onClose();
-
-    // After closing, trigger the reload callback if provided
     if (onAfterClose) {
-      // Small delay to ensure modal is closed before reload
       setTimeout(() => {
         onAfterClose();
       }, 100);
     }
   };
 
-  // Extract focus_group_ids from target_groups
   const extractFocusGroupIds = (targetGroups: FocusGroup[]): string[] => {
     return targetGroups
-      .map((group) => {
-        if (typeof group === "string") return group;
-        if (typeof group === "object") {
-          return group.focus_group_id || "";
-        }
-        return "";
-      })
+      .map((group) => group.focus_group_id || "")
       .filter((id) => id !== "");
   };
 
-  // Reset form when modal opens or plan changes
   useEffect(() => {
     if (isOpen && plan) {
-      // If editing, populate with existing data
       const targetGroups = Array.isArray(plan.target_groups)
         ? plan.target_groups
         : [];
-
-      // Extract IDs for the UI
       const groupIds = extractFocusGroupIds(targetGroups);
       setSelectedGroupIds(groupIds);
-
-      // Extract group names for display
       const groupNames = targetGroups
-        .map((group) =>
-          typeof group === "object" && group.name ? group.name : ""
-        )
+        .map((group) => (group.name ? group.name : ""))
         .filter((name) => name !== "");
       setSelectedGroups(groupNames);
-
-      // Set form values
       setFormValues({
         title: plan.title || "",
         purpose: plan.purpose || "",
@@ -133,7 +106,6 @@ const MultiStepActionPlanModal = ({
         steps: plan.steps || [],
       });
     } else if (isOpen) {
-      // If creating new, reset form
       setFormValues({
         title: "",
         purpose: "",
@@ -145,12 +117,9 @@ const MultiStepActionPlanModal = ({
       setSelectedGroupIds([]);
       setSelectedGroups([]);
       setCurrentStep(FormStep.BasicInfo);
-      setCurrentStepNumber(1);
-      setEditingStepIndex(null);
     }
   }, [isOpen, plan]);
 
-  // Validation functions for each step
   const validateBasicInfo = () => {
     return !!formValues.title && !!formValues.purpose;
   };
@@ -163,9 +132,7 @@ const MultiStepActionPlanModal = ({
     return formValues.metric.length > 0;
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -201,7 +168,6 @@ const MultiStepActionPlanModal = ({
     }));
   };
 
-  // Edit step functions
   const handleStartEditStep = (index: number) => {
     const stepToEdit = formValues.steps[index];
     setNewStep({
@@ -226,7 +192,6 @@ const MultiStepActionPlanModal = ({
       ),
     }));
 
-    // Reset editing state
     setNewStep({ title: "", description: "" });
     setEditingStepIndex(null);
   };
@@ -238,12 +203,10 @@ const MultiStepActionPlanModal = ({
 
   const handleAddGroup = () => {
     if (newGroupInput) {
-      // Find if the input matches any existing focus group
       const matchedGroups = focusGroups.filter((group) =>
         group.name.toLowerCase().includes(newGroupInput.toLowerCase())
       );
 
-      // If there's an exact match, add it
       const exactMatch = matchedGroups.find(
         (group) => group.name.toLowerCase() === newGroupInput.toLowerCase()
       );
@@ -260,23 +223,16 @@ const MultiStepActionPlanModal = ({
         }));
       }
 
-      // Reset input field (this will now filter back to showing all groups)
       setNewGroupInput("");
     }
   };
 
   const handleRemoveGroup = (groupName: string) => {
-    // Find the group to remove
     const indexToRemove = selectedGroups.indexOf(groupName);
     if (indexToRemove !== -1) {
-      // Get the ID to remove
       const idToRemove = selectedGroupIds[indexToRemove];
-
-      // Update selected groups
       setSelectedGroups((prev) => prev.filter((_, i) => i !== indexToRemove));
       setSelectedGroupIds((prev) => prev.filter((_, i) => i !== indexToRemove));
-
-      // Update form values
       setFormValues((prev) => ({
         ...prev,
         target_groups: prev.target_groups.filter(
@@ -287,18 +243,11 @@ const MultiStepActionPlanModal = ({
   };
 
   const handleMetricChange = (metric: string) => {
-    // Toggle metric selection
     setFormValues((prev) => {
       if (prev.metric.includes(metric)) {
-        return {
-          ...prev,
-          metric: prev.metric.filter((m) => m !== metric),
-        };
+        return { ...prev, metric: prev.metric.filter((m) => m !== metric) };
       } else {
-        return {
-          ...prev,
-          metric: [...prev.metric, metric],
-        };
+        return { ...prev, metric: [...prev.metric, metric] };
       }
     });
   };
@@ -306,24 +255,20 @@ const MultiStepActionPlanModal = ({
   const handleContinue = () => {
     if (currentStep === FormStep.BasicInfo && validateBasicInfo()) {
       setCurrentStep(FormStep.TargetGroupsMetrics);
-      setCurrentStepNumber(2);
     } else if (
       currentStep === FormStep.TargetGroupsMetrics &&
       validateTargetGroups() &&
       validateMetrics()
     ) {
       setCurrentStep(FormStep.ActionSteps);
-      setCurrentStepNumber(3);
     }
   };
 
   const handleBack = () => {
     if (currentStep === FormStep.TargetGroupsMetrics) {
       setCurrentStep(FormStep.BasicInfo);
-      setCurrentStepNumber(1);
     } else if (currentStep === FormStep.ActionSteps) {
       setCurrentStep(FormStep.TargetGroupsMetrics);
-      setCurrentStepNumber(2);
     }
   };
 
@@ -337,9 +282,7 @@ const MultiStepActionPlanModal = ({
           title: formValues.title,
           purpose: formValues.purpose,
           metric: formValues.metric,
-          target_groups: formValues.target_groups.map(
-            (group) => group.focus_group_id
-          ),
+          target_groups: formValues.target_groups, // Keep the original structure
           steps: formValues.steps,
           is_completed: formValues.is_completed,
           created_at: plan.created_at,
@@ -359,9 +302,7 @@ const MultiStepActionPlanModal = ({
           title: formValues.title,
           purpose: formValues.purpose,
           metric: formValues.metric,
-          target_groups: formValues.target_groups.map(
-            (group) => group.focus_group_id
-          ),
+          target_groups: formValues.target_groups, // Keep the original structure
           steps: formValues.steps,
           is_completed: formValues.is_completed,
         };
@@ -381,19 +322,12 @@ const MultiStepActionPlanModal = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && newGroupInput.trim() !== "") {
       e.preventDefault();
-      // If text is entered, try to add as a group
-      if (newGroupInput.trim()) {
-        handleAddGroup();
-      } else {
-        // If no text, do nothing
-        return;
-      }
+      handleAddGroup();
     }
   };
 
-  // Filter groups based on search input
   const filteredGroups = newGroupInput
     ? focusGroups.filter((group) =>
         group.name.toLowerCase().includes(newGroupInput.toLowerCase())
@@ -405,7 +339,6 @@ const MultiStepActionPlanModal = ({
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
-        {/* Header */}
         <div className="flex justify-between items-center p-6">
           <div className="flex items-center gap-3">
             <div className="w-16 h-16 bg-[#86BC25] rounded-full flex items-center justify-center">
@@ -421,9 +354,7 @@ const MultiStepActionPlanModal = ({
               </div>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
-                {modalTitle}
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">{modalTitle}</h2>
               <p className="text-sm text-gray-500">{modalSubtitle}</p>
             </div>
           </div>
@@ -437,7 +368,7 @@ const MultiStepActionPlanModal = ({
           </button>
         </div>
 
-        {/* Navigation tabs - Redesigned to match screenshots */}
+        {/* Navigation tabs */}
         <div className="flex border-b">
           <button
             className={`flex-1 py-4 text-center ${
@@ -445,10 +376,7 @@ const MultiStepActionPlanModal = ({
                 ? "border-b-2 border-[#86BC25] text-[#86BC25] font-medium"
                 : "text-gray-500"
             }`}
-            onClick={() => {
-              setCurrentStep(FormStep.BasicInfo);
-              setCurrentStepNumber(1);
-            }}
+            onClick={() => setCurrentStep(FormStep.BasicInfo)}
           >
             <div className="flex items-center justify-center gap-2">
               <svg
@@ -472,13 +400,12 @@ const MultiStepActionPlanModal = ({
               currentStep === FormStep.TargetGroupsMetrics
                 ? "border-b-2 border-[#86BC25] text-[#86BC25] font-medium"
                 : !validateBasicInfo()
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-500"
+                ? "text-gray-300 cursor-not-allowed"
+                : "text-gray-500"
             }`}
             onClick={() => {
               if (validateBasicInfo()) {
                 setCurrentStep(FormStep.TargetGroupsMetrics);
-                setCurrentStepNumber(2);
               }
             }}
             disabled={!validateBasicInfo()}
@@ -505,10 +432,10 @@ const MultiStepActionPlanModal = ({
               currentStep === FormStep.ActionSteps
                 ? "border-b-2 border-[#86BC25] text-[#86BC25] font-medium"
                 : !validateBasicInfo() ||
-                    !validateTargetGroups() ||
-                    !validateMetrics()
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-500"
+                  !validateTargetGroups() ||
+                  !validateMetrics()
+                ? "text-gray-300 cursor-not-allowed"
+                : "text-gray-500"
             }`}
             onClick={() => {
               if (
@@ -517,7 +444,6 @@ const MultiStepActionPlanModal = ({
                 validateMetrics()
               ) {
                 setCurrentStep(FormStep.ActionSteps);
-                setCurrentStepNumber(3);
               }
             }}
             disabled={
@@ -545,8 +471,8 @@ const MultiStepActionPlanModal = ({
           </button>
         </div>
 
+        {/* Form content */}
         <div className="p-6 max-h-[calc(100vh-240px)] overflow-y-auto">
-          {/* Basic Info Step */}
           {currentStep === FormStep.BasicInfo && (
             <div className="space-y-6">
               <div className="space-y-2">
@@ -585,7 +511,6 @@ const MultiStepActionPlanModal = ({
             </div>
           )}
 
-          {/* Target Groups & Metrics Step */}
           {currentStep === FormStep.TargetGroupsMetrics && (
             <div className="space-y-8">
               {/* Target Groups */}
@@ -606,9 +531,7 @@ const MultiStepActionPlanModal = ({
                           key={index}
                           className="bg-green-100 rounded-full px-3 py-1 flex items-center gap-1"
                         >
-                          <span className="text-sm text-green-800">
-                            {group}
-                          </span>
+                          <span className="text-sm text-green-800">{group}</span>
                           <button
                             onClick={() => handleRemoveGroup(group)}
                             className="text-green-800 hover:text-green-900"
@@ -635,17 +558,12 @@ const MultiStepActionPlanModal = ({
                         key={group.focus_group_id}
                         className="py-2 px-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between border-b border-gray-100 last:border-b-0"
                         onClick={() => {
-                          if (
-                            !selectedGroupIds.includes(group.focus_group_id)
-                          ) {
-                            // Add to selected IDs and names for UI
+                          if (!selectedGroupIds.includes(group.focus_group_id)) {
                             setSelectedGroupIds((prev) => [
                               ...prev,
                               group.focus_group_id,
                             ]);
                             setSelectedGroups((prev) => [...prev, group.name]);
-
-                            // Add to form values in format expected by API
                             setFormValues((prev) => ({
                               ...prev,
                               target_groups: [
@@ -706,7 +624,6 @@ const MultiStepActionPlanModal = ({
             </div>
           )}
 
-          {/* Action Steps */}
           {currentStep === FormStep.ActionSteps && (
             <div className="space-y-6">
               <div className="space-y-2">
@@ -717,7 +634,6 @@ const MultiStepActionPlanModal = ({
                   Steps
                 </label>
 
-                {/* Display existing steps */}
                 {formValues.steps.length > 0 && (
                   <div className="mb-6 space-y-4">
                     {formValues.steps.map((step, index) => (
@@ -772,14 +688,12 @@ const MultiStepActionPlanModal = ({
                   </div>
                 )}
 
-                {/* Add/Edit step form */}
                 <div className="border border-gray-200 rounded-md bg-white p-4">
                   <div className="mb-3">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {editingStepIndex !== null
                         ? `Edit Step ${editingStepIndex + 1}`
-                        : `Step ${formValues.steps.length + 1}`}
-                      : Title
+                        : `Step ${formValues.steps.length + 1}`}: Title
                     </label>
                     <Input
                       value={newStep.title}
@@ -845,14 +759,13 @@ const MultiStepActionPlanModal = ({
           )}
         </div>
 
-        {/* Footer with progress indicator and buttons */}
         <div className="flex justify-between items-center p-6 border-t">
           <div className="flex items-center gap-2">
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    step <= currentStepNumber
+                    step <= currentStep
                       ? "bg-[#86BC25] text-white"
                       : "bg-gray-200 text-gray-500"
                   }`}
@@ -862,7 +775,7 @@ const MultiStepActionPlanModal = ({
                 {step < 3 && (
                   <div
                     className={`w-8 h-0.5 ${
-                      step < currentStepNumber ? "bg-[#86BC25]" : "bg-gray-200"
+                      step < currentStep ? "bg-[#86BC25]" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -888,8 +801,7 @@ const MultiStepActionPlanModal = ({
                 onClick={handleContinue}
                 className="bg-[#86BC25] hover:bg-[#75a621] text-white"
                 disabled={
-                  (currentStep === FormStep.BasicInfo &&
-                    !validateBasicInfo()) ||
+                  (currentStep === FormStep.BasicInfo && !validateBasicInfo()) ||
                   (currentStep === FormStep.TargetGroupsMetrics &&
                     (!validateTargetGroups() || !validateMetrics()))
                 }
