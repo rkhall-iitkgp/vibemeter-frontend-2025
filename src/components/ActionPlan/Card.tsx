@@ -1,5 +1,3 @@
-"use client";
-
 import { Card as ShadcnCard, CardContent } from "@/components/ui/card";
 import { Trophy, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,6 +43,15 @@ export function Card({
       return "bg-blue-100 text-blue-600";
     } else {
       return "bg-gray-100 text-gray-600";
+    }
+  };
+
+  // Handle the view details click
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onViewDetails) {
+      onViewDetails();
     }
   };
 
@@ -103,8 +110,8 @@ export function Card({
         {/* View Details button at bottom center */}
         <div className="flex justify-center mt-auto pt-2">
           <button
-            onClick={onViewDetails}
-            className="text-blue-600 text-sm hover:text-blue-800 transition-colors flex items-center"
+            onClick={handleViewDetails}
+            className="text-blue-600 text-sm hover:text-blue-800 transition-colors flex items-center ml-2"
           >
             View Details <span className="ml-1">→</span>
           </button>

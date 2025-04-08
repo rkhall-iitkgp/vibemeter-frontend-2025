@@ -36,6 +36,7 @@ export interface Step {
 }
 
 export interface Suggestion {
+  id?: string;
   title: string;
   purpose: string;
   metric: string[];
