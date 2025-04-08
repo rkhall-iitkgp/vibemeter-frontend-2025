@@ -77,9 +77,9 @@ export function DataTable({
   // Filter data based on search query
   const filteredData = data.filter(
     (employee) =>
-      employee.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      employee.jobTitle.toLowerCase().includes(searchQuery.toLowerCase())
+      employee?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee?.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      employee?.jobTitle?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Sort data based on sort option
