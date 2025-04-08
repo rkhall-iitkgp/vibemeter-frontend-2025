@@ -68,6 +68,7 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
             console.log(data);
             switch (data.event) {
               case "thinking":
+                console.log("IM thinking");
                 dispatch(setBotThinking(true));
                 break;
               case "start":
@@ -76,6 +77,7 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
                 dispatch(addBotMessage());
                 break;
               case "ai_message":
+                dispatch(setBotThinking(false));
                 dispatch(addBotMessage());
                 dispatch(updateBotMessage(data.message));
                 break;

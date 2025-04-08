@@ -11,6 +11,8 @@ import { Smile, Send, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/useChat";
 import { cn } from "@/lib/utils";
+import { setBotThinking } from "@/store";
+import { useDispatch } from "react-redux";
 
 /**
  * Defines the structure of a chat message
@@ -65,6 +67,7 @@ export default function ChatPage() {
   // Refs for DOM manipulation
   const messagesEndRef = useRef<HTMLDivElement>(null); // Reference for auto-scrolling
   const inputRef = useRef<HTMLTextAreaElement>(null); // Reference for the textarea
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Optimized smooth scrolling using native browser animation
@@ -87,6 +90,7 @@ export default function ChatPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     sendUserMessage();
+    dispatch(setBotThinking(true));
   };
 
   /**
