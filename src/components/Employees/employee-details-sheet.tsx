@@ -8,7 +8,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, Phone, Calendar, FileText, User, Award, AlertCircle } from "lucide-react";
+import { Mail, Phone, Calendar, FileText, User, Award } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ActionPlanCard } from "./action-plan-card";
 import { useState, useRef, useEffect } from "react";
@@ -122,31 +122,37 @@ export function EmployeeDetailsSheet({
 
   const fetchReports = async () => {
     if (!employee?.id) return;
-    
+
     setIsLoadingReports(true);
     setError(null);
-    
+
     try {
       // Use the correct employee ID from props
       const employeeId = employee.employeeId;
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/profile/employee/EMP0014/reports`);
-      
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/profile/employee/EMP0014/reports`
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to fetch reports: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-      
+
       // Check for the correct data structure
-      if (data.status === "success" && data.data && Array.isArray(data.data.reports)) {
+      if (
+        data.status === "success" &&
+        data.data &&
+        Array.isArray(data.data.reports)
+      ) {
         setReports(data.data.reports);
       } else {
         setReports([]);
         console.warn("Unexpected response format:", data);
       }
     } catch (error) {
-      console.error('Error fetching reports:', error);
-      setError('Failed to load reports. Please try again later.');
+      console.error("Error fetching reports:", error);
+      setError("Failed to load reports. Please try again later.");
     } finally {
       setIsLoadingReports(false);
     }

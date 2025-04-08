@@ -10,6 +10,8 @@ import { format, differenceInMinutes } from "date-fns";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Vibemeter from "@/components/Vibemeter";
+import { useDispatch } from "react-redux";
+import { setShowChat } from "@/store";
 import { cn } from "@/lib/utils";
 
 interface ClockInOutProps {
@@ -34,6 +36,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
   const [isOnBreak, setIsOnBreak] = useState<boolean>(false);
   const [workingTime, setWorkingTime] = useState<string>("0h 0m");
   const [showToastVibemeter, setShowToastVibemeter] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,6 +107,8 @@ const ClockInOut: React.FC<ClockInOutProps> = ({
 
     // Hide the vibemeter
     setShowToastVibemeter(false);
+    console.log("Showing chat");
+    dispatch(setShowChat(true));
 
     // Optionally, you can also set Redux state if needed
     // dispatch(setMood(mood));
