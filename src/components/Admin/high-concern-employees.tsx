@@ -7,8 +7,8 @@ import { Calendar } from "lucide-react";
 const employees = [
   {
     id: "EM1234564",
-    name: "Ankan",
-    avatar: "/avatars/ankan.png",
+    name: "Bob",
+    avatar: "/avatars/bob.png",
     group: "Leadership Training #GRP12345",
     metrics: [
       {
