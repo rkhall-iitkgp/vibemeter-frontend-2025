@@ -55,12 +55,16 @@ interface FocusGroupModalProps {
 
 // Predefined tags with their colors
 const PREDEFINED_TAGS = [
-  { name: "Engagement", color: "bg-green-100 text-[#7CC243]" },
-  { name: "Morality", color: "bg-amber-100 text-amber-800" },
-  { name: "Cultural Score", color: "bg-pink-100 text-pink-800" },
-  { name: "Leave Impact", color: "bg-green-100 text-[#7CC243]" },
-  { name: "Leadership", color: "bg-blue-100 text-blue-800" },
-  { name: "Innovation", color: "bg-purple-100 text-purple-800" },
+  { name: "Low Vibe Score", color: "bg-amber-100 text-amber-800" },
+  { name: "Fluctuations in Vibe Score", color: "bg-purple-100 text-purple-800" },
+  { name: "Low Leave Consumption", color: "bg-blue-100 text-blue-800" },
+  { name: "Low Performance Rating", color: "bg-pink-100 text-pink-800" },
+  { name: "High Leave Consumption", color: "bg-green-100 text-[#7CC243]" },
+  { name: "High Mean Vibe Score", color: "bg-green-100 text-[#7CC243]" },
+  { name: "Medium Mean Vibe Score", color: "bg-blue-100 text-blue-800" },
+  { name: "Emotional Recovery Rate", color: "bg-purple-100 text-purple-800" },
+  { name: "Positive Peak Frequency", color: "bg-pink-100 text-pink-800" },
+  { name: "Intervention Priority Index", color: "bg-amber-100 text-amber-800" },
 ]
 
 // Our simplified mock data
