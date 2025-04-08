@@ -1,7 +1,9 @@
+"use client";
+
 import { fetchSuggestions } from "../../store/slices/suggestionsSlice";
-import { AppDispatch, RootState } from "@/store/store";
+import type { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Suggestion } from "@/types";
+import type { Suggestion } from "@/types";
 import { useEffect } from "react";
 
 import {
@@ -35,7 +37,7 @@ export function ActionPlansCarousel({
   if (items.length === 0) return <div>No suggestions available.</div>;
 
   return (
-    <div className="bg-slate-100 rounded-sm p-6 px-10 relative mx-auto max-w-7xl">
+    <div className="bg-grey-100 rounded-lg p-6 px-10 relative mx-auto max-w-7xl">
       <div className="flex justify-between items-center mb-5 pt-1">
         <h2 className="text-lg font-semibold">Suggested Action Plans</h2>
       </div>
@@ -54,7 +56,7 @@ export function ActionPlansCarousel({
           {items.map((plan: Suggestion, index: number) => (
             <CarouselItem
               key={index}
-              className="pl-4 w-full sm:basis-1/2 lg:basis-1/3"
+              className="pl-4 w-full sm:basis-1/2 lg:basis-1/3 h-[400px]"
             >
               <Card
                 title={plan.title}
@@ -65,6 +67,7 @@ export function ActionPlansCarousel({
                 onViewDetails={() =>
                   console.log(`View details for plan ${index}`)
                 }
+                className="h-full"
               />
             </CarouselItem>
           ))}
