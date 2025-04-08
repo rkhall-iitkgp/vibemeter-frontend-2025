@@ -36,11 +36,13 @@ export interface Step {
 }
 
 export interface Suggestion {
+  id?: string;
   title: string;
   purpose: string;
   metric: string[];
   steps: Step[];
   target_group: string;
+  target_group_id?: string;
 }
 
 export interface SuggestionsState {

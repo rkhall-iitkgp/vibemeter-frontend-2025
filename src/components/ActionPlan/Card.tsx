@@ -1,5 +1,3 @@
-"use client";
-
 import { Card as ShadcnCard, CardContent } from "@/components/ui/card";
 import { Trophy, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -48,6 +46,15 @@ export function Card({
     }
   };
 
+  // Handle the view details click
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onViewDetails) {
+      onViewDetails();
+    }
+  };
+
   return (
     <ShadcnCard className={cn("border border-gray-200 shadow-sm", className)}>
       <CardContent className="p-5">
@@ -93,7 +100,7 @@ export function Card({
           </div>
 
           <button
-            onClick={onViewDetails}
+            onClick={handleViewDetails}
             className="text-blue-600 text-sm hover:text-blue-800 transition-colors flex items-center ml-2"
           >
             View Details <span className="ml-1">→</span>
