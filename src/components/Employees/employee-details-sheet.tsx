@@ -16,6 +16,7 @@ import { TaskForceCard } from "./task-force-card";
 import { Button } from "@/components/ui/button";
 import VibemeterChart from "./VibemeterChart"; // This is your existing component
 import { ReportModal } from "./report-modal";
+import { useNavigate } from "react-router";
 
 // Updated employee interface with new data structure
 interface EmployeeDetailsSheetProps {
@@ -119,6 +120,7 @@ export function EmployeeDetailsSheet({
   // Use controlled or uncontrolled state based on props
   const isOpen = open !== undefined ? open : localOpen;
   const setOpen = onOpenChange || setLocalOpen;
+  const navigate = useNavigate();
 
   const fetchReports = async () => {
     if (!employee?.id) return;
@@ -171,6 +173,7 @@ export function EmployeeDetailsSheet({
         !sheetRef.current.contains(event.target as Node)
       ) {
         setOpen(false);
+        navigate("/employees");
       }
     };
 
