@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/useChat";
+import { Message } from "@/store";
 import { cn } from "@/lib/utils";
 
 /**
@@ -97,7 +98,7 @@ export default function ChatPage() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as any);
+      handleSubmit(e);
     }
   };
 
@@ -171,7 +172,7 @@ export default function ChatPage() {
         className="flex-1 space-y-3 overflow-y-auto p-3 will-change-scroll"
         style={{ scrollBehavior: "smooth", overscrollBehavior: "contain" }}
       >
-        {messages.map((message: any) => {
+        {messages.map((message: Message) => {
           // Apply animation to all messages
           return (
             <div
