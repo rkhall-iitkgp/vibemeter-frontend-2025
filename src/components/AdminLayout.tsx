@@ -1,0 +1,20 @@
+import Sidebar from "./Admin/sidenav";
+import React from "react";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar - fixed on desktop, toggleable on mobile */}
+      <div className="fixed inset-y-0 left-0 z-50 md:relative md:flex">
+        <Sidebar />
+      </div>
+
+      {/* Main content area */}
+      {children}
+    </div>
+  );
+}

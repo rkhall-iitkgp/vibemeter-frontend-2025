@@ -1,10 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { websocketMiddleware } from "./middlewares/webSocketMiddleware";
+import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import chatReducer from "./slices/chatSlice";
 import authReducer from "./authSlice";
 
-export const store = configureStore({
+export const store: EnhancedStore = configureStore({
   reducer: {
     auth: authReducer,
+    chat: chatReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(websocketMiddleware),
 });
 
 // Infer types for state and dispatch
