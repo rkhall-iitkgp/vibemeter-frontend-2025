@@ -65,49 +65,72 @@ const PREDEFINED_TAGS = [
 
 // Our simplified mock data
 const MOCK_MATRICES = [
-  { metrixId: "m1", name: "Metrix 1" },
-  { metrixId: "m2", name: "Metrix 2" },
-  { metrixId: "m3", name: "Metrix 3" },
-  { metrixId: "m4", name: "Metrix 4" },
-  { metrixId: "m5", name: "Metrix 5" },
+  { metrixId: "Teams_Messages_Sent", name: "Team Messages Sent" },
+  { metrixId: "Emails_Sent", name: "Emails Sent" },
+  { metrixId: "Meetings_Attended", name: "Meetings Attended" },
+  { metrixId: "Work_Hours", name: "Work Hours" },
+  { metrixId: "Leave_Days", name: "Leave Days" },
+  { metrixId: "Performance_Rating", name: "Performance Rating" },
+  { metrixId: "Manager_Feedback", name: "Manager Feedback" },
 ]
 
 // Mock employees by focus group - simplified to only have employee_id
 const MOCK_EMPLOYEES_BY_metrix: Record<string, EmployeeWithScore[]> = {
-  m1: [
-    { employee_id: "EMP10071", score: 75 },
-    { employee_id: "EMP10072", score: 45 },
-    { employee_id: "EMP10073", score: 90 },
-    { employee_id: "EMP10074", score: 30 },
-    { employee_id: "EMP10075", score: 60 },
+  Teams_Messages_Sent : [ // 0 - 50
+    { employee_id: "EMP10001", score: 75 },
+    { employee_id: "EMP10002", score: 45 },
+    { employee_id: "EMP10003", score: 90 },
+    { employee_id: "EMP10004", score: 30 },
+    { employee_id: "EMP10005", score: 60 },
+    { employee_id: "EMP10006", score: 85 },
   ],
-  m2: [
-    { employee_id: "EMP20071", score: 85 },
-    { employee_id: "EMP20072", score: 55 },
-    { employee_id: "EMP20073", score: 40 },
-    { employee_id: "EMP20074", score: 70 },
-    { employee_id: "EMP20075", score: 25 },
+  Emails_Sent : [ // 0 - 30
+    { employee_id: "EMP20001", score: 85 },
+    { employee_id: "EMP20002", score: 55 },
+    { employee_id: "EMP20003", score: 40 },
+    { employee_id: "EMP20004", score: 70 },
+    { employee_id: "EMP20005", score: 25 },
+    { employee_id: "EMP20006", score: 65 },
   ],
-  m3: [
-    { employee_id: "EMP30071", score: 65 },
-    { employee_id: "EMP30072", score: 35 },
-    { employee_id: "EMP30073", score: 80 },
-    { employee_id: "EMP30074", score: 50 },
-    { employee_id: "EMP30075", score: 95 },
+  Meetings_Attended : [ // 0 - 10
+    { employee_id: "EMP30001", score: 65 },
+    { employee_id: "EMP30002", score: 35 },
+    { employee_id: "EMP30003", score: 80 },
+    { employee_id: "EMP30004", score: 50 },
+    { employee_id: "EMP30005", score: 95 },
+    { employee_id: "EMP30006", score: 20 },
   ],
-  m4: [
-    { employee_id: "EMP40071", score: 20 },
-    { employee_id: "EMP40072", score: 60 },
-    { employee_id: "EMP40073", score: 75 },
-    { employee_id: "EMP40074", score: 45 },
-    { employee_id: "EMP40075", score: 85 },
+  Work_Hours : [ // 0.00 - 9.00
+    { employee_id: "EMP40001", score: 20 },
+    { employee_id: "EMP40002", score: 60 },
+    { employee_id: "EMP40003", score: 75 },
+    { employee_id: "EMP40004", score: 45 },
+    { employee_id: "EMP40005", score: 85 },
+    { employee_id: "EMP40006", score: 55 },
   ],
-  m5: [
-    { employee_id: "EMP50071", score: 55 },
-    { employee_id: "EMP50072", score: 70 },
-    { employee_id: "EMP50073", score: 30 },
-    { employee_id: "EMP50074", score: 90 },
-    { employee_id: "EMP50075", score: 40 },
+  Leave_Days : [ //  0 - 20
+    { employee_id: "EMP50001", score: 55 },
+    { employee_id: "EMP50002", score: 70 },
+    { employee_id: "EMP50003", score: 30 },
+    { employee_id: "EMP50004", score: 90 },
+    { employee_id: "EMP50005", score: 40 },
+    { employee_id: "EMP50006", score: 80 },
+  ],
+  Performance_Rating : [ // 0 - 5
+    { employee_id: "EMP60001", score: 90 },
+    { employee_id: "EMP60002", score: 50 },
+    { employee_id: "EMP60003", score: 70 },
+    { employee_id: "EMP60004", score: 60 },
+    { employee_id: "EMP60005", score: 80 },
+    { employee_id: "EMP60006", score: 40 },
+  ],
+  Manager_Feedback : [ // 0 - 5
+    { employee_id: "EMP70001", score: 80 },
+    { employee_id: "EMP70002", score: 55 },
+    { employee_id: "EMP70003", score: 65 },
+    { employee_id: "EMP70004", score: 75 },
+    { employee_id: "EMP70005", score: 85 },
+    { employee_id: "EMP70006", score: 45 },
   ],
 }
 
