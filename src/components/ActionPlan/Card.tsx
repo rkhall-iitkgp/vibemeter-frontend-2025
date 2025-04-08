@@ -8,7 +8,7 @@ export interface CardProps {
   title: string;
   description: string;
   priorityLevel: "high" | "medium" | "low";
-  targetGroup: { focus_group_id: string, name: string };
+  targetGroup: { focus_group_id: string; name: string };
   categories: string[];
   className?: string;
   onViewDetails?: () => void;
