@@ -17,13 +17,9 @@ interface Action {
   payload: string;
 }
 
-interface Content {
-  message: string;
-}
-
 interface WebSocketMessage {
-  type: string;
-  content: Content;
+  event: string;
+  message: string;
 }
 
 // WebSocket instance
@@ -52,7 +48,9 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
         dispatch(setConnectionStatus("connecting"));
 
         // Create new WebSocket connection
-        socket = new WebSocket(`${import.meta.env.VITE_WS_URL}/ws/chat`);
+        socket = new WebSocket(
+          `${import.meta.env.VITE_WS_URL}/api/chat/EMP0014`
+        );
 
         // Connection opened
         socket.onopen = () => {
@@ -67,7 +65,8 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
         socket.onmessage = (event) => {
           try {
             const data: WebSocketMessage = JSON.parse(event.data);
-            switch (data.type) {
+            console.log(data);
+            switch (data.event) {
               case "thinking":
                 dispatch(setBotThinking(true));
                 break;
@@ -76,8 +75,9 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
                 dispatch(setBotThinking(false));
                 dispatch(addBotMessage());
                 break;
-              case "data":
-                dispatch(updateBotMessage(data.content.message));
+              case "ai_message":
+                dispatch(addBotMessage());
+                dispatch(updateBotMessage(data.message));
                 break;
               case "end":
                 dispatch(setBotTyping(false));

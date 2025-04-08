@@ -8,13 +8,14 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mail, Phone, Calendar, FileText, User, Award } from "lucide-react";
+import { Mail, Phone, Calendar, FileText, User, Award, AlertCircle } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ActionPlanCard } from "./action-plan-card";
 import { useState, useRef, useEffect } from "react";
 import { TaskForceCard } from "./task-force-card";
 import { Button } from "@/components/ui/button";
 import VibemeterChart from "./VibemeterChart"; // This is your existing component
+import { ReportModal } from "./report-modal";
 
 // Updated employee interface with new data structure
 interface EmployeeDetailsSheetProps {
@@ -65,6 +66,27 @@ interface EmployeeDetailsSheetProps {
   isLoading?: boolean;
 }
 
+interface Report {
+  report_id: string;
+  generated_at: string;
+  content: {
+    full_report: string;
+    conversation_summary: {
+      issues_discussed: string[];
+      root_causes: {
+        [key: string]: string[];
+      };
+      themes: string[];
+    };
+    recommendations: string[];
+    metrics: {
+      vibe_trend: string;
+      performance_rating?: number | null;
+      avg_work_hours?: number | null;
+    };
+  };
+}
+
 // Sample employee data for fallback
 const employeeData = {
   id: "1",
@@ -89,13 +111,54 @@ export function EmployeeDetailsSheet({
 }: EmployeeDetailsSheetProps) {
   const [localOpen, setLocalOpen] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isLoadingReports, setIsLoadingReports] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Use controlled or uncontrolled state based on props
   const isOpen = open !== undefined ? open : localOpen;
   const setOpen = onOpenChange || setLocalOpen;
 
-  // Handle click outside to close the sheet
+  const fetchReports = async () => {
+    if (!employee?.id) return;
+    
+    setIsLoadingReports(true);
+    setError(null);
+    
+    try {
+      // Use the correct employee ID from props
+      const employeeId = employee.employeeId;
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/profile/employee/EMP0014/reports`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch reports: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Check for the correct data structure
+      if (data.status === "success" && data.data && Array.isArray(data.data.reports)) {
+        setReports(data.data.reports);
+      } else {
+        setReports([]);
+        console.warn("Unexpected response format:", data);
+      }
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      setError('Failed to load reports. Please try again later.');
+    } finally {
+      setIsLoadingReports(false);
+    }
+  };
+
+  // Modified to completely disable outside clicks when modal is open
   useEffect(() => {
+    // Skip the entire effect if the report modal is open
+    if (isReportModalOpen) {
+      return;
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         sheetRef.current &&
@@ -112,7 +175,12 @@ export function EmployeeDetailsSheet({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, setOpen]);
+  }, [isOpen, setOpen, isReportModalOpen]);
+
+  // Custom handler for modal close that prevents event propagation
+  const handleModalClose = (value: boolean) => {
+    setIsReportModalOpen(value);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
@@ -267,20 +335,34 @@ export function EmployeeDetailsSheet({
 
                 {/* Chat Interaction Summary */}
                 <div className="mb-4 sm:mb-6">
-                  <h3 className="text-base sm:text-lg font-medium mb-1">
-                    Chat Interaction Summary
-                  </h3>
+                  <div className="flex justify-between items-center mb-1">
+                    <h3 className="text-base sm:text-lg font-medium">
+                      Chat Interaction Summary
+                    </h3>
+                  </div>
                   <p className="text-xs text-muted-foreground mb-2">
                     Summary of the Chat Interactions the employee has
                     participated in
                   </p>
-                  <div className="bg-gray-50 p-3 sm:p-4 rounded-md">
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      {employee.chatInteractionSummary ||
-                        "No chat interactions recorded."}
-                    </p>
-                  </div>
+                  <Button
+                    onClick={() => {
+                      fetchReports();
+                      setIsReportModalOpen(true);
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="text-[#80c342] border-[#80c342] hover:bg-[#80c342] hover:text-white"
+                  >
+                    View Chat Summary
+                  </Button>
                 </div>
+
+                {/* Report Modal */}
+                <ReportModal
+                  isOpen={isReportModalOpen}
+                  onClose={handleModalClose}
+                  reports={reports}
+                />
 
                 {/* Focus Groups */}
                 <div className="mb-4 sm:mb-6">
