@@ -5,4 +5,4 @@ export * from "./middlewares/webSocketMiddleware";
 export * from "./slices/personaSlice";
 export * from "./slices/suggestionsSlice";
 export * from "./slices/highRiskSlice";
-export * from "./actions/highRiskActions"
+export * from "./actions/highRiskActions";

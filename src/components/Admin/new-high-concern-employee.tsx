@@ -3,8 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import MeetingScheduler from "@/pages/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import { Employee } from "@/store";
+import { useState } from "react";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
@@ -121,7 +121,9 @@ const EmployeeCard = ({ employee }: { employee: Employee }) => {
                 {employee.employee_id}
               </p>
             </div>
-            <p className="text-xs text-gray-500 truncate">{employee.focus_groups}</p>
+            <p className="text-xs text-gray-500 truncate">
+              {employee.focus_groups}
+            </p>
           </div>
         </div>
         <div className="mt-1 flex gap-1 flex-wrap">
@@ -175,7 +177,9 @@ export default function HighConcernEmployees({
     employees?.filter((emp) => emp.escalated && !emp.meet_scheduled) || [];
   // Regular high concern employees
   const regularEmployees =
-    employees?.filter((emp) => !(emp.escalated && !emp.meet_scheduled)).slice(0, 6 - interventionEmployees.length) || [];
+    employees
+      ?.filter((emp) => !(emp.escalated && !emp.meet_scheduled))
+      .slice(0, 6 - interventionEmployees.length) || [];
 
   return (
     <div className={`rounded-md bg-white h-full flex flex-col ${className}`}>

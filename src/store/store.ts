@@ -5,11 +5,11 @@ import {
   UnknownAction,
 } from "@reduxjs/toolkit";
 import { websocketMiddleware } from "./middlewares/webSocketMiddleware";
+import highRiskEmployeeReducer from "./slices/highRiskSlice";
 import suggestionsReducer from "./slices/suggestionsSlice";
 import personaReducer from "./slices/personaSlice";
 import chatReducer from "./slices/chatSlice";
 import authReducer from "./authSlice";
-import highRiskEmployeeReducer from "./slices/highRiskSlice";
 
 export const store: EnhancedStore = configureStore({
   reducer: {
@@ -17,7 +17,7 @@ export const store: EnhancedStore = configureStore({
     chat: chatReducer,
     persona: personaReducer,
     suggestions: suggestionsReducer,
-	highRiskEmployees: highRiskEmployeeReducer,
+    highRiskEmployees: highRiskEmployeeReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(websocketMiddleware),
