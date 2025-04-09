@@ -19,22 +19,21 @@ export default function UpcomingMeetings({ id }: { id?: string }) {
   const [meetings, setMeetings] = useState<MeetingData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMeetings = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/meetings/${id}`
-      );
-      const data = await response.json();
-      setMeetings(data.data || []);
-    } catch (error) {
-      console.error("Error fetching meetings:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchMeetings = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/meetings/${id}`
+        );
+        const data = await response.json();
+        setMeetings(data.data || []);
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     if (id) fetchMeetings();
 
     const socket = new WebSocket(`ws://localhost:8000/api/ws/${id}`);
@@ -51,7 +50,7 @@ export default function UpcomingMeetings({ id }: { id?: string }) {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [id]);
 
   return (
     <div className="w-full h-full bg-white rounded-xl py-4 space-y-4 relative">

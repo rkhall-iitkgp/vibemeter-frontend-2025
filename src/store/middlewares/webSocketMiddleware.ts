@@ -76,6 +76,7 @@ export const websocketMiddleware: Middleware<unknown, RootState> =
                 dispatch(addBotMessage());
                 break;
               case "ai_message":
+                dispatch(setBotThinking(false));
                 dispatch(addBotMessage());
                 dispatch(updateBotMessage(data.message));
                 break;

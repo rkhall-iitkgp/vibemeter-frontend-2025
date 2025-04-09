@@ -184,7 +184,7 @@ export function EmployeeDetailsSheet({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, setOpen, isReportModalOpen]);
+  }, [isOpen, setOpen, isReportModalOpen, navigate]);
 
   // Custom handler for modal close that prevents event propagation
   const handleModalClose = (value: boolean) => {

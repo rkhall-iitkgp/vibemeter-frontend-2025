@@ -1,0 +1,10 @@
+version: '1.0'
+
+services:
+  app:
+    build: .
+    container_name: vibemeter-frontend
+    network_mode: host
+    volumes:
+      - .:/app # Mounts your local code into the container for live updates
+    restart: unless-stopped

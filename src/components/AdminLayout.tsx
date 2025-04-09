@@ -14,7 +14,7 @@ export default function AdminLayout({
   useEffect(() => {
     dispatch(connectWebSocket("admin"));
     dispatch(fetchHighRiskEmployees());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex h-screen bg-gray-100">
