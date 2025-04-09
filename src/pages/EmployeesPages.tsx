@@ -25,7 +25,6 @@ type EmployeeDetail = {
   phone_number: string;
   created_at: string | null;
   employee_id: string;
-  avatar?: string;
   awards: {
     award_type: string;
     award_date: string;
@@ -213,7 +212,6 @@ export default function EmployeesPage() {
 
     return {
       ...selectedEmployee,
-      ...(selectedEmployeeDetails || {}),
       //   name: selectedEmployeeDetails.name || selectedEmployee.name,
       jobTitle: selectedEmployeeDetails.job_title || selectedEmployee.jobTitle,
       email: selectedEmployeeDetails.email || selectedEmployee.email,
@@ -225,7 +223,7 @@ export default function EmployeesPage() {
         formatDate(selectedEmployeeDetails.created_at!) ||
         selectedEmployee.dateAdded,
       employeeId: selectedEmployeeDetails.employee_id || selectedEmployee.id,
-      // avatar: "/placeholder.svg?height=80&width=80",
+      avatar: selectedEmployeeDetails?.avatar || "/placeholder.svg?height=80&width=80",
       recentAchievements: Array.isArray(selectedEmployeeDetails.awards)
         ? selectedEmployeeDetails.awards.map((award) => ({
             title: award.award_type,
@@ -320,8 +318,6 @@ export default function EmployeesPage() {
                 ? mapEmployeeDetailsToSheetFormat()
                 : selectedEmployee
                   ? {
-                      ...selectedEmployee,
-                      ...(selectedEmployeeDetails || {}),
                       id: selectedEmployee.id,
                       name: selectedEmployee.name,
                       jobTitle: selectedEmployee.jobTitle,
@@ -331,7 +327,7 @@ export default function EmployeesPage() {
                         `${selectedEmployee.name.toLowerCase()}@deloitte.com`,
                       phone: selectedEmployee.phone || "+1 (555) 123-4567",
                       employeeId: selectedEmployee.id,
-                      //   avatar: selectedEmployeeDetails?.avatar || "/placeholder.svg?height=80&width=80",
+                      avatar: "/placeholder.svg?height=80&width=80",
                       recentAchievements: [],
                       chatInteractionSummary: isLoadingDetails
                         ? "Loading..."
