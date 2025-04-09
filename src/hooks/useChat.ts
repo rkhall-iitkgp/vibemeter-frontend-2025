@@ -10,6 +10,7 @@ import {
 import { RootState } from "@/store";
 
 export const useChat = () => {
+  const id = useSelector((state: RootState) => state.persona.persona.id);
   const dispatch = useDispatch();
   const [inputMessage, setInputMessage] = useState<string>("");
 
@@ -25,7 +26,7 @@ export const useChat = () => {
 
   // Connect to WebSocket when hook is first used
   useEffect(() => {
-    dispatch(connectWebSocket());
+    dispatch(connectWebSocket(id));
 
     return () => {
       dispatch(disconnectWebSocket());

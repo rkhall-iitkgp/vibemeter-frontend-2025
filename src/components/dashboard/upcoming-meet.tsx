@@ -36,7 +36,7 @@ export default function UpcomingMeetings({ id }: { id?: string }) {
     };
     if (id) fetchMeetings();
 
-    const socket = new WebSocket(`ws://localhost:8000/api/ws/${id}`);
+    const socket = new WebSocket(`${import.meta.env.VITE_WS_URL}/api/ws/${id}`);
     socket.onopen = () => {
       console.log("WebSocket connection established");
     };
