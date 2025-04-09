@@ -11,6 +11,7 @@ import HighConcernEmployees from "@/components/Admin/new-high-concern-employee";
 import { FaChartBar, FaDownload, FaSpinner } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface AdminData {
   employee_satisfaction: EmployeeSatisfaction;
