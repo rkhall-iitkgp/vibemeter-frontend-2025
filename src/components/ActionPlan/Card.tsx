@@ -58,7 +58,7 @@ export function Card({
   return (
     <ShadcnCard
       className={cn(
-        "border border-gray-200 shadow-sm flex flex-col",
+        "border border-gray-200 shadow-sm flex flex-col h-full",
         className
       )}
     >
@@ -111,7 +111,7 @@ export function Card({
         <div className="flex justify-center mt-auto pt-2">
           <button
             onClick={handleViewDetails}
-            className="text-blue-600 text-sm hover:text-blue-800 transition-colors flex items-center ml-2"
+            className="text-blue-600 text-sm hover:text-blue-800 transition-colors flex items-center"
           >
             View Details <span className="ml-1">→</span>
           </button>

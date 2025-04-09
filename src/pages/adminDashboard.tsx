@@ -9,9 +9,8 @@ import AdminBubbleChart, {
 } from "@/components/Admin/AdminBubbleChart";
 import HighConcernEmployees from "@/components/Admin/new-high-concern-employee"; // Employee,
 import { FaChartBar, FaDownload, FaSpinner } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { AppDispatch, RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 interface AdminData {
   employee_satisfaction: EmployeeSatisfaction;
@@ -45,7 +44,6 @@ export default function AdminDashboard() {
   const [isExporting, setIsExporting] = useState(false);
   const [data, setData] = useState<AdminData>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
   const highRiskEmployeeState = useSelector(
     (state: RootState) => state.highRiskEmployees
   );

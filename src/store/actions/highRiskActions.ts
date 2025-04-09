@@ -11,7 +11,7 @@ export const fetchHighRiskEmployees = createAsyncThunk<Employee[], void>(
       );
       const data = await response.json();
       return data.data;
-    } catch (error) {
+    } catch {
       return rejectWithValue("Failed to fetch employees");
     }
   }

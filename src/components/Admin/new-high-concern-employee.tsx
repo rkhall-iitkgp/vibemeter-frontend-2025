@@ -8,11 +8,6 @@ import { useState } from "react";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
-type Metric = {
-  label: string;
-  value: string;
-  color: string;
-};
 
 type HighConcernEmployeesProps = {
   className?: string;

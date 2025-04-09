@@ -1,5 +1,19 @@
 import { Suggestion, ActionPlan } from "@/types";
 
+export type FormData = {
+  title: string;
+  purpose: string;
+  metric: string[];
+  target_groups: Array<{
+    name: string;
+    focus_group_id: string;
+  }>;
+  steps: Array<{
+    title: string;
+    description: string;
+  }>;
+  is_completed?: boolean;
+};
 /**
  * Converts a Suggestion object from the carousel to an ActionPlan object
  * compatible with the MultiStepActionPlanModal
@@ -37,7 +51,7 @@ export function adaptSuggestionToActionPlan(
  * Prepares the submission data from the action plan form for the API
  */
 export function prepareSubmissionData(
-  formData: any,
+  formData: FormData,
   isEditing: boolean,
   originalPlan?: ActionPlan
 ) {
