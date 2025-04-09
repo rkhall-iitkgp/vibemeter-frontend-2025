@@ -1,4 +1,5 @@
-import { Suggestion, ActionPlan } from "@/types";
+import { Suggestion, ActionPlan, SuggestedActions } from "@/types";
+import { ActionPlanFormValues } from "./MultiStepActionPlanModal";
 
 export type FormData = {
   title: string;
@@ -20,7 +21,7 @@ export type FormData = {
  */
 export function adaptSuggestionToActionPlan(
   suggestion: Suggestion
-): ActionPlan {
+): SuggestedActions {
   return {
     action_id: suggestion.id || "",
     title: suggestion.title,
@@ -51,7 +52,7 @@ export function adaptSuggestionToActionPlan(
  * Prepares the submission data from the action plan form for the API
  */
 export function prepareSubmissionData(
-  formData: FormData,
+  formData: ActionPlanFormValues,
   isEditing: boolean,
   originalPlan?: ActionPlan
 ) {

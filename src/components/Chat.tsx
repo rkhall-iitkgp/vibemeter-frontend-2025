@@ -49,14 +49,6 @@ export default function ChatPage() {
   } = useChat();
 
   // Predefined quick reply options for common responses
-  const suggestedReplies = useMemo(
-    () => [
-      "Tell me more about the requirements",
-      "What's the timeline?",
-      "Do you have any examples?",
-    ],
-    []
-  );
 
   // State variables for managing the chat interface
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility

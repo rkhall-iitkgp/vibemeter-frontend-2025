@@ -1,5 +1,5 @@
 import { X, ArrowRight, Edit, Check } from "lucide-react";
-import { ActionPlan, FocusGroup } from "@/types";
+import { FocusGroup, SuggestedActions } from "@/types";
 import { useState, useEffect } from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
@@ -17,7 +17,7 @@ interface Step {
   description: string;
 }
 
-interface ActionPlanFormValues {
+export interface ActionPlanFormValues {
   title: string;
   purpose: string;
   is_completed: boolean;
@@ -30,7 +30,7 @@ interface MultiStepActionPlanModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: ActionPlanFormValues) => Promise<void>;
-  plan?: ActionPlan;
+  plan?: SuggestedActions;
   focusGroups?: FocusGroup[];
   metrics?: string[];
   isSubmitting: boolean;
@@ -83,7 +83,7 @@ const MultiStepActionPlanModal = ({
     }
   };
 
-  const extractFocusGroupIds = (targetGroups: FocusGroup[]): string[] => {
+  const extractFocusGroupIds = (targetGroups: { focus_group_id: string, name: string }[]): string[] => {
     return targetGroups
       .map((group) => group.focus_group_id || "")
       .filter((id) => id !== "");

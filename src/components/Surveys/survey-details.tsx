@@ -52,10 +52,10 @@ const QuestionAccordion: React.FC<QuestionProps> = ({ question }) => {
   return (
     <div className="border rounded-lg p-4 bg-white shadow-sm">
       <button className="p-1 w-full" onClick={() => setIsExpanded(!isExpanded)}>
-        <div className="flex items-center justify-between py-2">
+        <div className="flex justify-between py-2">
           <div>
             <div className="font-medium text-left">{question.text}</div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 text-left">
               Average Score: {question.average}/5
               <span className="text-green-500">+{question.delta}</span>
             </div>

@@ -15,10 +15,9 @@ import {
 } from "@/components/ui/carousel";
 import {
   adaptSuggestionToActionPlan,
-  FormData,
   prepareSubmissionData,
 } from "./Action-plan-adaptor";
-import MultiStepActionPlanModal from "./MultiStepActionPlanModal";
+import MultiStepActionPlanModal, { ActionPlanFormValues } from "./MultiStepActionPlanModal";
 import { Card } from "./Card";
 
 export function ActionPlansCarousel({
@@ -60,7 +59,7 @@ export function ActionPlansCarousel({
   };
 
   // Handler for form submission
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (data: ActionPlanFormValues) => {
     setIsSubmitting(true);
     try {
       // Prepare the data for submission using our adapter
