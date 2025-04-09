@@ -251,7 +251,7 @@ export default function ChatPage() {
       </div>
 
       {/* Suggested Replies - Quick response options */}
-      <div
+      {/* <div
         className={`max-h-32 overflow-y-auto border-t p-2 ${showSuggestions ? "block" : "hidden"}`}
         style={{
           animation: "slideUp 0.2s ease-out forwards",
@@ -275,7 +275,7 @@ export default function ChatPage() {
             </Button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Input Area - Message composition and sending */}
       <div className="relative border-t p-3">
