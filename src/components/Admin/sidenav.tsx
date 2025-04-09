@@ -1,8 +1,8 @@
 import { FaUsers, FaChevronRight } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router";
-import React from "react";
-import { useSelector } from "react-redux";
 import { Employee, RootState } from "@/store";
+import { useSelector } from "react-redux";
+import React from "react";
 
 // Extend MenuItem to include a disabled flag
 type MenuItem = {
@@ -39,72 +39,84 @@ const menuIcons: Record<string, string> = {
 
 // Update defaultMenuSections to mark the items to disable
 
-const Sidebar: React.FC<SidebarProps> = ({
-	activeTab,
-	onTabChange,
-}) => {
-	const location = useLocation();
-	const navigate = useNavigate();
-	const highRiskEmployees = useSelector((state: RootState) => state.highRiskEmployees.highRiskEmployees);
-	const menuSections: MenuSection[] = [
-	  {
-		title: "Main",
-		items: [
-		  {
-			name: "Overview",
-			img_src: menuIcons["Overview"],
-			link: "admin",
-			notifications:  (highRiskEmployees?.filter((emp: Employee) => emp.escalated && !emp.meet_scheduled) || []).length || undefined,
-		  },
-		  { name: "Employees", img_src: menuIcons["Employees"], link: "employees" },
-		  {
-			name: "Focus Groups",
-			img_src: menuIcons["Focus Groups"],
-			link: "focus-groups",
-		  },
-		],
-	  },
-	  {
-		title: "Engagement",
-		items: [
-		  { name: "Surveys", img_src: menuIcons["Surveys"], link: "surveys" },
-		  { name: "Questions", img_src: menuIcons["Questions"], link: "questions" },
-		],
-	  },
-	  {
-		title: "Improvement",
-		items: [
-		  {
-			name: "Action Plans",
-			img_src: menuIcons["Action Plans"],
-			link: "action-plan",
-		  },
-		  {
-			name: "Initiatives",
-			img_src: menuIcons["Initiatives"],
-			link: "initiatives",
-			disabled: true, // Disabled item
-		  },
-		],
-	  },
-	  {
-		title: "Support",
-		items: [
-		  {
-			name: "Help Center",
-			img_src: menuIcons["Help Center"],
-			link: "help-center",
-			disabled: true, // Disabled item
-		  },
-		  {
-			name: "HR Policies",
-			img_src: menuIcons["HR Policies"],
-			link: "hr-policies",
-			disabled: true, // Disabled item
-		  },
-		],
-	  },
-	];
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const highRiskEmployees = useSelector(
+    (state: RootState) => state.highRiskEmployees.highRiskEmployees
+  );
+  const menuSections: MenuSection[] = [
+    {
+      title: "Main",
+      items: [
+        {
+          name: "Overview",
+          img_src: menuIcons["Overview"],
+          link: "admin",
+          notifications:
+            (
+              highRiskEmployees?.filter(
+                (emp: Employee) => emp.escalated && !emp.meet_scheduled
+              ) || []
+            ).length || undefined,
+        },
+        {
+          name: "Employees",
+          img_src: menuIcons["Employees"],
+          link: "employees",
+        },
+        {
+          name: "Focus Groups",
+          img_src: menuIcons["Focus Groups"],
+          link: "focus-groups",
+        },
+      ],
+    },
+    {
+      title: "Engagement",
+      items: [
+        { name: "Surveys", img_src: menuIcons["Surveys"], link: "surveys" },
+        {
+          name: "Questions",
+          img_src: menuIcons["Questions"],
+          link: "questions",
+        },
+      ],
+    },
+    {
+      title: "Improvement",
+      items: [
+        {
+          name: "Action Plans",
+          img_src: menuIcons["Action Plans"],
+          link: "action-plan",
+        },
+        {
+          name: "Initiatives",
+          img_src: menuIcons["Initiatives"],
+          link: "initiatives",
+          disabled: true, // Disabled item
+        },
+      ],
+    },
+    {
+      title: "Support",
+      items: [
+        {
+          name: "Help Center",
+          img_src: menuIcons["Help Center"],
+          link: "help-center",
+          disabled: true, // Disabled item
+        },
+        {
+          name: "HR Policies",
+          img_src: menuIcons["HR Policies"],
+          link: "hr-policies",
+          disabled: true, // Disabled item
+        },
+      ],
+    },
+  ];
 
   // Handle the click on menu items
   const handleItemClick = (item: MenuItem) => {
