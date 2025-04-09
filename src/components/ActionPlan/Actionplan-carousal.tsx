@@ -13,9 +13,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card } from "./Card";
+import {
+  adaptSuggestionToActionPlan,
+  prepareSubmissionData,
+} from "./Action-plan-adaptor";
 import MultiStepActionPlanModal from "./MultiStepActionPlanModal";
-import { adaptSuggestionToActionPlan, prepareSubmissionData } from "./Action-plan-adaptor";
+import { Card } from "./Card";
 
 export function ActionPlansCarousel({
   targetGroupId,
@@ -26,7 +29,7 @@ export function ActionPlansCarousel({
   const { items, loading, error } = useSelector(
     (state: RootState) => state.suggestions
   );
-  
+
   // Add state for the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<Suggestion | null>(null);
@@ -35,7 +38,7 @@ export function ActionPlansCarousel({
   useEffect(() => {
     dispatch(fetchSuggestions(targetGroupId));
   }, [dispatch, targetGroupId]);
-  
+
   const isVisible = true;
 
   if (!isVisible) return null;
@@ -61,28 +64,28 @@ export function ActionPlansCarousel({
     try {
       // Prepare the data for submission using our adapter
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-      
+
       // For suggested actions, we're always creating a new action plan based on the suggestion
       const submissionData = prepareSubmissionData(data, false);
-      
+
       // Submit to API
       const response = await fetch(`${BACKEND_URL}/api/actions`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
         body: JSON.stringify(submissionData),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Failed to create action plan');
+        throw new Error("Failed to create action plan");
       }
-      
+
       // Success, close modal
       setIsModalOpen(false);
       setSelectedPlan(null);
-      
+
       // Optionally refresh the page or update the UI
       window.location.reload();
     } catch (error) {
@@ -142,7 +145,13 @@ export function ActionPlansCarousel({
           onSubmit={handleSubmit}
           plan={adaptSuggestionToActionPlan(selectedPlan)}
           focusGroups={[]} // You might want to fetch focus groups here
-          metrics={selectedPlan.metric ? (Array.isArray(selectedPlan.metric) ? selectedPlan.metric : [selectedPlan.metric]) : []}
+          metrics={
+            selectedPlan.metric
+              ? Array.isArray(selectedPlan.metric)
+                ? selectedPlan.metric
+                : [selectedPlan.metric]
+              : []
+          }
           isSubmitting={isSubmitting}
           onAfterClose={() => window.location.reload()} // Refresh after closing
         />

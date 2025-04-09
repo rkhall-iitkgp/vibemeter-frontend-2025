@@ -48,7 +48,10 @@ const MultiStepActionPlanModal = ({
   onAfterClose,
 }: MultiStepActionPlanModalProps) => {
   const [currentStep, setCurrentStep] = useState<FormStep>(FormStep.BasicInfo);
-  const [newStep, setNewStep] = useState<{ title: string; description: string }>({
+  const [newStep, setNewStep] = useState<{
+    title: string;
+    description: string;
+  }>({
     title: "",
     description: "",
   });
@@ -132,7 +135,9 @@ const MultiStepActionPlanModal = ({
     return formValues.metric.length > 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
@@ -354,7 +359,9 @@ const MultiStepActionPlanModal = ({
               </div>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{modalTitle}</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {modalTitle}
+              </h2>
               <p className="text-sm text-gray-500">{modalSubtitle}</p>
             </div>
           </div>
@@ -400,8 +407,8 @@ const MultiStepActionPlanModal = ({
               currentStep === FormStep.TargetGroupsMetrics
                 ? "border-b-2 border-[#86BC25] text-[#86BC25] font-medium"
                 : !validateBasicInfo()
-                ? "text-gray-300 cursor-not-allowed"
-                : "text-gray-500"
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-500"
             }`}
             onClick={() => {
               if (validateBasicInfo()) {
@@ -432,10 +439,10 @@ const MultiStepActionPlanModal = ({
               currentStep === FormStep.ActionSteps
                 ? "border-b-2 border-[#86BC25] text-[#86BC25] font-medium"
                 : !validateBasicInfo() ||
-                  !validateTargetGroups() ||
-                  !validateMetrics()
-                ? "text-gray-300 cursor-not-allowed"
-                : "text-gray-500"
+                    !validateTargetGroups() ||
+                    !validateMetrics()
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-500"
             }`}
             onClick={() => {
               if (
@@ -531,7 +538,9 @@ const MultiStepActionPlanModal = ({
                           key={index}
                           className="bg-green-100 rounded-full px-3 py-1 flex items-center gap-1"
                         >
-                          <span className="text-sm text-green-800">{group}</span>
+                          <span className="text-sm text-green-800">
+                            {group}
+                          </span>
                           <button
                             onClick={() => handleRemoveGroup(group)}
                             className="text-green-800 hover:text-green-900"
@@ -558,7 +567,9 @@ const MultiStepActionPlanModal = ({
                         key={group.focus_group_id}
                         className="py-2 px-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between border-b border-gray-100 last:border-b-0"
                         onClick={() => {
-                          if (!selectedGroupIds.includes(group.focus_group_id)) {
+                          if (
+                            !selectedGroupIds.includes(group.focus_group_id)
+                          ) {
                             setSelectedGroupIds((prev) => [
                               ...prev,
                               group.focus_group_id,
@@ -693,7 +704,8 @@ const MultiStepActionPlanModal = ({
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {editingStepIndex !== null
                         ? `Edit Step ${editingStepIndex + 1}`
-                        : `Step ${formValues.steps.length + 1}`}: Title
+                        : `Step ${formValues.steps.length + 1}`}
+                      : Title
                     </label>
                     <Input
                       value={newStep.title}
@@ -801,7 +813,8 @@ const MultiStepActionPlanModal = ({
                 onClick={handleContinue}
                 className="bg-[#86BC25] hover:bg-[#75a621] text-white"
                 disabled={
-                  (currentStep === FormStep.BasicInfo && !validateBasicInfo()) ||
+                  (currentStep === FormStep.BasicInfo &&
+                    !validateBasicInfo()) ||
                   (currentStep === FormStep.TargetGroupsMetrics &&
                     (!validateTargetGroups() || !validateMetrics()))
                 }

@@ -10,10 +10,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Smile, Send, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@/hooks/useChat";
+import { useDispatch } from "react-redux";
+import { setBotThinking } from "@/store";
 import { Message } from "@/store";
 import { cn } from "@/lib/utils";
-import { setBotThinking } from "@/store";
-import { useDispatch } from "react-redux";
 
 /**
  * Defines the structure of a chat message
