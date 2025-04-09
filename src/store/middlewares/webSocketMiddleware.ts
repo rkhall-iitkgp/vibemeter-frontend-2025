@@ -9,7 +9,7 @@ import {
   stopBotResponse,
 } from "../slices/chatSlice";
 import { RootState } from "../index";
-import { Middleware } from "redux";
+import { Middleware } from "@reduxjs/toolkit";
 
 // Define WebSocket message types
 interface Action {

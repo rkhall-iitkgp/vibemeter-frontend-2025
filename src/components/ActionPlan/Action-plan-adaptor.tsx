@@ -14,7 +14,7 @@ export function adaptSuggestionToActionPlan(suggestion: Suggestion): ActionPlan 
     target_groups: suggestion.target_group 
       ? [{ 
           name: suggestion.target_group, 
-          focus_group_id: suggestion.target_group_id || "" 
+          focus_group_id: suggestion.focus_group_id || "" 
         }] 
       : [],
     is_completed: false,

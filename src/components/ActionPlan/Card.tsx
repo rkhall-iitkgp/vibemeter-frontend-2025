@@ -6,7 +6,7 @@ export interface CardProps {
   title: string;
   description: string;
   priorityLevel: "high" | "medium" | "low";
-  targetGroup: { focus_group_id: string; name: string };
+  targetGroup: string;
   categories: string[];
   className?: string;
   onViewDetails?: () => void;
@@ -90,7 +90,7 @@ export function Card({
           <div className="flex items-start gap-2 mb-4">
             <Users className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
             <span className="text-xs text-gray-500 line-clamp-3 overflow-hidden">
-              Target Group: {targetGroup.name}
+              Target Group: {targetGroup}
             </span>
           </div>
 

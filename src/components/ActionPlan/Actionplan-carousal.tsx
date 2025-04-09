@@ -109,7 +109,7 @@ export function ActionPlansCarousel({
         }}
       >
         <CarouselContent className="-ml-4">
-          {items.map((plan: Suggestion, index: number) => (
+          {items?.length && items.map((plan: Suggestion, index: number) => (
             <CarouselItem
               key={index}
               className="pl-4 w-full sm:basis-1/2 lg:basis-1/3"
@@ -119,7 +119,7 @@ export function ActionPlansCarousel({
                 title={plan.title}
                 description={plan.purpose}
                 priorityLevel={"high"}
-                targetGroup={plan.target_group}
+                targetGroup={plan.name}
                 categories={plan.metric}
                 onViewDetails={() => handleViewDetails(plan)}
               />
