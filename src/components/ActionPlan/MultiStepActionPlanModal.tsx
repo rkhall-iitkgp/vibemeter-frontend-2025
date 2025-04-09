@@ -83,7 +83,9 @@ const MultiStepActionPlanModal = ({
     }
   };
 
-  const extractFocusGroupIds = (targetGroups: { focus_group_id: string, name: string }[]): string[] => {
+  const extractFocusGroupIds = (
+    targetGroups: { focus_group_id: string; name: string }[]
+  ): string[] => {
     return targetGroups
       .map((group) => group.focus_group_id || "")
       .filter((id) => id !== "");

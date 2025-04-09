@@ -17,7 +17,9 @@ import {
   adaptSuggestionToActionPlan,
   prepareSubmissionData,
 } from "./Action-plan-adaptor";
-import MultiStepActionPlanModal, { ActionPlanFormValues } from "./MultiStepActionPlanModal";
+import MultiStepActionPlanModal, {
+  ActionPlanFormValues,
+} from "./MultiStepActionPlanModal";
 import { Card } from "./Card";
 
 export function ActionPlansCarousel({

@@ -79,13 +79,18 @@ export function ActionPlanCard({
               <span>
                 {plan.target_groups
                   .slice(0, 2)
-                  .map((group: any, index: any) => (
-                    <React.Fragment key={index}>
-                      {group.name}
-                      {index < plan.target_groups.slice(0, 2).length - 1 &&
-                        ", "}
-                    </React.Fragment>
-                  ))}
+                  .map(
+                    (
+                      group: { focus_group_id: string; name: string },
+                      index: number
+                    ) => (
+                      <React.Fragment key={index}>
+                        {group.name}
+                        {index < plan.target_groups.slice(0, 2).length - 1 &&
+                          ", "}
+                      </React.Fragment>
+                    )
+                  )}
                 {plan.target_groups.length > 2 &&
                   ` (+${plan.target_groups.length - 2} more)`}
               </span>

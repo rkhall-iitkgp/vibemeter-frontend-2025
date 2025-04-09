@@ -200,6 +200,7 @@ const ActionSteps = ({ steps }: { steps?: ActionStep[] }) => {
       </div>
     );
   }
+  console.log("Steps", steps);
 
   return (
     <div className="my-6">
@@ -225,9 +226,9 @@ const ActionSteps = ({ steps }: { steps?: ActionStep[] }) => {
               <div className="ml-4 flex-grow">
                 <div className="border rounded-md overflow-hidden bg-white shadow-sm border-l-4 border-l-[#80C342]">
                   <div className="p-3 border-b">
-                    <h3 className="text-base font-medium">{step.title}</h3>
+                    <h3 className="text-base font-medium">{step}</h3>
                   </div>
-                  <div className="p-3 text-sm">{step.description}</div>
+                  {/* <div className="p-3 text-sm">{step.description}</div> */}
                 </div>
               </div>
             </div>
