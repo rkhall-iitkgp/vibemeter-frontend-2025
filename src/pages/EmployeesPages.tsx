@@ -96,7 +96,7 @@ export default function EmployeesPage() {
   const fetchEmployeeDetails = async (employeeId: string) => {
     setIsLoadingDetails(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/employee/${employeeId}`);
+      const response = await fetch(`${BACKEND_URL}/api/employee/by-id/${employeeId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch employee details");
       }

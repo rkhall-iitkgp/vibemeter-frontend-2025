@@ -18,10 +18,10 @@ const ProfileSelectPage: React.FC = () => {
     (state: RootState) => state.persona.available_personas
   ) as Profile[];
 
-  const handleProfileSelect = (id: string) => {
+  const handleProfileSelect = (profile: Profile) => {
     // Navigate to the dashboard with the selected profile ID
-    console.log("Selected Profile ID:", id);
-    dispatch(setPersona(id));
+    console.log("Selected Profile ID:", profile.id);
+    dispatch(setPersona(profile));
     navigate(`/dashboard`);
   };
 
@@ -35,7 +35,7 @@ const ProfileSelectPage: React.FC = () => {
             className="flex flex-col items-center cursor-pointer group"
             onMouseEnter={() => setHoveredProfile(profile.id)}
             onMouseLeave={() => setHoveredProfile(null)}
-            onClick={() => handleProfileSelect(profile.id)}
+            onClick={() => handleProfileSelect(profile)}
           >
             <div
               className={`relative mb-3 overflow-hidden rounded-full border-4 ${

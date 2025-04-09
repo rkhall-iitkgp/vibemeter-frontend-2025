@@ -18,7 +18,7 @@ interface DashboardData {
 export function DashboardContent() {
   const [data, setData] = useState<DashboardData | undefined>();
   const selectedPersona = useSelector(
-    (state: RootState) => state.persona.persona_id
+    (state: RootState) => state.persona.persona
   );
   const navigate = useNavigate();
   console.log("Selected Persona ID:", selectedPersona);
@@ -33,7 +33,7 @@ export function DashboardContent() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/employee/${selectedPersona}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/employee/${selectedPersona.id}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -50,7 +50,7 @@ export function DashboardContent() {
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      <Navbar name={data?.user_data?.name || ""} />
+      <Navbar name={data?.user_data?.employee_name || ""} />
 
       <main className="flex-1 p-4 md:p-4 overflow-hidden">
         {/* Main Grid - Fixed width columns on larger screens */}
