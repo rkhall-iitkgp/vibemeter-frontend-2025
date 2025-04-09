@@ -33,7 +33,7 @@ export function DashboardContent() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/employee/${selectedPersona.id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/employee/${selectedPersona?.id}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -45,7 +45,7 @@ export function DashboardContent() {
         console.error("Error fetching data:", error);
       }
     };
-    fetchData();
+    if (selectedPersona) fetchData();
   }, [selectedPersona]);
 
   return (
@@ -74,7 +74,7 @@ export function DashboardContent() {
               className="w-full rounded-xl shadow-md border"
               style={{ height: "calc(100vh - 332px)" }}
             >
-              <UpcomingMeetings />
+              <UpcomingMeetings id={selectedPersona?.id} />
             </div>
           </div>
 

@@ -13,7 +13,7 @@ interface PersonaState {
 
 const personas = [
   {
-    id: "EMP001",
+    id: "EMP0444",
     name: "Joey",
     description: "Underperforming",
     avatar: "/avatars/Joey.png",
@@ -25,13 +25,13 @@ const personas = [
     avatar: "/avatars/Monica.png",
   },
   {
-    id: "EMP003",
+    id: "EMP0283",
     name: "Rachel",
     description: "Dissatisfied",
     avatar: "/avatars/Rachel.png",
   },
   {
-    id: "EMP004",
+    id: "EMP0090",
     name: "Monica",
     description: "Burned out",
     avatar: "/avatars/Ross.png",

@@ -15,7 +15,7 @@ interface MeetingData {
   created_at: string;
 }
 
-export default function UpcomingMeetings() {
+export default function UpcomingMeetings({ id }: { id?: string }) {
   const [meetings, setMeetings] = useState<MeetingData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +23,7 @@ export default function UpcomingMeetings() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/meetings/100`
+        `${import.meta.env.VITE_BACKEND_URL}/api/meetings/${id}`
       );
       const data = await response.json();
       setMeetings(data.data || []);
@@ -35,9 +35,9 @@ export default function UpcomingMeetings() {
   };
 
   useEffect(() => {
-    fetchMeetings();
+    if (id) fetchMeetings();
 
-    const socket = new WebSocket(`ws://localhost:8000/api/ws/EMP0014`);
+    const socket = new WebSocket(`ws://localhost:8000/api/ws/${id}`);
     socket.onopen = () => {
       console.log("WebSocket connection established");
     };
