@@ -59,6 +59,7 @@ const suggestionsSlice = createSlice({
         fetchSuggestions.fulfilled,
         (state, action: PayloadAction<Suggestion[]>) => {
           state.loading = false;
+          console.log(action.payload);
           state.items = action.payload;
         }
       )

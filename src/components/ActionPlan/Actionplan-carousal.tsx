@@ -113,22 +113,23 @@ export function ActionPlansCarousel({
         }}
       >
         <CarouselContent className="-ml-4">
-          {items.map((plan: Suggestion, index: number) => (
-            <CarouselItem
-              key={index}
-              className="pl-4 w-full sm:basis-1/2 lg:basis-1/3"
-              style={{ height: "inherit" }}
-            >
-              <Card
-                title={plan.title}
-                description={plan.purpose}
-                priorityLevel={"high"}
-                targetGroup={plan.target_group}
-                categories={plan.metric}
-                onViewDetails={() => handleViewDetails(plan)}
-              />
-            </CarouselItem>
-          ))}
+          {items?.length &&
+            items.map((plan: Suggestion, index: number) => (
+              <CarouselItem
+                key={index}
+                className="pl-4 w-full sm:basis-1/2 lg:basis-1/3"
+                style={{ height: "inherit" }}
+              >
+                <Card
+                  title={plan.title}
+                  description={plan.purpose}
+                  priorityLevel={"high"}
+                  targetGroup={plan.name}
+                  categories={plan.metric}
+                  onViewDetails={() => handleViewDetails(plan)}
+                />
+              </CarouselItem>
+            ))}
         </CarouselContent>
         <div className="absolute inset-y-0 left-0 flex items-center">
           <CarouselPrevious className="!h-9 !w-9 -ml-7 bg-white text-black shadow-none border-0 " />

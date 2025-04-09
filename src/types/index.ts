@@ -26,7 +26,7 @@ export interface ActionPlan {
   metric: string[];
   steps: ActionStep[];
   is_completed: boolean;
-  target_groups: FocusGroup[];
+  target_groups: any;
   created_at: string;
 }
 
@@ -41,7 +41,9 @@ export interface Suggestion {
   purpose: string;
   metric: string[];
   steps: Step[];
-  target_group: { focus_group_id: string; name: string };
+  focus_group_id: string;
+  name: string;
+  target_group?: any;
 }
 
 export interface SuggestionsState {

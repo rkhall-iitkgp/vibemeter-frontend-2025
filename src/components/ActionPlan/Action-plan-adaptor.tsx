@@ -33,7 +33,7 @@ export function adaptSuggestionToActionPlan(
       ? [
           {
             name: suggestion.target_group,
-            focus_group_id: suggestion.target_group_id || "",
+            focus_group_id: suggestion.focus_group_id || "",
           },
         ]
       : [],
