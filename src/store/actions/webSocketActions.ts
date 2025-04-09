@@ -1,6 +1,7 @@
 // WebSocket action creators
-export const connectWebSocket = () => ({
+export const connectWebSocket = (id?: string) => ({
   type: "ws/connect" as const,
+  payload: id || "EMP0014"
 });
 
 export const disconnectWebSocket = () => ({

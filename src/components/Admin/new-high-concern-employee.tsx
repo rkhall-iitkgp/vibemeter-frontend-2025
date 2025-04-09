@@ -4,6 +4,7 @@ import MeetingScheduler from "@/pages/MeetingScheduler";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { Employee } from "@/store";
 // import { Calendar } from "lucide-react";
 
 // Types for better export readiness
@@ -12,15 +13,6 @@ type Metric = {
   value: string;
   color: string;
 };
-
-export interface Employee {
-  id: string;
-  name: string;
-  avatar: string;
-  group: string;
-  needsIntervention: boolean;
-  metrics: Metric[];
-}
 
 type HighConcernEmployeesProps = {
   className?: string;
@@ -63,14 +55,14 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
                     {employee.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-0.5 truncate">
-                    {employee.group}
+                    {employee.focus_groups}
                   </p>
                   <p className="text-red-500 font-medium text-xs sm:text-sm mt-1">
                     Needs Immediate Intervention!
                   </p>
                 </div>
                 <p className="text-xs text-gray-400 whitespace-nowrap">
-                  #{employee.id}
+                  #{employee.employee_id}
                 </p>
               </div>
 
@@ -82,7 +74,7 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
               </Button>
               <Button
                 className="bg-white hover:bg-gray-100 text-black border w-24 text-xs sm:text-sm px-2 sm:px-4 py-2 mt-2 rounded-md font-medium h-auto"
-                onClick={() => navigate(`/employees/${employee.id}`)}
+                onClick={() => navigate(`/employees/${employee.employee_id}`)}
               >
                 View
               </Button>
@@ -95,8 +87,8 @@ const InterventionEmployeeCard = ({ employee }: { employee: Employee }) => {
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
           <MeetingScheduler
             participantName={employee.name}
-            participantId={employee.id}
-            participantGroup={employee.group}
+            participantId={employee.employee_id}
+            participantGroup={employee.focus_groups}
             onCancel={() => setShowMeetingScheduler(false)}
             onClose={() => setShowMeetingScheduler(false)}
           />
@@ -126,21 +118,21 @@ const EmployeeCard = ({ employee }: { employee: Employee }) => {
                 {employee.name}
               </p>
               <p className="text-xs text-gray-400 whitespace-nowrap">
-                {employee.id}
+                {employee.employee_id}
               </p>
             </div>
-            <p className="text-xs text-gray-500 truncate">{employee.group}</p>
+            <p className="text-xs text-gray-500 truncate">{employee.focus_groups}</p>
           </div>
         </div>
         <div className="mt-1 flex gap-1 flex-wrap">
-          {employee.metrics.map((metric, idx) => (
+          {/* {employee.metrics.map((metric, idx) => (
             <span
               key={idx}
               className={`text-xs px-2 py-1 mt-1 rounded-sm font-medium ${metric.color}`}
             >
               {metric.label} {metric.value}
             </span>
-          ))}
+          ))} */}
         </div>
       </CardContent>
     </Card>
@@ -180,10 +172,10 @@ export default function HighConcernEmployees({
 
   // Intervention employees
   const interventionEmployees =
-    employees?.filter((emp) => emp.needsIntervention) || [];
+    employees?.filter((emp) => emp.escalated && !emp.meet_scheduled) || [];
   // Regular high concern employees
   const regularEmployees =
-    employees?.filter((emp) => !emp.needsIntervention) || [];
+    employees?.filter((emp) => !(emp.escalated && !emp.meet_scheduled)).slice(0, 6 - interventionEmployees.length) || [];
 
   return (
     <div className={`rounded-md bg-white h-full flex flex-col ${className}`}>
@@ -220,7 +212,7 @@ export default function HighConcernEmployees({
             <div>
               {interventionEmployees.map((employee) => (
                 <InterventionEmployeeCard
-                  key={employee.id}
+                  key={employee.employee_id}
                   employee={employee}
                 />
               ))}
@@ -231,7 +223,7 @@ export default function HighConcernEmployees({
           {regularEmployees.length > 0 && (
             <div>
               {regularEmployees.map((employee) => (
-                <EmployeeCard key={employee.id} employee={employee} />
+                <EmployeeCard key={employee.employee_id} employee={employee} />
               ))}
             </div>
           )}
