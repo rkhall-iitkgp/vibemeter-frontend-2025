@@ -196,11 +196,7 @@ export function ReportModal({
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="font-semibold text-lg">
                         Report #{report.report_id.replace("RPT", "")}
-                      </h3>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        {formatDate(report.generated_at)}
-                      </div>
+                      </h3> 
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gray-50 p-3 rounded-md">
@@ -314,13 +310,6 @@ export function ReportModal({
               {/* Summary card */}
               <div className="bg-white rounded-lg border p-4">
                 <div className="flex justify-between items-center mb-3">
-                  <div>
-                    <span className="text-sm text-gray-500">Generated on</span>
-                    <div className="flex items-center text-sm">
-                      <Calendar className="h-4 w-4 mr-1 text-[#80c342]" />
-                      {formatDate(selectedReport.generated_at)}
-                    </div>
-                  </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="bg-gray-50">
                       ID: {selectedReport.report_id}

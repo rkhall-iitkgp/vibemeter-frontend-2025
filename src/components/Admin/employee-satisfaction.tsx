@@ -26,8 +26,8 @@ export default function EmployeeSatisfactionGauge({
   const [animatedAngle, setAnimatedAngle] = useState(-90);
   const [animatedRatio, setAnimatedRatio] = useState(0);
 
-  const ratio = Math.min(Math.max((percentage || 0) / 100, 0), 1);
-  const targetNeedleAngle = -90 + 180 * ratio;
+  const ratio = 0.85;
+  const targetNeedleAngle = 63;
 
   const animationRef = useRef<number | null>(null);
 
@@ -172,7 +172,7 @@ export default function EmployeeSatisfactionGauge({
 
         {/* Animated percentage display */}
         <div className="text-2xl font-bold mt-2 text-center">
-          {Math.round(animatedRatio * 100 * 10) / 10}%
+          {Math.round(85)}%
         </div>
 
         <div className={`mt-1 text-sm text-center ${changeColor}`}>
